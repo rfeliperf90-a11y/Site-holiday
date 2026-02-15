@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comandos & Dicas - HOLIDAY Guild</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles-premium.css">
+</head>
+<body>
+    <div class="animated-background">
+        <div class="smoke-particle smoke-particle-1"></div>
+        <div class="smoke-particle smoke-particle-2"></div>
+        <div class="smoke-particle smoke-particle-3"></div>
+        <div class="smoke-particle smoke-particle-4"></div>
+        <div class="smoke-particle smoke-particle-5"></div>
+
+        <div class="light-flicker light-1"></div>
+        <div class="light-flicker light-2"></div>
+        <div class="light-flicker light-3"></div>
+
+        <div class="cloud cloud-bg-1"></div>
+        <div class="cloud cloud-bg-2"></div>
+        <div class="cloud cloud-bg-3"></div>
+        <div class="star star-bg-1"></div>
+        <div class="star star-bg-2"></div>
+        <div class="star star-bg-3"></div>
+        <div class="star star-bg-4"></div>
+        <div class="star star-bg-5"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>GUILD HOLIDAY</h1>
+                <h2 style="color: white; font-size: 28px; margin: 10px 0 5px 0; font-weight: 600; animation: fadeInUp 1s ease-out 0.2s both;">Comandos e Dicas</h2>
+            </div>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Início</a>
+                <a href="dicas.html" class="nav-link active">Comandos & Dicas</a>
+                <a href="lag.html" class="nav-link">Customização</a>
+                <a href="downloads.html" class="nav-link">Downloads</a>
+                <a href="profile.html" class="nav-link" style="display: none;">Perfil</a>
+            </div>
+            <div class="navbar-buttons">
+                <a href="https://chat.whatsapp.com/EDqaY8udJmFCTVCTex3b5p" class="btn-navbar btn-whatsapp icon-btn" target="_blank" aria-label="WhatsApp">
+                    <img src="https://guildholiday.discloud.app/imagens/wp.png" alt="WhatsApp" class="navbar-icon" width="16" height="16">
+                </a>
+                <a href="https://discord.gg/KEc4ZdR3" class="btn-navbar btn-discord icon-btn" target="_blank" aria-label="Discord">
+                    <img src="https://guildholiday.discloud.app/imagens/Discord.png" alt="Discord" class="navbar-icon" width="16" height="16">
+                </a>
+                <button id="notificationBell" class="btn-navbar btn-notifications icon-btn" style="position: relative; display: none;" aria-label="Notificações">
+                    <img src="https://guildholiday.discloud.app/imagens/Sino.png" alt="Notificações" class="navbar-icon" width="16" height="16">
+                    <span id="notificationBadge" class="notification-badge" style="display: none;"></span>
+                </button>
+                <a href="login.html" class="btn-navbar btn-login icon-btn" aria-label="Login" title="Login">
+                    <img src="https://guildholiday.discloud.app/imagens/login.png" alt="Login" class="navbar-icon" width="16" height="16">
+                </a>
+                <button id="logoutBtn" class="btn-navbar btn-logout icon-btn" style="display: none;" aria-label="Sair" title="Sair">
+                    <img src="https://guildholiday.discloud.app/imagens/Sair.png" alt="" class="navbar-icon" width="16" height="16">
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="content-section">
+            <p style="text-align: center; color: white; animation: fadeInUp 1s ease-out 0.4s both; margin-bottom: 26px;">
+                Essas Configurações certeza que irá ajudar a sua maneira de jogar, deixando mais ágil
+            </p>
+
+            <h3 class="config-title" style="text-align: center; margin-bottom: 22px;">Comandos e Dicas</h3>
+
+            <div class="tips-grid" style="margin-bottom: 36px;">
+                <div class="tip-card" style="grid-column: 1 / -1;">
+                    <p><strong>Dica:</strong> Quando o nome do jogador tiver mais de dois espaços, digite o nome dele e dê espaço, depois digite "&gt;" e espaço novamente para sussurrar com ele.</p>
+                    <p><strong>Dica:</strong> Clique em cima do nome do "Jogador", pressionando tecla "Shift" no chat para sussurrar com ele.</p>
+                    <p><strong>Comando:</strong> <code>/friendoff</code> ou <code>/friendon</code>. Desativa ou ativa a aceitação de amigos.</p>
+                    <p><strong>Comando:</strong> <code>/pmoff</code> ou <code>/pmon</code>. Desativa ou ativa o sussurro.</p>
+                    <p><strong>Comando:</strong> <code>/pi name</code>. Invite o "amigo" para party.</p>
+                    <p><strong>Comando:</strong> <code>/ps name</code>. Chama o "amigo da party" para sua sala. (Funciona somente se estiver em party)</p>
+                    <p><strong>Comando:</strong> <code>/roll</code> digite um número entre 1 e 100, para fazer um sorteio.</p>
+                </div>
+            </div>
+
+            <section class="keybinds-section">
+                <h3 class="config-title" style="text-align: center; margin-bottom: 20px;">Customize keybinds:</h3>
+
+                <div class="keybinds-list">
+                    <div class="keybind-item">
+                        <div class="keybind-name">Area List</div>
+                        <div class="keybind-key">U</div>
+                        <div class="keybind-description">Faça que você observa as classes que os jogadores estão usando na sala.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Auto Attack</div>
+                        <div class="keybind-key">NUMBER_1</div>
+                        <div class="keybind-description">Ativa o ataque automaticamente em monstros. (Somente com classes de magia.)</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Bank</div>
+                        <div class="keybind-key">B</div>
+                        <div class="keybind-description">Abre o banco de qualquer lugar (Somente se tiver algum pet bank ou cape.)</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Battle Analyzer</div>
+                        <div class="keybind-key">PAGE UP</div>
+                        <div class="keybind-description">Abre ou fecha o analisador de batalha.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Camera Tool</div>
+                        <div class="keybind-key">LEFTBRACKET</div>
+                        <div class="keybind-description">Sistema de câmera.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Cancel Target</div>
+                        <div class="keybind-key">ESCAPE</div>
+                        <div class="keybind-description">Cancela seu alvo se a redução disponível for sua velocidade de ataque automático. (Tem um resfriamento mínimo de 2 segundos.)</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Character Panel</div>
+                        <div class="keybind-key">C</div>
+                        <div class="keybind-description">Abre o painel de personagens.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Custom Drops UI</div>
+                        <div class="keybind-key">NONE</div>
+                        <div class="keybind-description">Alterna a visibilidade da interface do usuário de drop personalizada. (Recomendo não mexer.)</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Decline All Drops</div>
+                        <div class="keybind-key">DELETE</div>
+                        <div class="keybind-description">Recusa todos os drop da lista de uma vez. (Coloque uma tecla do seu desejo.)</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Friends List</div>
+                        <div class="keybind-key">F</div>
+                        <div class="keybind-description">Abre a lista de amigos.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Hide Monster</div>
+                        <div class="keybind-key">M</div>
+                        <div class="keybind-description">Desativa ou ativa a visibilidade dos monstros.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Hide Players</div>
+                        <div class="keybind-key">P</div>
+                        <div class="keybind-description">Desativa ou ativa a visibilidade dos jogadores.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Hide UI</div>
+                        <div class="keybind-key">H</div>
+                        <div class="keybind-description">Desativa ou ativa o HUB.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Inventory</div>
+                        <div class="keybind-key">I</div>
+                        <div class="keybind-description">Abre ou fecha o inventário.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Jump</div>
+                        <div class="keybind-key">SPACE</div>
+                        <div class="keybind-description">O personagem pula.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Options</div>
+                        <div class="keybind-key">O</div>
+                        <div class="keybind-description">Abre as configurações do jogo.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Player HP Bar</div>
+                        <div class="keybind-key">V</div>
+                        <div class="keybind-description">Desativa ou ativa a barra de vida em cima dos jogadores.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Quest Log</div>
+                        <div class="keybind-key">Q</div>
+                        <div class="keybind-description">Abre ou fecha seu registro de missões, onde você pode entregar suas missões concluídas.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Rest</div>
+                        <div class="keybind-key">X</div>
+                        <div class="keybind-description">Seu personagem começará a descansar para restaurar HP / MP.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Skill 1</div>
+                        <div class="keybind-key">NUMBER_2</div>
+                        <div class="keybind-description">Ativar a primeira skill da sua classe.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Skill 2</div>
+                        <div class="keybind-key">NUMBER_3</div>
+                        <div class="keybind-description">Ativar a terceira skill da sua classe.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Skill 3</div>
+                        <div class="keybind-key">NUMBER_4</div>
+                        <div class="keybind-description">Ativar a quarta skill da sua classe.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Skill 4</div>
+                        <div class="keybind-key">NUMBER_5</div>
+                        <div class="keybind-description">Ativar a quinta skill da sua classe.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Skill 5</div>
+                        <div class="keybind-key">NUMBER_6</div>
+                        <div class="keybind-description">Ativar a sexta skill do item que estiver equipado junto com a classe.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Stats Overview</div>
+                        <div class="keybind-key">PAGE_DOWN</div>
+                        <div class="keybind-description">Alternar o painel de estatísticas / visão geral.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Target Random Monster</div>
+                        <div class="keybind-key">T</div>
+                        <div class="keybind-description">Alterar o seu alvo para o próximo monstro.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">Travel Menu's Travel</div>
+                        <div class="keybind-key">Y</div>
+                        <div class="keybind-description">Atalho de teclado usado para viajar para o próximo mapa na lista para o menu de viagem.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">World Camera</div>
+                        <div class="keybind-key">RIGHTBRACKET</div>
+                        <div class="keybind-description">Abre câmera livre.</div>
+                    </div>
+                    <div class="keybind-item">
+                        <div class="keybind-name">World Camera's Hide</div>
+                        <div class="keybind-key">NUMBER_0</div>
+                        <div class="keybind-description">Atalho de teclado usado para ocultar a interface do usuário da câmera mundial.</div>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 HOLIDAY Guild. Todos os direitos reservados.</p>
+            <p>Grupo Guild Holiday criado em 2014</p>
+        </div>
+    </footer>
+
+    <script src="site-config.js"></script>
+    <script src="auth-api.js"></script>
+    <script src="auth-manager.js"></script>
+    <script src="navigation.js"></script>
+</body>
+</html>
+

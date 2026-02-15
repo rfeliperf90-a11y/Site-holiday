@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - HOLIDAY Guild</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles-premium.css">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #6B46C1 0%, #EC4899 100%);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            color: white;
+            text-align: center;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .admin-header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+
+        .admin-section {
+            background: rgba(107, 70, 193, 0.1);
+            border: 1px solid #6B46C1;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .admin-section h2 {
+            color: #EC4899;
+            margin-top: 0;
+            border-bottom: 2px solid #6B46C1;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .form-group input, .form-group select {
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #EC4899;
+            border-radius: 5px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-group button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #EC4899 0%, #6B46C1 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .form-group button:hover {
+            transform: scale(1.05);
+        }
+
+        .color-input {
+            width: 60px;
+            height: 40px;
+            padding: 2px;
+            cursor: pointer;
+        }
+
+        .ranks-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .rank-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .rank-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .rank-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .rank-info h3 {
+            margin: 0 0 5px 0;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .rank-info p {
+            margin: 0;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .rank-description {
+            margin: 3px 0 0 0 !important;
+            font-size: 12px !important;
+            color: rgba(255, 255, 255, 0.7) !important;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .rank-custom-text {
+            margin: 2px 0 0 0 !important;
+            font-size: 11px !important;
+            color: rgba(236, 72, 153, 0.8) !important;
+            font-style: italic;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .rank-actions {
+            display: flex;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .rank-actions button {
+            padding: 5px 10px;
+            font-size: 11px;
+            background: #EC4899;
+            border: none;
+            border-radius: 3px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .rank-actions button:hover {
+            background: #6B46C1;
+        }
+
+        .rank-actions button.delete {
+            background: #FF0000;
+        }
+
+        .rank-actions button.delete:hover {
+            background: #CC0000;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .users-table thead {
+            background: linear-gradient(135deg, #6B46C1 0%, #EC4899 100%);
+        }
+
+        .users-table th {
+            padding: 15px;
+            text-align: left;
+            color: white;
+            font-weight: 600;
+        }
+
+        .users-table td {
+            padding: 15px;
+            color: #E0E7FF;
+            border-bottom: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .users-table tr:hover {
+            background: rgba(236, 72, 153, 0.1);
+        }
+
+        .user-ranks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .user-rank-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            background: rgba(236, 72, 153, 0.3);
+            border: 1px solid rgba(236, 72, 153, 0.5);
+        }
+
+        .rank-select {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .rank-select select {
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #EC4899;
+            border-radius: 3px;
+            color: white;
+            font-size: 12px;
+        }
+
+        .rank-select button {
+            padding: 5px 10px;
+            background: #EC4899;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #FF0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #CC0000;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .message.success {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22C55E;
+            border: 1px solid rgba(34, 197, 94, 0.4);
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #EF4444;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .loading {
+            text-align: center;
+            color: #EC4899;
+            font-weight: 600;
+            padding: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: transparent;
+            color: #999;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #EC4899;
+            border-bottom-color: #EC4899;
+        }
+
+        .tab-btn:hover {
+            color: #EC4899;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .ban-card {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .ban-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .ban-info h3 {
+            margin: 0 0 5px 0;
+            color: #FF0000;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .ban-details {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin: 3px 0;
+        }
+
+        .ban-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .ban-actions button {
+            padding: 6px 12px;
+            font-size: 11px;
+            background: #EC4899;
+            border: none;
+            border-radius: 3px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: 600;
+        }
+
+        .ban-actions button:hover {
+            background: #6B46C1;
+        }
+
+        .ban-actions button.unban {
+            background: #22C55E;
+        }
+
+        .ban-actions button.unban:hover {
+            background: #16A34A;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background">
+        <div class="smoke-particle smoke-particle-1"></div>
+        <div class="smoke-particle smoke-particle-2"></div>
+        <div class="smoke-particle smoke-particle-3"></div>
+        <div class="smoke-particle smoke-particle-4"></div>
+        <div class="smoke-particle smoke-particle-5"></div>
+        
+        <div class="light-flicker light-1"></div>
+        <div class="light-flicker light-2"></div>
+        <div class="light-flicker light-3"></div>
+    </div>
+
+    <button class="logout-btn" id="logoutBtn">Sair</button>
+    <div id="message" class="message"></div>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Painel Administrativo</h1>
+            <p>Gerenciar conquistas e usuários da guilda</p>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <!-- Abas para diferentes seções -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="ranks">Gerenciar conquistas</button>
+            <button class="tab-btn" data-tab="users">Gerenciar Usuários</button>
+            <button class="tab-btn" data-tab="post-permissions">Postagens (Downloads)</button>
+            <button class="tab-btn" data-tab="bans">Banimentos</button>
+        </div>
+
+        <!-- TAB: Gerenciar conquistas Customizáveis -->
+        <div id="ranks-tab" class="tab-content active">
+            <div class="admin-section">
+                <h2>Links da Comunidade (Navbar)</h2>
+                <form class="form-group" id="socialLinksForm" style="flex-direction: column; align-items: flex-start;">
+                    <div style="width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">URL do WhatsApp *</label>
+                            <input type="url" id="adminWhatsappUrl" placeholder="https://chat.whatsapp.com/..." required style="width: 100%; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">URL do Discord *</label>
+                            <input type="url" id="adminDiscordUrl" placeholder="https://discord.gg/..." required style="width: 100%; box-sizing: border-box;">
+                        </div>
+                    </div>
+                    <small style="color: rgba(255,255,255,0.65); margin-top: 8px;">
+                        Esses links serão usados em todos os botões do navbar (todas as páginas).
+                    </small>
+                    <button type="submit" style="margin-top: 15px; width: 100%;">Salvar Links</button>
+                </form>
+            </div>
+
+            <div class="admin-section">
+                <h2>Criar Novo conquista Customizável</h2>
+                <form class="form-group" id="createRankForm" style="flex-direction: column; align-items: flex-start;">
+                    <div style="width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Nome do conquista *</label>
+                            <input type="text" placeholder="Ex: Fundador" required id="rankName" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Cor do conquista *</label>
+                            <input type="color" required id="rankColor" class="color-input" title="Cor do conquista" style="width: 100%; height: 40px;">
+                        </div>
+                    </div>
+
+                    <div style="width: 100%; margin-top: 10px;">
+                        <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Descrição *</label>
+                        <textarea placeholder="Ex: Fundador e proprietário da HOLIDAY Guild" required id="rankDescription" style="width: 100%; box-sizing: border-box; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid #EC4899; border-radius: 5px; color: white; font-family: inherit; height: 70px; resize: vertical;"></textarea>
+                    </div>
+
+                    <div style="width: 100%; margin-top: 10px;">
+                        <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Texto Customizável (Conquistado, Membro, etc) *</label>
+                        <input type="text" placeholder="Ex: Conquistado em Jul/2025" required id="rankCustomText" style="width: 100%; box-sizing: border-box;">
+                    </div>
+
+                    <div style="width: 100%; margin-top: 10px;">
+                        <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Imagem de Fundo (Opcional - URL ou upload)</label>
+                        <input type="text" placeholder="Cole a URL da imagem ou deixe em branco" id="rankBackgroundImage" style="width: 100%; box-sizing: border-box;">
+                        <input type="file" accept="image/*" id="rankBackgroundImageFile" style="width: 100%; box-sizing: border-box; margin-top: 5px;">
+                        <small style="color: rgba(255, 255, 255, 0.5); display: block; margin-top: 5px;">Tamanho recomendado: 250x150px</small>
+                    </div>
+
+                    <div id="adminPanelCheckboxContainer" style="width: 100%; margin-top: 15px; padding: 15px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 5px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #10B981; font-weight: 600;">
+                            <input type="checkbox" id="rankEnableAdminPanel" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span>Habilitar Painel Admin para este conquista</span>
+                        </label>
+                        <small style="color: rgba(16, 185, 129, 0.8); display: block; margin-top: 8px;">Usuários com este conquista poderão acessar o painel de administração com permissões limitadas</small>
+                    </div>
+
+                    <div id="visibilityCheckboxContainer" style="width: 100%; margin-top: 15px; padding: 15px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 5px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #3B82F6; font-weight: 600;">
+                            <input type="checkbox" id="rankIsVisible" checked style="width: 18px; height: 18px; cursor: pointer;">
+                            <span>Permitir Usuário Escolher (Exibir/Ocultar)</span>
+                        </label>
+                        <small style="color: rgba(59, 130, 246, 0.8); display: block; margin-top: 8px;">Marcado: usuário pode escolher exibir ou não o conquista. Desmarcado: conquista fica fixo nas conquistas (como progressão)</small>
+                    </div>
+
+                    <div id="downloadManagementCheckboxContainer" style="width: 100%; margin-top: 15px; padding: 15px; background: rgba(236, 72, 153, 0.1); border: 1px solid rgba(236, 72, 153, 0.4); border-radius: 5px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #EC4899; font-weight: 600;">
+                            <input type="checkbox" id="rankCanManageDownloads" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span>Permitir Editar/Excluir Downloads</span>
+                        </label>
+                        <small style="color: rgba(236, 72, 153, 0.8); display: block; margin-top: 8px;">Usuários com este conquista poderão editar e excluir seus próprios downloads e também os de outros usuários</small>
+                    </div>
+                    <div id="orderAllRanksCheckboxContainer" style="width: 100%; margin-top: 15px; padding: 15px; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 5px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #F59E0B; font-weight: 600;">
+                            <input type="checkbox" id="rankCanOrderAllRanks" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span>Permitir Usuário Ordenar Todos os conquistas (incluindo fixos)</span>
+                        </label>
+                        <small style="color: rgba(245, 158, 11, 0.85); display: block; margin-top: 8px;">Com este conquista, o usuário pode reordenar também conquistas fixos na seção Minhas Conquistas.</small>
+                    </div>
+
+                    <button type="submit" style="margin-top: 15px; width: 100%;">Criar conquista</button>
+                </form>
+            </div>
+
+            <div class="admin-section">
+                <h2>conquistas Customizáveis</h2>
+                <div id="customRanksContainer" class="ranks-list loading">Carregando conquistas customizáveis...</div>
+            </div>
+
+            <div class="admin-section">
+                <h2>conquistas Padrão (Não Removíveis)</h2>
+                <div id="defaultRanksContainer" class="ranks-list loading">Carregando conquistas padrão...</div>
+            </div>
+        </div>
+
+        <!-- TAB: Gerenciar Usuários -->
+        <div id="users-tab" class="tab-content">
+            <div class="admin-section">
+                <h2>conquistas dos Usuários</h2>
+                <div id="usersContainer" class="loading">Carregando usuários...</div>
+            </div>
+        </div>
+
+        <!-- TAB: Permissões de Postagem/Downloads -->
+        <div id="post-permissions-tab" class="tab-content">
+            <div class="admin-section">
+                <h2>Conceder Permissão de Postagem</h2>
+                <form class="form-group" id="grantPermissionForm" style="flex-direction: column; align-items: flex-start;">
+                    <div style="width: 100%;">
+                        <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Nickname/Email do Usuário *</label>
+                        <input type="text" placeholder="Digite o nickname ou email" required id="userForPermission" style="width: 100%; box-sizing: border-box;">
+                        <small style="color: rgba(255, 255, 255, 0.5); display: block; margin-top: 5px;">Usuários com permissão poderão postar programas na página de downloads e ganhar conquistas por postagens</small>
+                    </div>
+                    <button type="submit" style="margin-top: 15px; width: 100%;">Conceder Permissão</button>
+                </form>
+            </div>
+
+            <div class="admin-section">
+                <h2>Usuários com Permissão de Postagem</h2>
+                <table class="users-table" id="postPermissionsTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Nickname</th>
+                            <th>Email</th>
+                            <th>Postagens</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="postPermissionsTableBody"></tbody>
+                </table>
+                <div id="postPermissionsContainer" class="loading">Carregando usuários com permissão...</div>
+            </div>
+
+            <div class="admin-section">
+                <h2>conquistas de Postagem (Progressão)</h2>
+                <div id="postageRanksContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;"></div>
+            </div>
+        </div>
+
+        <!-- TAB: Banimentos -->
+        <div id="bans-tab" class="tab-content">
+            <div class="admin-section">
+                <h2>Banir ou Suspender Usuário</h2>
+                <form class="form-group" id="banForm" style="flex-direction: column; align-items: flex-start;">
+                    <div style="width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Nickname/Email do Usuário *</label>
+                            <input type="text" placeholder="Digite o nickname ou email" required id="userToBan" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Tipo *</label>
+                            <select id="banType" style="width: 100%; box-sizing: border-box;">
+                                <option value="suspension">Suspensão Temporária</option>
+                                <option value="permanent">Ban Permanente</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="width: 100%; margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div id="daysDiv" style="display: block;">
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Dias de Suspensão *</label>
+                            <input type="number" placeholder="Ex: 7, 30, 365" required id="banDays" min="1" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Motivo *</label>
+                            <input type="text" placeholder="Ex: Comportamento abusivo" required id="banReason" style="width: 100%; box-sizing: border-box;">
+                        </div>
+                    </div>
+
+                    <button type="submit" style="margin-top: 15px; width: 100%; background: #FF0000;">Banir/Suspender</button>
+                </form>
+            </div>
+
+            <div class="admin-section">
+                <h2>Usuários Banidos/Suspensos</h2>
+                <div id="bansListContainer" class="loading">Carregando lista de banimentos...</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 HOLIDAY Guild. Todos os direitos reservados.</p>
+            <p>Grupo Guild Holiday criado em 2014</p>
+        </div>
+    </footer>
+
+    <script src="site-config.js"></script>
+    <script src="auth-api.js"></script>
+    <script src="auth-manager.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
+
+
+
+

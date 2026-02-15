@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil - HOLIDAY Guild</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles-premium.css">
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <div class="animated-background">
+        <div class="smoke-particle smoke-particle-1"></div>
+        <div class="smoke-particle smoke-particle-2"></div>
+        <div class="smoke-particle smoke-particle-3"></div>
+        <div class="smoke-particle smoke-particle-4"></div>
+        <div class="smoke-particle smoke-particle-5"></div>
+        
+        <div class="light-flicker light-1"></div>
+        <div class="light-flicker light-2"></div>
+        <div class="light-flicker light-3"></div>
+        
+        <div class="cloud cloud-bg-1"></div>
+        <div class="cloud cloud-bg-2"></div>
+        <div class="cloud cloud-bg-3"></div>
+        <div class="star star-bg-1"></div>
+        <div class="star star-bg-2"></div>
+        <div class="star star-bg-3"></div>
+        <div class="star star-bg-4"></div>
+        <div class="star star-bg-5"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>GUILD HOLIDAY</h1>
+                <p>Seu Perfil</p>
+            </div>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Início</a>
+                <a href="dicas.html" class="nav-link">Comandos & Dicas</a>
+                <a href="lag.html" class="nav-link">Customização</a>
+                <a href="downloads.html" class="nav-link">Downloads</a>
+                <a href="profile.html" class="nav-link active">Perfil</a>
+            </div>
+            <div class="navbar-buttons">
+                <a href="https://chat.whatsapp.com/EDqaY8udJmFCTVCTex3b5p" class="btn-navbar btn-whatsapp icon-btn" target="_blank" aria-label="WhatsApp">
+                    <img src="https://guildholiday.discloud.app/imagens/wp.png" alt="WhatsApp" class="navbar-icon" width="16" height="16">
+                </a>
+                <a href="https://discord.gg/KEc4ZdR3" class="btn-navbar btn-discord icon-btn" target="_blank" aria-label="Discord">
+                    <img src="https://guildholiday.discloud.app/imagens/Discord.png" alt="Discord" class="navbar-icon" width="16" height="16">
+                </a>
+                <button id="notificationBell" class="btn-navbar btn-notifications icon-btn" style="position: relative; display: none;" aria-label="Notificações">
+                    <img src="https://guildholiday.discloud.app/imagens/Sino.png" alt="Notificações" class="navbar-icon" width="16" height="16">
+                    <span id="notificationBadge" class="notification-badge" style="display: none;"></span>
+                </button>
+                <button id="logoutBtn" class="btn-navbar btn-logout icon-btn" style="display: none;" aria-label="Sair" title="Sair">
+                    <img src="https://guildholiday.discloud.app/imagens/Sair.png" alt="" class="navbar-icon" width="16" height="16">
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div id="loadingScreen" class="loading-screen">
+            <div class="spinner"></div>
+            <p>Carregando perfil...</p>
+        </div>
+
+        <div id="profileContent" class="profile-content" style="display: none;">
+            <!-- Banner do Perfil -->
+            <div class="profile-banner-section">
+                <div class="profile-banner" id="profileBanner">
+                    <label for="bannerInput" class="banner-upload-label upload-icon-btn" aria-label="Upload banner" title="Upload banner">
+                        <img src="https://guildholiday.discloud.app/imagens/upload.png" alt="" class="upload-btn-icon">
+                    </label>
+                </div>
+                <span class="banner-size-info">Recomendado: 1200x250px</span>
+                <input type="file" id="bannerInput" accept="image/*" style="display: none;">
+            </div>
+
+            <!-- Informações Principais -->
+            <div class="profile-main">
+                <div class="profile-avatar-section">
+                    <div class="profile-avatar" id="profileAvatar"></div>
+                    <label for="avatarInput" class="avatar-upload-label upload-icon-btn" aria-label="Upload avatar" title="Upload avatar">
+                        <img src="https://guildholiday.discloud.app/imagens/upload.png" alt="" class="upload-btn-icon">
+                    </label>
+                    <span class="size-info">Recomendado: 400x400px</span>
+                    <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                </div>
+
+                <div class="profile-info">
+                    <h1 id="profileUsername">Username</h1>
+                    
+                    <!-- conquista Progressivo + conquistas Automáticos + Customizáveis + Minhas Conquistas -->
+                    <div class="rank-display">
+                        <!-- Label Minhas Conquistas -->
+                        <div style="display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0;">
+                            <p id="achievementsLabel" class="conquistas-label" style="display: none; margin: 0;">Minhas Conquistas</p>
+                            <button id="toggleRankOrderBtn" type="button" style="display: inline-flex; padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(236,72,153,0.6); background: rgba(236,72,153,0.15); color: #EC4899; font-size: 12px; font-weight: 600; cursor: pointer;">Ordenar</button>
+                        </div>
+                        
+                        <!-- Linha dos conquistas -->
+                        <div class="ranks-container">
+                            <div class="rank-badge" id="rankBadge">
+                                <span id="rankName">Beta</span>
+                            </div>
+                            <div class="automatic-ranks-inline" id="automaticRanksInline"></div>
+                            <div class="custom-ranks-inline" id="customRanksInline"></div>
+                            <div id="selectedAchievementsSection" style="display: none;">
+                                <div id="selectedAchievementsDisplay" style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;"></div>
+                            </div>
+                        </div>
+                        <p id="rankDescription" class="rank-description"></p>
+                    </div>
+
+                    <div class="email-verification-row">
+                        <div class="email-display">
+                            <p class="profile-email" id="profileEmail">email@example.com</p>
+                            <button id="toggleEmailBtn" class="toggle-visibility-btn">Ocultar</button>
+                        </div>
+                        <span id="emailVerificationStatus" class="verification-badge verified">Verificado</span>
+                    </div>
+                    <p class="profile-joined" id="profileJoined">Membro desde: --</p>
+                </div>
+
+                <div class="profile-actions">
+                    <button id="editBtn" class="btn-primary">Editar Perfil</button>
+                    <button id="adminBtn" class="btn-admin" style="display: none;">Painel Admin</button>
+                </div>
+            </div>
+
+            <!-- Histórico de conquistas -->
+            <div class="profile-section">
+                <h2>Histórico de conquistas</h2>
+                <div class="ranks-history" id="ranksHistory">
+                    <p>Carregando histórico...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Edição de Perfil -->
+    <div id="editModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Configurações da Conta</h2>
+            
+            <!-- Abas -->
+            <div class="modal-tabs">
+                <button class="tab-btn active" data-tab="edit-tab">Perfil</button>
+                <button class="tab-btn" data-tab="conquistas-tab">Minhas Conquistas</button>
+                <button class="tab-btn" data-tab="postages-tab">Minhas Postagens</button>
+                <button class="tab-btn" data-tab="password-tab">Segurança</button>
+            </div>
+
+            <!-- Aba 1: Editar Perfil -->
+            <div id="edit-tab" class="tab-content active">
+                <form id="editProfileForm">
+                    <div class="form-group">
+                        <label for="editFirstName">Nome</label>
+                        <input type="text" id="editFirstName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editLastName">Sobrenome</label>
+                        <input type="text" id="editLastName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editNickname">Nickname</label>
+                        <input type="text" id="editNickname" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editEmail">Email</label>
+                        <div class="email-field-wrapper">
+                            <input type="email" id="editEmail" readonly disabled>
+                            <button type="button" id="changeEmailBtn" class="btn-change-email">Alterar Email</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editBirthDate">Data de Nascimento</label>
+                        <input type="date" id="editBirthDate">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-label-row">
+                            <label for="editProfileTagline">Frase do Perfil</label>
+                            <div class="tagline-actions">
+                                <button type="button" id="randomTaglineBtn" class="btn-random-tagline">Frase Aleatória</button>
+                                <button type="button" id="clearTaglineBtn" class="btn-random-tagline btn-clear-tagline">Limpar</button>
+                            </div>
+                        </div>
+                        <textarea id="editProfileTagline" maxlength="120" rows="2" placeholder="Digite sua frase (opcional) ou use Frase Aleatória"></textarea>
+                        <small id="taglineCount">0/120</small>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Salvar Alterações</button>
+                    <span class="error-message" id="editError"></span>
+                </form>
+            </div>
+
+            <!-- Aba: Minhas Conquistas -->
+            <div id="conquistas-tab" class="tab-content">
+                <div class="notif-settings-box">
+                    <h4 class="notif-settings-title">Notificações</h4>
+                    <label class="notif-setting-item">
+                        <input type="checkbox" id="disableCommentNotifications">
+                        <span>Desativar notificações de comentários</span>
+                    </label>
+                    <label class="notif-setting-item">
+                        <input type="checkbox" id="disableLikeNotifications">
+                        <span>Desativar notificações de likes</span>
+                    </label>
+                    <label class="notif-setting-item">
+                        <input type="checkbox" id="disableAchievementNotifications">
+                        <span>Desativar notificação de ganho de conquista</span>
+                    </label>
+                    <label class="notif-setting-item all">
+                        <input type="checkbox" id="disableAllNotifications">
+                        <span>Desativar todas as notificações</span>
+                    </label>
+                </div>
+
+                <h3 style="margin-top: 0; color: #EC4899;">Configuração de conquistas</h3>
+
+                <div class="conquista-expand-options">
+                    <button type="button" class="conquista-expand-btn active" data-target="conquista-conquistas-section">Minhas Conquistas</button>
+                    <button type="button" class="conquista-expand-btn" data-target="conquista-postagens-section">conquistas de Postagens</button>
+                    <button type="button" class="conquista-expand-btn" data-target="conquista-likes-section">conquistas de Likes</button>
+                </div>
+
+                <div id="conquista-conquistas-section" class="conquista-expand-section active">
+                    <p class="conquista-section-subtitle">conquistas exibidos atualmente no seu perfil e card.</p>
+                    <div id="myConquestsList" class="conquista-cards-grid">
+                        <p style="margin: 0; color: rgba(255,255,255,0.55);">Carregando conquistas...</p>
+                    </div>
+                </div>
+
+                <div id="conquista-postagens-section" class="conquista-expand-section">
+                    <p class="conquista-section-subtitle">conquistas de progressão por quantidade de postagens.</p>
+
+                    <div class="conquista-stats-grid">
+                        <div class="conquista-stat-box">
+                            <div class="conquista-stat-value"><span id="totalPostages">0</span></div>
+                            <div class="conquista-stat-label">Postagens Feitas</div>
+                        </div>
+                        <div class="conquista-stat-box">
+                            <div class="conquista-stat-value"><span id="totalLikesReceived">0</span></div>
+                            <div class="conquista-stat-label">Likes Recebidos</div>
+                        </div>
+                        <div class="conquista-stat-box">
+                            <div class="conquista-stat-value"><span id="totalHeartsReceived">0</span></div>
+                            <div class="conquista-stat-label">Corações</div>
+                        </div>
+                    </div>
+
+                    <div class="conquista-current-card" id="currentPostageRank">
+                        <div class="conquista-current-icon" id="currentRankIcon">?</div>
+                        <div class="conquista-current-info">
+                            <h4 id="currentRankName">Sem conquista</h4>
+                            <p id="currentRankDesc">Faça sua primeira postagem</p>
+                            <p id="nextPostageRankHint">Faça sua primeira postagem para desbloquear o primeiro conquista.</p>
+                        </div>
+                    </div>
+
+                    <div class="conquista-progress-box">
+                        <div class="conquista-progress-row">
+                            <span>Progresso:</span>
+                            <span><span id="progressCurrent">0</span>/<span id="progressNeeded">5</span></span>
+                        </div>
+                        <div class="conquista-progress-track">
+                            <div id="progressBar" class="conquista-progress-fill"></div>
+                        </div>
+                    </div>
+
+                    <h4 class="conquista-list-title">conquistas de Postagens</h4>
+                    <div id="allPostageRanks" class="conquista-cards-grid"></div>
+                </div>
+
+                <div id="conquista-likes-section" class="conquista-expand-section">
+                    <p class="conquista-section-subtitle">conquistas de progressão por likes acumulados no histórico.</p>
+
+                    <div class="conquista-stats-grid">
+                        <div class="conquista-stat-box">
+                            <div class="conquista-stat-value"><span id="totalLikesHistory">0</span></div>
+                            <div class="conquista-stat-label">Likes Históricos</div>
+                        </div>
+                        <div class="conquista-stat-box">
+                            <div class="conquista-stat-value"><span id="totalLikesCurrent">0</span></div>
+                            <div class="conquista-stat-label">Likes Atuais</div>
+                        </div>
+                        <div class="conquista-stat-box">
+                            <div class="conquista-stat-value"><span id="totalHeartsLikesTab">0</span></div>
+                            <div class="conquista-stat-label">Corações</div>
+                        </div>
+                    </div>
+
+                    <div class="conquista-current-card">
+                        <div class="conquista-current-icon" id="currentLikeRankIcon">L0</div>
+                        <div class="conquista-current-info">
+                            <h4 id="currentLikeRankName">Sem conquista de Likes</h4>
+                            <p id="currentLikeRankDesc">Ganhe likes para desbloquear seus conquistas.</p>
+                            <p id="nextLikeRankHint">Faltam 3 likes para o primeiro conquista.</p>
+                        </div>
+                    </div>
+
+                    <div class="conquista-progress-box">
+                        <div class="conquista-progress-row">
+                            <span>Progresso:</span>
+                            <span><span id="likeProgressCurrent">0</span>/<span id="likeProgressNeeded">3</span></span>
+                        </div>
+                        <div class="conquista-progress-track">
+                            <div id="likeProgressBar" class="conquista-progress-fill likes"></div>
+                        </div>
+                    </div>
+
+                    <h4 class="conquista-list-title likes">conquistas de Likes</h4>
+                    <div id="allLikeRanks" class="conquista-cards-grid"></div>
+                </div>
+            </div>
+
+            <!-- Aba: Minhas Postagens -->
+            <div id="postages-tab" class="tab-content">
+                <h3 style="margin-top: 0; color: #EC4899;">Minhas Postagens</h3>
+                
+                <a href="downloads.html" style="display: inline-block; padding: 10px 20px; background: linear-gradient(135deg, #EC4899, #6B46C1); color: white; border-radius: 5px; text-decoration: none; font-weight: 600; margin-bottom: 20px;">Postar Nova Postagem</a>
+
+                <div id="myPostagesContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
+                    <p style="text-align: center; color: #999; grid-column: 1/-1; padding: 30px;">Carregando suas postagens...</p>
+                </div>
+            </div>
+
+
+            <div id="password-tab" class="tab-content">
+                <form id="changePasswordForm">
+                    <div class="form-group">
+                        <label for="currentPassword">Senha Atual</label>
+                        <input type="password" id="currentPassword" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newPassword">Nova Senha</label>
+                        <input type="password" id="newPassword" required placeholder="Mínimo 6 caracteres">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirmar Nova Senha</label>
+                        <input type="password" id="confirmPassword" required>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit">Alterar Senha</button>
+                    <span class="error-message" id="passwordError"></span>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Alteração de Email -->
+    <div id="changeEmailModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" id="closeChangeEmailModal">&times;</span>
+            <h2>Alterar Email</h2>
+            
+            <form id="changeEmailForm">
+                <div class="form-group">
+                    <label>Email Atual</label>
+                    <input type="email" id="currentEmailDisplay" readonly disabled style="background: rgba(255,255,255,0.05); cursor: not-allowed;">
+                </div>
+
+                <div class="form-group">
+                    <label for="newEmailInput">Novo Email</label>
+                    <input type="email" id="newEmailInput" placeholder="Digite seu novo email" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Código de Confirmação</label>
+                    <div class="code-input-wrapper">
+                        <input type="text" id="emailVerificationCode" placeholder="Código enviado para seu email atual" maxlength="6" required>
+                        <button type="button" id="sendEmailCodeBtn" class="btn-send-code">Enviar Código</button>
+                    </div>
+                    <small style="color: rgba(255,255,255,0.5); margin-top: 5px; display: block;">Um código será enviado para seu email atual</small>
+                </div>
+                
+                <button type="submit" class="btn-submit">Confirmar Alteração</button>
+                <span class="error-message" id="changeEmailError"></span>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="notificationToast"></div>
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 HOLIDAY Guild. Todos os direitos reservados.</p>
+            <p>Grupo Guild Holiday criado em 2014</p>
+        </div>
+    </footer>
+
+    <script src="site-config.js"></script>
+    <script src="auth-api.js"></script>
+    <script src="auth-manager.js"></script>
+    <script src="navigation.js"></script>
+    <script src="profile.js"></script>
+</body>
+</html>
+
+
+
+
+
+
