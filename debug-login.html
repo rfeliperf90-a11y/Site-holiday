@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Login</title>
+    <style>
+        body {
+            background: #1a1a2e;
+            color: #fff;
+            font-family: Arial;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #16213e;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        h1 {
+            color: #6B46C1;
+            margin-top: 0;
+        }
+        h2 {
+            color: #EC4899;
+            margin-top: 30px;
+            border-bottom: 2px solid #EC4899;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            background: #0f0f1e;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border-left: 4px solid #00d4ff;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #6B46C1;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            border: 1px solid #6B46C1;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #6B46C1 0%, #EC4899 100%);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px 5px 5px 0;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(107, 70, 193, 0.4);
+        }
+        .password-field {
+            position: relative;
+            margin-top: 8px;
+        }
+        #passwordDemo {
+            padding-right: 45px;
+        }
+        #toggleBtn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #EC4899;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            font-weight: bold;
+        }
+        .log {
+            background: #000;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-bottom: 1px solid #333;
+        }
+        .log-success { color: #44ff44; }
+        .log-error { color: #ff4444; }
+        .log-info { color: #44ddff; }
+        .credentials {
+            background: #0a4d0a;
+            border-left: 4px solid #44ff44;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .credentials h3 {
+            margin-top: 0;
+            color: #44ff44;
+        }
+        code {
+            background: #000;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #ffff44;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Debug de Login e Toggle Senha</h1>
+
+        <h2>1️⃣ Teste do Botão Toggle (Mostrar/Ocultar Senha)</h2>
+        <div class="test-section">
+            <div class="form-group">
+                <label for="passwordDemo">Senha:</label>
+                <div class="password-field">
+                    <input type="password" id="passwordDemo" placeholder="Digite algo aqui...">
+                    <button type="button" id="toggleBtn">⊙</button>
+                </div>
+            </div>
+            <button onclick="testToggle()">Testar Click no Botão</button>
+            <div class="log" id="toggleLog"></div>
+        </div>
+
+        <h2>2️⃣ Teste de Credenciais</h2>
+        <div class="credentials">
+            <h3>✓ Credenciais que FUNCIONAM:</h3>
+            <p><code>Apelido:</code> <strong>fael</strong></p>
+            <p><code>Senha:</code> <strong>test123</strong></p>
+        </div>
+
+        <div class="credentials" style="background: #4d0a0a; border-left-color: #ff4444;">
+            <h3>✗ Credenciais que NÃO FUNCIONAM:</h3>
+            <p><code>Apelido:</code> <strong>Fael</strong> (com F maiúsculo)</p>
+            <p><code>Senha:</code> <strong>@Anjoloco90</strong></p>
+            <p style="color: #ff8888;">⚠️ Esta conta NÃO existe no banco de dados!</p>
+        </div>
+
+        <h2>3️⃣ Teste Automático de Login</h2>
+        <div class="test-section">
+            <button onclick="testLoginValid()">Testar Login (Credenciais Válidas: fael/test123)</button>
+            <button onclick="testLoginInvalid()">Testar Login (Credenciais Inválidas: Fael/@Anjoloco90)</button>
+            <div class="log" id="loginLog"></div>
+        </div>
+
+        <h2>4️⃣ Links Rápidos</h2>
+        <div class="test-section">
+            <p><a href="login.html?nickname=fael&password=test123" style="color: #44ff44; text-decoration: none; font-weight: bold;">➜ Ir para login auto-preenchido (fael/test123)</a></p>
+            <p><a href="login.html" style="color: #EC4899; text-decoration: none; font-weight: bold;">➜ Ir para login vazio</a></p>
+            <p><a href="signup.html" style="color: #6B46C1; text-decoration: none; font-weight: bold;">➜ Criar nova conta</a></p>
+        </div>
+    </div>
+
+    <script src="auth-api.js"></script>
+    <script>
+        function addLog(elementId, message, type = 'info') {
+            const logDiv = document.getElementById(elementId);
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function testToggle() {
+            const btn = document.getElementById('toggleBtn');
+            const input = document.getElementById('passwordDemo');
+            
+            addLog('toggleLog', 'Simulando clique no botão...', 'info');
+            
+            input.value = 'teste123';
+            input.type = input.type === 'password' ? 'text' : 'password';
+            btn.textContent = input.type === 'password' ? '⊙' : '⊗';
+            
+            addLog('toggleLog', `Tipo alterado para: ${input.type}`, 'success');
+            addLog('toggleLog', `Botão agora mostra: ${btn.textContent}`, 'success');
+        }
+
+        async function testLoginValid() {
+            const logDiv = document.getElementById('loginLog');
+            logDiv.innerHTML = '';
+            
+            addLog('loginLog', 'Iniciando teste com credenciais VÁLIDAS...', 'info');
+            addLog('loginLog', 'Apelido: fael', 'info');
+            addLog('loginLog', 'Senha: test123', 'info');
+            
+            try {
+                const result = await AuthAPI.login('fael', 'test123');
+                
+                if (result.success) {
+                    addLog('loginLog', '✓ Login bem-sucedido!', 'success');
+                    addLog('loginLog', `Token: ${result.token.substring(0, 40)}...`, 'success');
+                    addLog('loginLog', 'Você será redirecionado em 3 segundos...', 'success');
+                    
+                    AuthAPI.setToken(result.token);
+                    setTimeout(() => {
+                        window.location.href = 'profile.html';
+                    }, 3000);
+                } else {
+                    addLog('loginLog', `✗ Erro: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                addLog('loginLog', `✗ Erro na conexão: ${error.message}`, 'error');
+            }
+        }
+
+        async function testLoginInvalid() {
+            const logDiv = document.getElementById('loginLog');
+            logDiv.innerHTML = '';
+            
+            addLog('loginLog', 'Iniciando teste com credenciais INVÁLIDAS...', 'info');
+            addLog('loginLog', 'Apelido: Fael', 'info');
+            addLog('loginLog', 'Senha: @Anjoloco90', 'info');
+            addLog('loginLog', 'Nota: Esta conta não existe no banco de dados', 'info');
+            
+            try {
+                const result = await AuthAPI.login('Fael', '@Anjoloco90');
+                
+                if (result.success) {
+                    addLog('loginLog', '✓ Login bem-sucedido!', 'success');
+                } else {
+                    addLog('loginLog', `✗ Login falhou (esperado):`, 'error');
+                    addLog('loginLog', `Mensagem: ${result.message}`, 'error');
+                    addLog('loginLog', 'Razão: Credenciais não existem no banco de dados', 'error');
+                }
+            } catch (error) {
+                addLog('loginLog', `✗ Erro na conexão: ${error.message}`, 'error');
+            }
+        }
+
+        // Testes automáticos ao carregar
+        window.addEventListener('DOMContentLoaded', () => {
+            addLog('toggleLog', 'Sistema de teste pronto', 'success');
+            addLog('loginLog', 'Aguardando comando...', 'info');
+        });
+    </script>
+</body>
+</html>

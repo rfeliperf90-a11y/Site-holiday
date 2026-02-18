@@ -1,0 +1,324 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Selected Ranks - DEBUG</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a2e;
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #EC4899;
+            border-bottom: 2px solid #6B46C1;
+            padding-bottom: 10px;
+        }
+        .section {
+            background: #0f3460;
+            border: 1px solid #6B46C1;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        button {
+            background: #6B46C1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #EC4899;
+        }
+        .log {
+            background: #001a33;
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 3px solid #00FF00;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success { border-left-color: #00FF00; }
+        .error { border-left-color: #FF0000; }
+        .info { border-left-color: #0099FF; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DEBUG - System de SeleÃ§Ã£o de conquistas</h1>
+        
+        <div class="section">
+            <h3>1. Teste de Login</h3>
+            <button onclick="testLogin()">Login com fael/test123</button>
+            <div id="loginLog" class="log"></div>
+        </div>
+
+        <div class="section">
+            <h3>2. Teste de ObtenÃ§Ã£o de conquistas Customizados</h3>
+            <button onclick="testGetCustomRanks()">Obter conquistas Customizados</button>
+            <div id="customRanksLog" class="log"></div>
+        </div>
+
+        <div class="section">
+            <h3>3. Teste de SeleÃ§Ã£o de conquistas</h3>
+            <button onclick="testSelectRanks()">Selecionar IDs: [1, 2, 3]</button>
+            <div id="selectLog" class="log"></div>
+        </div>
+
+        <div class="section">
+            <h3>4. Teste de RecuperaÃ§Ã£o de conquistas Selecionados</h3>
+            <button onclick="testGetSelectedRanks()">Obter conquistas Selecionados</button>
+            <div id="retrieveLog" class="log"></div>
+        </div>
+
+        <div class="section">
+            <h3>5. Teste Completo (Fluxo Full)</h3>
+            <button onclick="testFullFlow()">Executar Fluxo Completo</button>
+            <div id="fullLog" class="log"></div>
+        </div>
+    </div>
+
+    <script src="auth-api.js"></script>
+    <script>
+        let currentToken = null;
+        let customRanks = [];
+
+        function addLog(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}`;
+            const div = document.createElement('div');
+            div.className = `log ${type}`;
+            div.textContent = logEntry;
+            element.appendChild(div);
+            element.scrollTop = element.scrollHeight;
+        }
+
+        async function testLogin() {
+            const logId = 'loginLog';
+            document.getElementById(logId).innerHTML = '';
+            
+            try {
+                addLog(logId, 'Iniciando login...', 'info');
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nickname: 'fael', password: 'test123' })
+                });
+
+                const data = await response.json();
+                
+                if (data.success && data.token) {
+                    currentToken = data.token;
+                    AuthAPI.setToken(currentToken);
+                    addLog(logId, 'âœ“ Login bem-sucedido!', 'success');
+                    addLog(logId, `Token: ${currentToken.substring(0, 30)}...`, 'success');
+                    addLog(logId, `User ID: ${data.user?.id}`, 'success');
+                } else {
+                    addLog(logId, `âœ— Erro no login: ${data.message}`, 'error');
+                }
+            } catch (err) {
+                addLog(logId, `âœ— Erro na requisiÃ§Ã£o: ${err.message}`, 'error');
+            }
+        }
+
+        async function testGetCustomRanks() {
+            const logId = 'customRanksLog';
+            document.getElementById(logId).innerHTML = '';
+
+            if (!currentToken) {
+                addLog(logId, 'âœ— FaÃ§a login primeiro!', 'error');
+                return;
+            }
+
+            try {
+                addLog(logId, 'Buscando conquistas customizados...', 'info');
+                const result = await AuthAPI.getCustomRanks();
+
+                if (result.success) {
+                    customRanks = result.ranks || [];
+                    addLog(logId, `âœ“ Encontrados ${customRanks.length} conquistas customizados`, 'success');
+                    customRanks.slice(0, 5).forEach(rank => {
+                        addLog(logId, `  - ID: ${rank.id}, Nome: ${rank.name}, Cor: ${rank.color}`, 'info');
+                    });
+                    if (customRanks.length > 5) {
+                        addLog(logId, `  ... e mais ${customRanks.length - 5} conquistas`, 'info');
+                    }
+                } else {
+                    addLog(logId, `âœ— Erro: ${result.message}`, 'error');
+                }
+            } catch (err) {
+                addLog(logId, `âœ— Erro: ${err.message}`, 'error');
+            }
+        }
+
+        async function testSelectRanks() {
+            const logId = 'selectLog';
+            document.getElementById(logId).innerHTML = '';
+
+            if (!currentToken) {
+                addLog(logId, 'âœ— FaÃ§a login primeiro!', 'error');
+                return;
+            }
+
+            try {
+                const rankIds = [1, 2];  // Selecionar os dois primeiros conquistas
+                addLog(logId, `Selecionando conquistas com IDs: ${JSON.stringify(rankIds)}`, 'info');
+                
+                const result = await AuthAPI.selectProfileRanks(rankIds);
+
+                if (result.success) {
+                    addLog(logId, 'âœ“ conquistas selecionados com sucesso!', 'success');
+                    addLog(logId, `Message: ${result.message}`, 'info');
+                } else {
+                    addLog(logId, `âœ— Erro: ${result.message}`, 'error');
+                }
+            } catch (err) {
+                addLog(logId, `âœ— Erro: ${err.message}`, 'error');
+            }
+        }
+
+        async function testGetSelectedRanks() {
+            const logId = 'retrieveLog';
+            document.getElementById(logId).innerHTML = '';
+
+            if (!currentToken) {
+                addLog(logId, 'âœ— FaÃ§a login primeiro!', 'error');
+                return;
+            }
+
+            try {
+                addLog(logId, 'Recuperando conquistas selecionados...', 'info');
+                const result = await AuthAPI.getSelectedProfileRanks();
+
+                if (result.success) {
+                    addLog(logId, `âœ“ Resposta recebida`, 'success');
+                    addLog(logId, `Rank IDs: ${JSON.stringify(result.rankIds)}`, 'info');
+                    addLog(logId, `Total de conquistas: ${result.ranks?.length || 0}`, 'info');
+                    
+                    if (result.ranks && result.ranks.length > 0) {
+                        result.ranks.forEach(rank => {
+                            addLog(logId, `  - [${rank.id}] ${rank.name} (${rank.color})`, 'success');
+                        });
+                    }
+                } else {
+                    addLog(logId, `âœ— Erro: ${result.message}`, 'error');
+                }
+            } catch (err) {
+                addLog(logId, `âœ— Erro: ${err.message}`, 'error');
+            }
+        }
+
+        async function testFullFlow() {
+            const logId = 'fullLog';
+            document.getElementById(logId).innerHTML = '';
+
+            addLog(logId, '=== INICIANDO TESTE COMPLETO ===', 'info');
+
+            // Step 1: Login
+            addLog(logId, '[1/5] Fazendo login...', 'info');
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nickname: 'fael', password: 'test123' })
+                });
+
+                const data = await response.json();
+                if (!data.success) {
+                    addLog(logId, `âœ— Login falhou: ${data.message}`, 'error');
+                    return;
+                }
+                currentToken = data.token;
+                AuthAPI.setToken(currentToken);
+                addLog(logId, 'âœ“ Login bem-sucedido!', 'success');
+            } catch (err) {
+                addLog(logId, `âœ— Erro no login: ${err.message}`, 'error');
+                return;
+            }
+
+            // Step 2: Get custom ranks
+            addLog(logId, '[2/5] Buscando conquistas customizados...', 'info');
+            try {
+                const result = await AuthAPI.getCustomRanks();
+                if (!result.success) {
+                    addLog(logId, `âœ— Erro: ${result.message}`, 'error');
+                    return;
+                }
+                customRanks = result.ranks || [];
+                addLog(logId, `âœ“ ${customRanks.length} conquistas encontrados`, 'success');
+            } catch (err) {
+                addLog(logId, `âœ— Erro: ${err.message}`, 'error');
+                return;
+            }
+
+            // Step 3: Select some ranks
+            const rankIds = customRanks.slice(0, Math.min(2, customRanks.length)).map(r => r.id);
+            addLog(logId, `[3/5] Selecionando conquistas: ${JSON.stringify(rankIds)}`, 'info');
+            try {
+                const result = await AuthAPI.selectProfileRanks(rankIds);
+                if (!result.success) {
+                    addLog(logId, `âœ— Erro: ${result.message}`, 'error');
+                    return;
+                }
+                addLog(logId, 'âœ“ conquistas selecionados com sucesso!', 'success');
+            } catch (err) {
+                addLog(logId, `âœ— Erro: ${err.message}`, 'error');
+                return;
+            }
+
+            // Step 4: Retrieve selected ranks
+            addLog(logId, '[4/5] Recuperando conquistas selecionados...', 'info');
+            try {
+                const result = await AuthAPI.getSelectedProfileRanks();
+                if (!result.success) {
+                    addLog(logId, `âœ— Erro: ${result.message}`, 'error');
+                    return;
+                }
+                addLog(logId, `âœ“ conquistas recuperados: ${JSON.stringify(result.rankIds)}`, 'success');
+                
+                if (JSON.stringify(result.rankIds) === JSON.stringify(rankIds)) {
+                    addLog(logId, 'âœ“âœ“ SUCESSO! Os IDs correspondem!', 'success');
+                } else {
+                    addLog(logId, `âš ï¸ ATENÃ‡ÃƒO: IDs nÃ£o correspondem!`, 'error');
+                    addLog(logId, `  Esperado: ${JSON.stringify(rankIds)}`, 'error');
+                    addLog(logId, `  Recebido: ${JSON.stringify(result.rankIds)}`, 'error');
+                }
+            } catch (err) {
+                addLog(logId, `âœ— Erro: ${err.message}`, 'error');
+                return;
+            }
+
+            // Step 5: Simulate page reload
+            addLog(logId, '[5/5] Simulando reload (F5)...', 'info');
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            try {
+                const result = await AuthAPI.getSelectedProfileRanks();
+                if (result.success && JSON.stringify(result.rankIds) === JSON.stringify(rankIds)) {
+                    addLog(logId, 'âœ“âœ“âœ“ PERFEITO! Os conquistas persistiram apÃ³s reload!', 'success');
+                } else {
+                    addLog(logId, 'âœ— FALHA: Os conquistas nÃ£o persistiram!', 'error');
+                }
+            } catch (err) {
+                addLog(logId, `âœ— Erro: ${err.message}`, 'error');
+            }
+
+            addLog(logId, '=== TESTE CONCLUÃDO ===', 'info');
+        }
+    </script>
+</body>
+</html>
+
+

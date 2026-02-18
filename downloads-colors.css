@@ -62,10 +62,978 @@
     height: 440px;
 }
 
+.animated-download-card {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    --mx: 50%;
+    --my: 50%;
+    --rx: 0deg;
+    --ry: 0deg;
+    --glow-intensity: 0.34;
+    background-image:
+        radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.22), transparent 40%),
+        linear-gradient(135deg, rgba(15, 23, 42, 0.66), rgba(31, 41, 55, 0.42));
+    border-color: rgba(236, 72, 153, 0.36);
+    transform-style: preserve-3d;
+    transform: perspective(940px) rotateX(var(--rx)) rotateY(var(--ry));
+    transition: transform 220ms ease, box-shadow 240ms ease, border-color 220ms ease, filter 220ms ease;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(236, 72, 153, 0.1) inset;
+}
+
+.animated-download-card.fx-active {
+    border-color: rgba(236, 72, 153, 0.58);
+    box-shadow:
+        0 20px 36px rgba(0, 0, 0, 0.45),
+        0 0 38px rgba(59, 130, 246, calc(var(--glow-intensity) * 0.8)),
+        0 0 24px rgba(236, 72, 153, var(--glow-intensity));
+}
+
+.animated-download-card > * {
+    position: relative;
+    z-index: 2;
+}
+
+.animated-download-card::before,
+.animated-download-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.animated-download-card::after {
+    mix-blend-mode: screen;
+    opacity: 0.24;
+}
+
+.animated-download-card .download-header,
+.animated-download-card .download-content,
+.animated-download-card .download-reactions {
+    transform: translateZ(18px);
+    transition: transform 220ms ease;
+}
+
+.animated-download-card.fx-active .download-header {
+    transform: translateZ(24px);
+}
+
+.animated-download-card.fx-active .download-content {
+    transform: translateZ(20px);
+}
+
+.animated-download-card.fx-active .download-reactions {
+    transform: translateZ(22px);
+}
+
+.animated-download-card.theme-aurora::before {
+    background: radial-gradient(circle at 18% 20%, rgba(56, 189, 248, 0.26), transparent 50%),
+                radial-gradient(circle at 82% 78%, rgba(236, 72, 153, 0.22), transparent 48%);
+    animation: cardAuroraFlow 8s ease-in-out infinite alternate;
+}
+
+.animated-download-card.theme-aurora::after {
+    background: linear-gradient(120deg, transparent 0%, rgba(167, 139, 250, 0.65) 46%, transparent 100%);
+    transform: translateX(-120%);
+    animation: cardShineSweep 5.4s ease-in-out infinite;
+}
+
+.animated-download-card.theme-prisma::before {
+    background: conic-gradient(from 140deg at 50% 50%, rgba(236, 72, 153, 0.18), rgba(59, 130, 246, 0.16), rgba(16, 185, 129, 0.15), rgba(236, 72, 153, 0.18));
+    animation: cardSpinGradient 11s linear infinite;
+}
+
+.animated-download-card.theme-prisma::after {
+    background: radial-gradient(circle at 20% 80%, rgba(244, 114, 182, 0.36), transparent 55%);
+    animation: cardPulseOverlay 3.8s ease-in-out infinite;
+}
+
+.animated-download-card.theme-pulse::before {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(107, 70, 193, 0.1));
+    animation: cardPulseGlow 3.6s ease-in-out infinite;
+}
+
+.animated-download-card.theme-pulse::after {
+    background: repeating-linear-gradient(135deg, rgba(56, 189, 248, 0.18) 0 8px, transparent 8px 18px);
+    animation: cardStripesMove 10s linear infinite;
+}
+
+.animated-download-card.theme-comet::before {
+    background: radial-gradient(circle at 10% 10%, rgba(167, 139, 250, 0.3), transparent 42%);
+    animation: cardCometPath 6.8s ease-in-out infinite;
+}
+
+.animated-download-card.theme-comet::after {
+    background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.72) 48%, transparent 100%);
+    transform: translateX(-125%);
+    animation: cardShineSweep 4.8s ease-in-out infinite;
+}
+
+.animated-download-card.theme-inferno::before {
+    background: radial-gradient(circle at 18% 16%, rgba(251, 146, 60, 0.32), transparent 44%),
+                radial-gradient(circle at 78% 84%, rgba(239, 68, 68, 0.3), transparent 52%),
+                linear-gradient(145deg, rgba(127, 29, 29, 0.22), rgba(249, 115, 22, 0.14));
+    animation: cardInfernoFlow 5.2s ease-in-out infinite;
+}
+
+.animated-download-card.theme-inferno::after {
+    background: repeating-linear-gradient(120deg, rgba(251, 191, 36, 0.22) 0 6px, transparent 6px 16px);
+    animation: cardEmberDrift 7.2s linear infinite;
+    opacity: 0.3;
+}
+
+.animated-download-card.theme-frost::before {
+    background: radial-gradient(circle at 16% 20%, rgba(147, 197, 253, 0.3), transparent 48%),
+                radial-gradient(circle at 85% 82%, rgba(34, 211, 238, 0.26), transparent 52%),
+                linear-gradient(155deg, rgba(30, 64, 175, 0.16), rgba(56, 189, 248, 0.1));
+    animation: cardFrostDrift 8.5s ease-in-out infinite;
+}
+
+.animated-download-card.theme-frost::after {
+    background: linear-gradient(115deg, transparent 0%, rgba(224, 242, 254, 0.72) 48%, transparent 100%);
+    transform: translateX(-130%);
+    animation: cardFrostShimmer 5.8s ease-in-out infinite;
+}
+
+.animated-download-card.theme-voltage::before {
+    background:
+        radial-gradient(circle at 18% 24%, rgba(56, 189, 248, 0.38), transparent 48%),
+        radial-gradient(circle at 84% 78%, rgba(139, 92, 246, 0.34), transparent 52%),
+        linear-gradient(145deg, rgba(30, 64, 175, 0.24), rgba(14, 165, 233, 0.14));
+    animation: cardAuroraFlow 5.4s ease-in-out infinite alternate;
+}
+
+.animated-download-card.theme-voltage::after {
+    background: repeating-linear-gradient(120deg, rgba(125, 211, 252, 0.34) 0 4px, transparent 4px 14px);
+    animation: cardGlitchShift 2.2s linear infinite;
+    opacity: 0.3;
+}
+
+.animated-download-card.theme-emberstorm::before {
+    background:
+        radial-gradient(circle at 20% 18%, rgba(251, 146, 60, 0.38), transparent 45%),
+        radial-gradient(circle at 80% 82%, rgba(239, 68, 68, 0.32), transparent 50%),
+        linear-gradient(145deg, rgba(127, 29, 29, 0.3), rgba(249, 115, 22, 0.14));
+    animation: cardInfernoFlow 4.6s ease-in-out infinite;
+}
+
+.animated-download-card.theme-emberstorm::after {
+    background: repeating-linear-gradient(130deg, rgba(251, 191, 36, 0.26) 0 6px, transparent 6px 16px);
+    animation: cardEmberDrift 5.8s linear infinite;
+    opacity: 0.34;
+}
+
+.animated-download-card.theme-blizzard::before {
+    background:
+        radial-gradient(circle at 16% 20%, rgba(186, 230, 253, 0.36), transparent 48%),
+        radial-gradient(circle at 84% 82%, rgba(147, 197, 253, 0.32), transparent 52%),
+        linear-gradient(150deg, rgba(30, 64, 175, 0.2), rgba(56, 189, 248, 0.12));
+    animation: cardFrostDrift 6.6s ease-in-out infinite;
+}
+
+.animated-download-card.theme-blizzard::after {
+    background: linear-gradient(115deg, transparent 0%, rgba(240, 249, 255, 0.84) 50%, transparent 100%);
+    transform: translateX(-135%);
+    animation: cardFrostShimmer 4.8s ease-in-out infinite;
+}
+
+.animated-download-card.theme-neon-grid::before {
+    background:
+        linear-gradient(rgba(34, 211, 238, 0.18) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(236, 72, 153, 0.14) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(125, 211, 252, 0.16), rgba(12, 10, 38, 0.46));
+    background-size: 26px 26px, 26px 26px, cover;
+    animation: cardGridShift 6.2s linear infinite;
+}
+
+.animated-download-card.theme-neon-grid::after {
+    background: linear-gradient(120deg, transparent 0%, rgba(244, 114, 182, 0.56) 48%, transparent 100%);
+    transform: translateX(-130%);
+    animation: cardShineSweep 4.2s ease-in-out infinite;
+}
+
+.animated-download-card.theme-liquid-metal::before {
+    background:
+        conic-gradient(from 180deg at 52% 50%, rgba(226, 232, 240, 0.34), rgba(148, 163, 184, 0.2), rgba(203, 213, 225, 0.34), rgba(148, 163, 184, 0.2), rgba(226, 232, 240, 0.34));
+    animation: cardSpinGradient 8.4s linear infinite;
+}
+
+.animated-download-card.theme-liquid-metal::after {
+    background: radial-gradient(circle at 30% 80%, rgba(248, 250, 252, 0.34), transparent 58%);
+    animation: cardPulseOverlay 3.2s ease-in-out infinite;
+}
+
+.animated-download-card.theme-void-rift::before {
+    background:
+        radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.34), transparent 44%),
+        radial-gradient(circle at 82% 18%, rgba(56, 189, 248, 0.22), transparent 50%),
+        linear-gradient(145deg, rgba(10, 6, 26, 0.6), rgba(45, 9, 75, 0.26));
+    animation: cardVoidPulse 5.6s ease-in-out infinite;
+}
+
+.animated-download-card.theme-void-rift::after {
+    background: repeating-linear-gradient(140deg, rgba(192, 132, 252, 0.2) 0 7px, transparent 7px 18px);
+    animation: cardStripesMove 8.6s linear infinite;
+    opacity: 0.28;
+}
+
+.animated-download-card.theme-solar-flare::before {
+    background:
+        radial-gradient(circle at 22% 20%, rgba(253, 224, 71, 0.4), transparent 44%),
+        radial-gradient(circle at 78% 78%, rgba(251, 146, 60, 0.32), transparent 50%),
+        linear-gradient(150deg, rgba(120, 53, 15, 0.3), rgba(245, 158, 11, 0.16));
+    animation: cardInfernoFlow 5.2s ease-in-out infinite;
+}
+
+.animated-download-card.theme-solar-flare::after {
+    background: linear-gradient(110deg, transparent 0%, rgba(254, 240, 138, 0.78) 50%, transparent 100%);
+    transform: translateX(-130%);
+    animation: cardShineSweep 4.6s ease-in-out infinite;
+}
+
+.animated-download-card.theme-toxic-mist::before {
+    background:
+        radial-gradient(circle at 18% 24%, rgba(163, 230, 53, 0.34), transparent 48%),
+        radial-gradient(circle at 82% 80%, rgba(16, 185, 129, 0.3), transparent 52%),
+        linear-gradient(145deg, rgba(20, 83, 45, 0.26), rgba(74, 222, 128, 0.12));
+    animation: cardAuroraFlow 7s ease-in-out infinite alternate;
+}
+
+.animated-download-card.theme-toxic-mist::after {
+    background: radial-gradient(circle at 24% 82%, rgba(134, 239, 172, 0.28), transparent 56%);
+    animation: cardPulseOverlay 3.6s ease-in-out infinite;
+}
+
+.animated-download-card.theme-crystal-cave::before {
+    background:
+        linear-gradient(135deg, rgba(56, 189, 248, 0.26), transparent 40%),
+        linear-gradient(315deg, rgba(167, 139, 250, 0.24), transparent 45%),
+        repeating-linear-gradient(60deg, rgba(186, 230, 253, 0.14) 0 10px, transparent 10px 22px),
+        linear-gradient(145deg, rgba(30, 64, 175, 0.18), rgba(76, 29, 149, 0.14));
+    animation: cardGridShift 7.4s linear infinite;
+}
+
+.animated-download-card.theme-crystal-cave::after {
+    background: linear-gradient(120deg, transparent 0%, rgba(191, 219, 254, 0.72) 48%, transparent 100%);
+    transform: translateX(-125%);
+    animation: cardShineSweep 5.2s ease-in-out infinite;
+}
+
+.animated-download-card.theme-glitchwave::before {
+    background:
+        repeating-linear-gradient(165deg, rgba(244, 114, 182, 0.2) 0 6px, transparent 6px 14px),
+        repeating-linear-gradient(20deg, rgba(56, 189, 248, 0.16) 0 5px, transparent 5px 13px),
+        linear-gradient(145deg, rgba(45, 9, 75, 0.3), rgba(17, 24, 39, 0.22));
+    animation: cardGlitchShift 1.8s linear infinite;
+}
+
+.animated-download-card.theme-glitchwave::after {
+    background: linear-gradient(115deg, transparent 0%, rgba(244, 114, 182, 0.52) 45%, rgba(56, 189, 248, 0.44) 56%, transparent 100%);
+    transform: translateX(-130%);
+    animation: cardShineSweep 3.1s ease-in-out infinite;
+}
+
+.animated-download-card.animated-profile-gif::before {
+    background-image: var(--animated-card-gif-url);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.5;
+    filter: saturate(1.2) contrast(1.08) brightness(0.9);
+    animation: cardCoracaoFloat 7.2s ease-in-out infinite;
+}
+
+.animated-download-card.animated-profile-gif::after {
+    background:
+        linear-gradient(180deg, rgba(5, 8, 20, 0.72), rgba(5, 8, 20, 0.62)),
+        linear-gradient(120deg, rgba(14, 165, 233, 0.14), rgba(236, 72, 153, 0.14), rgba(99, 102, 241, 0.14));
+    animation: cardPulseOverlay 3.2s ease-in-out infinite;
+    opacity: 0.8;
+}
+
+.animated-download-card.animated-profile-gif .download-header,
+.animated-download-card.animated-profile-gif .download-content,
+.animated-download-card.animated-profile-gif .download-reactions {
+    background: rgba(7, 10, 24, 0.38);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    padding: 10px 12px;
+}
+
+.animated-download-card.animated-profile-gif .download-header {
+    margin-bottom: 8px;
+}
+
+.animated-download-card.animated-profile-gif .download-content {
+    margin-bottom: 8px;
+}
+
+.animated-download-card.animated-profile-gif .download-reactions {
+    margin-top: 0;
+}
+
+.animated-download-card.animated-profile-gif h3,
+.animated-download-card.animated-profile-gif p,
+.animated-download-card.animated-profile-gif strong,
+.animated-download-card.animated-profile-gif .user-name,
+.animated-download-card.animated-profile-gif .count {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
+}
+
+.animated-download-card.animated-profile-gif .download-description-scroll,
+.animated-download-card.animated-profile-gif .download-meta-bottom {
+    color: rgba(248, 250, 255, 0.95);
+}
+
+.animated-download-card.theme-arvore-de-natal {
+    --animated-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Arvore%20de%20Natal.gif");
+    --animated-card-overlay: linear-gradient(120deg, rgba(34, 197, 94, 0.16), rgba(239, 68, 68, 0.22), rgba(250, 204, 21, 0.14));
+    --animated-card-lite-a: rgba(34, 197, 94, 0.3);
+    --animated-card-lite-b: rgba(239, 68, 68, 0.24);
+}
+
+.animated-download-card.theme-coracao {
+    --animated-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Cora%C3%A7%C3%A3o.gif");
+    --animated-card-overlay: linear-gradient(120deg, rgba(236, 72, 153, 0.1), rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.1));
+    --animated-card-lite-a: rgba(236, 72, 153, 0.3);
+    --animated-card-lite-b: rgba(168, 85, 247, 0.24);
+}
+
+.animated-download-card.theme-cruz {
+    --animated-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Cruz.gif");
+    --animated-card-overlay: linear-gradient(120deg, rgba(14, 165, 233, 0.14), rgba(129, 140, 248, 0.24), rgba(236, 72, 153, 0.14));
+    --animated-card-lite-a: rgba(14, 165, 233, 0.28);
+    --animated-card-lite-b: rgba(129, 140, 248, 0.24);
+}
+
+.animated-download-card.theme-diagonal {
+    --animated-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Diagonal.gif");
+    --animated-card-overlay: linear-gradient(120deg, rgba(236, 72, 153, 0.14), rgba(59, 130, 246, 0.22), rgba(99, 102, 241, 0.14));
+    --animated-card-lite-a: rgba(236, 72, 153, 0.28);
+    --animated-card-lite-b: rgba(59, 130, 246, 0.24);
+}
+
+.animated-download-card.theme-estante-neon {
+    --animated-card-gif-url: url("imagens/Cards%20animado/Mini%20card/estante%20neon.gif");
+    --animated-card-overlay: linear-gradient(120deg, rgba(16, 185, 129, 0.14), rgba(59, 130, 246, 0.22), rgba(168, 85, 247, 0.14));
+    --animated-card-lite-a: rgba(16, 185, 129, 0.28);
+    --animated-card-lite-b: rgba(59, 130, 246, 0.24);
+}
+
+.animated-download-card.theme-luzes-azuis {
+    --animated-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Luzes%20azuis.gif");
+    --animated-card-overlay: linear-gradient(120deg, rgba(56, 189, 248, 0.16), rgba(99, 102, 241, 0.22), rgba(6, 182, 212, 0.14));
+    --animated-card-lite-a: rgba(56, 189, 248, 0.28);
+    --animated-card-lite-b: rgba(99, 102, 241, 0.24);
+}
+
+.animated-download-card.theme-motion {
+    --animated-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Motion.gif");
+    --animated-card-overlay: linear-gradient(120deg, rgba(251, 146, 60, 0.16), rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.14));
+    --animated-card-lite-a: rgba(251, 146, 60, 0.28);
+    --animated-card-lite-b: rgba(168, 85, 247, 0.24);
+}
+
+.animated-download-card.theme-ondas {
+    --animated-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Ondas.gif");
+    --animated-card-overlay: linear-gradient(120deg, rgba(59, 130, 246, 0.14), rgba(6, 182, 212, 0.2), rgba(99, 102, 241, 0.14));
+    --animated-card-lite-a: rgba(59, 130, 246, 0.28);
+    --animated-card-lite-b: rgba(6, 182, 212, 0.24);
+}
+
+.animated-download-card.theme-nebulo {
+    --animated-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Nebulo%20Azul.gif");
+    --animated-card-overlay: linear-gradient(120deg, rgba(56, 189, 248, 0.14), rgba(139, 92, 246, 0.22), rgba(59, 130, 246, 0.14));
+    --animated-card-lite-a: rgba(56, 189, 248, 0.28);
+    --animated-card-lite-b: rgba(139, 92, 246, 0.24);
+}
+
+.animated-download-card.theme-stilo {
+    --animated-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Stilo.gif");
+    --animated-card-overlay: linear-gradient(120deg, rgba(192, 132, 252, 0.16), rgba(236, 72, 153, 0.2), rgba(14, 165, 233, 0.14));
+    --animated-card-lite-a: rgba(192, 132, 252, 0.28);
+    --animated-card-lite-b: rgba(236, 72, 153, 0.24);
+}
+
+.animated-download-card.theme-arvore-de-natal::before,
+.animated-download-card.theme-coracao::before,
+.animated-download-card.theme-cruz::before,
+.animated-download-card.theme-diagonal::before,
+.animated-download-card.theme-estante-neon::before,
+.animated-download-card.theme-luzes-azuis::before,
+.animated-download-card.theme-motion::before,
+.animated-download-card.theme-ondas::before,
+.animated-download-card.theme-nebulo::before,
+.animated-download-card.theme-stilo::before {
+    background-image: var(--animated-card-gif-url);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.46;
+    filter: saturate(1.2) contrast(1.1) brightness(0.9);
+    animation: cardCoracaoFloat 7.8s ease-in-out infinite;
+}
+
+.animated-download-card.theme-arvore-de-natal::after,
+.animated-download-card.theme-coracao::after,
+.animated-download-card.theme-cruz::after,
+.animated-download-card.theme-diagonal::after,
+.animated-download-card.theme-estante-neon::after,
+.animated-download-card.theme-luzes-azuis::after,
+.animated-download-card.theme-motion::after,
+.animated-download-card.theme-ondas::after,
+.animated-download-card.theme-nebulo::after,
+.animated-download-card.theme-stilo::after {
+    background: var(--animated-card-overlay);
+    animation: cardPulseOverlay 3.4s ease-in-out infinite;
+    opacity: 0.34;
+}
+
+.animated-download-card.animated-download-card-lite.theme-arvore-de-natal::before,
+.animated-download-card.animated-download-card-lite.theme-coracao::before,
+.animated-download-card.animated-download-card-lite.theme-cruz::before,
+.animated-download-card.animated-download-card-lite.theme-diagonal::before,
+.animated-download-card.animated-download-card-lite.theme-estante-neon::before,
+.animated-download-card.animated-download-card-lite.theme-luzes-azuis::before,
+.animated-download-card.animated-download-card-lite.theme-motion::before,
+.animated-download-card.animated-download-card-lite.theme-ondas::before,
+.animated-download-card.animated-download-card-lite.theme-nebulo::before,
+.animated-download-card.animated-download-card-lite.theme-stilo::before {
+    background-image: none;
+    background: radial-gradient(circle at 22% 24%, var(--animated-card-lite-a), transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--animated-card-lite-b), transparent 54%);
+    opacity: 1;
+    filter: none;
+    animation: cardAuroraFlow 8s ease-in-out infinite alternate;
+}
+
+.mini-profile-card {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    --mx: 50%;
+    --my: 50%;
+    --rx: 0deg;
+    --ry: 0deg;
+    --glow-intensity: 0.34;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background-image:
+        radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.2), transparent 42%),
+        linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 2px solid #EC4899;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 400px;
+    width: min(92vw, 400px);
+    color: white;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+    transform-style: preserve-3d;
+    transform: perspective(960px) rotateX(var(--rx)) rotateY(var(--ry));
+    transition: transform 240ms ease, box-shadow 260ms ease, border-color 220ms ease;
+}
+
+.mini-profile-card.fx-active {
+    border-color: rgba(244, 114, 182, 0.9);
+    box-shadow:
+        0 24px 56px rgba(0, 0, 0, 0.52),
+        0 0 32px rgba(125, 211, 252, calc(var(--glow-intensity) * 0.85)),
+        0 0 22px rgba(236, 72, 153, var(--glow-intensity));
+}
+
+.mini-profile-card > * {
+    position: relative;
+    z-index: 2;
+    transform: translateZ(18px);
+    transition: transform 220ms ease;
+}
+
+.mini-profile-card.fx-active > * {
+    transform: translateZ(24px);
+}
+
+.mini-profile-card::before,
+.mini-profile-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.mini-profile-card::after {
+    mix-blend-mode: screen;
+    opacity: 0.28;
+}
+
+.mini-profile-card.theme-aurora::before {
+    background: radial-gradient(circle at 22% 25%, rgba(56, 189, 248, 0.28), transparent 52%),
+                radial-gradient(circle at 78% 80%, rgba(236, 72, 153, 0.28), transparent 50%);
+    animation: cardAuroraFlow 7.2s ease-in-out infinite alternate;
+}
+
+.mini-profile-card.theme-prisma::before {
+    background: conic-gradient(from 160deg at 50% 50%, rgba(236, 72, 153, 0.24), rgba(59, 130, 246, 0.2), rgba(16, 185, 129, 0.16), rgba(236, 72, 153, 0.24));
+    animation: cardSpinGradient 9.2s linear infinite;
+}
+
+.mini-profile-card.theme-pulse::before {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.28), rgba(107, 70, 193, 0.14));
+    animation: cardPulseGlow 3.2s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-comet::before {
+    background: radial-gradient(circle at 10% 12%, rgba(167, 139, 250, 0.34), transparent 45%);
+    animation: cardCometPath 5.8s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-inferno::before {
+    background: radial-gradient(circle at 18% 16%, rgba(251, 146, 60, 0.34), transparent 45%),
+                radial-gradient(circle at 82% 84%, rgba(239, 68, 68, 0.3), transparent 52%),
+                linear-gradient(150deg, rgba(127, 29, 29, 0.26), rgba(249, 115, 22, 0.14));
+    animation: cardInfernoFlow 4.8s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-frost::before {
+    background: radial-gradient(circle at 18% 22%, rgba(147, 197, 253, 0.34), transparent 46%),
+                radial-gradient(circle at 80% 80%, rgba(34, 211, 238, 0.26), transparent 52%),
+                linear-gradient(155deg, rgba(30, 64, 175, 0.2), rgba(56, 189, 248, 0.12));
+    animation: cardFrostDrift 7.8s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-aurora::after,
+.mini-profile-card.theme-comet::after {
+    background: linear-gradient(110deg, transparent 0%, rgba(56, 189, 248, 0.75) 48%, transparent 100%);
+    transform: translateX(-130%);
+    animation: cardShineSweep 4.8s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-prisma::after {
+    background: radial-gradient(circle at 25% 82%, rgba(244, 114, 182, 0.42), transparent 58%);
+    animation: cardPulseOverlay 3.6s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-pulse::after {
+    background: repeating-linear-gradient(135deg, rgba(56, 189, 248, 0.22) 0 8px, transparent 8px 18px);
+    animation: cardStripesMove 9.2s linear infinite;
+}
+
+.mini-profile-card.theme-inferno::after {
+    background: repeating-linear-gradient(120deg, rgba(251, 191, 36, 0.24) 0 6px, transparent 6px 16px);
+    animation: cardEmberDrift 6.8s linear infinite;
+    opacity: 0.34;
+}
+
+.mini-profile-card.theme-frost::after {
+    background: linear-gradient(115deg, transparent 0%, rgba(224, 242, 254, 0.82) 50%, transparent 100%);
+    transform: translateX(-135%);
+    animation: cardFrostShimmer 5.4s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-voltage::before {
+    background:
+        radial-gradient(circle at 18% 24%, rgba(56, 189, 248, 0.38), transparent 48%),
+        radial-gradient(circle at 84% 78%, rgba(139, 92, 246, 0.34), transparent 52%),
+        linear-gradient(145deg, rgba(30, 64, 175, 0.24), rgba(14, 165, 233, 0.14));
+    animation: cardAuroraFlow 5.4s ease-in-out infinite alternate;
+}
+
+.mini-profile-card.theme-voltage::after {
+    background: repeating-linear-gradient(120deg, rgba(125, 211, 252, 0.34) 0 4px, transparent 4px 14px);
+    animation: cardGlitchShift 2.2s linear infinite;
+    opacity: 0.32;
+}
+
+.mini-profile-card.theme-emberstorm::before {
+    background:
+        radial-gradient(circle at 20% 18%, rgba(251, 146, 60, 0.38), transparent 45%),
+        radial-gradient(circle at 80% 82%, rgba(239, 68, 68, 0.32), transparent 50%),
+        linear-gradient(145deg, rgba(127, 29, 29, 0.3), rgba(249, 115, 22, 0.14));
+    animation: cardInfernoFlow 4.6s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-emberstorm::after {
+    background: repeating-linear-gradient(130deg, rgba(251, 191, 36, 0.26) 0 6px, transparent 6px 16px);
+    animation: cardEmberDrift 5.8s linear infinite;
+    opacity: 0.34;
+}
+
+.mini-profile-card.theme-blizzard::before {
+    background:
+        radial-gradient(circle at 16% 20%, rgba(186, 230, 253, 0.36), transparent 48%),
+        radial-gradient(circle at 84% 82%, rgba(147, 197, 253, 0.32), transparent 52%),
+        linear-gradient(150deg, rgba(30, 64, 175, 0.2), rgba(56, 189, 248, 0.12));
+    animation: cardFrostDrift 6.6s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-blizzard::after {
+    background: linear-gradient(115deg, transparent 0%, rgba(240, 249, 255, 0.84) 50%, transparent 100%);
+    transform: translateX(-135%);
+    animation: cardFrostShimmer 4.8s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-neon-grid::before {
+    background:
+        linear-gradient(rgba(34, 211, 238, 0.18) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(236, 72, 153, 0.14) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(125, 211, 252, 0.16), rgba(12, 10, 38, 0.46));
+    background-size: 26px 26px, 26px 26px, cover;
+    animation: cardGridShift 6.2s linear infinite;
+}
+
+.mini-profile-card.theme-neon-grid::after {
+    background: linear-gradient(120deg, transparent 0%, rgba(244, 114, 182, 0.56) 48%, transparent 100%);
+    transform: translateX(-130%);
+    animation: cardShineSweep 4.2s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-liquid-metal::before {
+    background: conic-gradient(from 180deg at 52% 50%, rgba(226, 232, 240, 0.34), rgba(148, 163, 184, 0.2), rgba(203, 213, 225, 0.34), rgba(148, 163, 184, 0.2), rgba(226, 232, 240, 0.34));
+    animation: cardSpinGradient 8.4s linear infinite;
+}
+
+.mini-profile-card.theme-liquid-metal::after {
+    background: radial-gradient(circle at 30% 80%, rgba(248, 250, 252, 0.34), transparent 58%);
+    animation: cardPulseOverlay 3.2s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-void-rift::before {
+    background:
+        radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.34), transparent 44%),
+        radial-gradient(circle at 82% 18%, rgba(56, 189, 248, 0.22), transparent 50%),
+        linear-gradient(145deg, rgba(10, 6, 26, 0.6), rgba(45, 9, 75, 0.26));
+    animation: cardVoidPulse 5.6s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-void-rift::after {
+    background: repeating-linear-gradient(140deg, rgba(192, 132, 252, 0.2) 0 7px, transparent 7px 18px);
+    animation: cardStripesMove 8.6s linear infinite;
+    opacity: 0.28;
+}
+
+.mini-profile-card.theme-solar-flare::before {
+    background:
+        radial-gradient(circle at 22% 20%, rgba(253, 224, 71, 0.4), transparent 44%),
+        radial-gradient(circle at 78% 78%, rgba(251, 146, 60, 0.32), transparent 50%),
+        linear-gradient(150deg, rgba(120, 53, 15, 0.3), rgba(245, 158, 11, 0.16));
+    animation: cardInfernoFlow 5.2s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-solar-flare::after {
+    background: linear-gradient(110deg, transparent 0%, rgba(254, 240, 138, 0.78) 50%, transparent 100%);
+    transform: translateX(-130%);
+    animation: cardShineSweep 4.6s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-toxic-mist::before {
+    background:
+        radial-gradient(circle at 18% 24%, rgba(163, 230, 53, 0.34), transparent 48%),
+        radial-gradient(circle at 82% 80%, rgba(16, 185, 129, 0.3), transparent 52%),
+        linear-gradient(145deg, rgba(20, 83, 45, 0.26), rgba(74, 222, 128, 0.12));
+    animation: cardAuroraFlow 7s ease-in-out infinite alternate;
+}
+
+.mini-profile-card.theme-toxic-mist::after {
+    background: radial-gradient(circle at 24% 82%, rgba(134, 239, 172, 0.28), transparent 56%);
+    animation: cardPulseOverlay 3.6s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-crystal-cave::before {
+    background:
+        linear-gradient(135deg, rgba(56, 189, 248, 0.26), transparent 40%),
+        linear-gradient(315deg, rgba(167, 139, 250, 0.24), transparent 45%),
+        repeating-linear-gradient(60deg, rgba(186, 230, 253, 0.14) 0 10px, transparent 10px 22px),
+        linear-gradient(145deg, rgba(30, 64, 175, 0.18), rgba(76, 29, 149, 0.14));
+    animation: cardGridShift 7.4s linear infinite;
+}
+
+.mini-profile-card.theme-crystal-cave::after {
+    background: linear-gradient(120deg, transparent 0%, rgba(191, 219, 254, 0.72) 48%, transparent 100%);
+    transform: translateX(-125%);
+    animation: cardShineSweep 5.2s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-glitchwave::before {
+    background:
+        repeating-linear-gradient(165deg, rgba(244, 114, 182, 0.2) 0 6px, transparent 6px 14px),
+        repeating-linear-gradient(20deg, rgba(56, 189, 248, 0.16) 0 5px, transparent 5px 13px),
+        linear-gradient(145deg, rgba(45, 9, 75, 0.3), rgba(17, 24, 39, 0.22));
+    animation: cardGlitchShift 1.8s linear infinite;
+}
+
+.mini-profile-card.theme-glitchwave::after {
+    background: linear-gradient(115deg, transparent 0%, rgba(244, 114, 182, 0.52) 45%, rgba(56, 189, 248, 0.44) 56%, transparent 100%);
+    transform: translateX(-130%);
+    animation: cardShineSweep 3.1s ease-in-out infinite;
+}
+
+.mini-profile-card.animated-profile-gif::before {
+    background-image: var(--animated-card-gif-url);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.52;
+    filter: saturate(1.2) contrast(1.08) brightness(0.9);
+    animation: cardCoracaoFloat 7s ease-in-out infinite;
+}
+
+.mini-profile-card.animated-profile-gif::after {
+    background:
+        linear-gradient(180deg, rgba(5, 8, 20, 0.76), rgba(5, 8, 20, 0.66)),
+        linear-gradient(125deg, rgba(14, 165, 233, 0.14), rgba(236, 72, 153, 0.14), rgba(99, 102, 241, 0.14));
+    animation: cardPulseOverlay 3.1s ease-in-out infinite;
+    opacity: 0.86;
+}
+
+.mini-profile-card.animated-profile-gif h1,
+.mini-profile-card.animated-profile-gif h2,
+.mini-profile-card.animated-profile-gif h3,
+.mini-profile-card.animated-profile-gif h4,
+.mini-profile-card.animated-profile-gif p,
+.mini-profile-card.animated-profile-gif span,
+.mini-profile-card.animated-profile-gif strong,
+.mini-profile-card.animated-profile-gif div {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+}
+
+.mini-profile-card.theme-arvore-de-natal {
+    --mini-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Arvore%20de%20Natal.gif");
+    --mini-card-overlay: linear-gradient(125deg, rgba(34, 197, 94, 0.14), rgba(239, 68, 68, 0.24), rgba(250, 204, 21, 0.12));
+}
+
+.mini-profile-card.theme-coracao {
+    --mini-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Cora%C3%A7%C3%A3o.gif");
+    --mini-card-overlay: linear-gradient(125deg, rgba(236, 72, 153, 0.14), rgba(168, 85, 247, 0.24), rgba(236, 72, 153, 0.1));
+}
+
+.mini-profile-card.theme-cruz {
+    --mini-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Cruz.gif");
+    --mini-card-overlay: linear-gradient(125deg, rgba(14, 165, 233, 0.14), rgba(129, 140, 248, 0.24), rgba(236, 72, 153, 0.12));
+}
+
+.mini-profile-card.theme-diagonal {
+    --mini-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Diagonal.gif");
+    --mini-card-overlay: linear-gradient(125deg, rgba(236, 72, 153, 0.14), rgba(59, 130, 246, 0.24), rgba(99, 102, 241, 0.14));
+}
+
+.mini-profile-card.theme-estante-neon {
+    --mini-card-gif-url: url("imagens/Cards%20animado/Mini%20card/estante%20neon.gif");
+    --mini-card-overlay: linear-gradient(125deg, rgba(16, 185, 129, 0.14), rgba(59, 130, 246, 0.24), rgba(168, 85, 247, 0.12));
+}
+
+.mini-profile-card.theme-luzes-azuis {
+    --mini-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Luzes%20azuis.gif");
+    --mini-card-overlay: linear-gradient(125deg, rgba(56, 189, 248, 0.14), rgba(99, 102, 241, 0.24), rgba(6, 182, 212, 0.12));
+}
+
+.mini-profile-card.theme-motion {
+    --mini-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Motion.gif");
+    --mini-card-overlay: linear-gradient(125deg, rgba(251, 146, 60, 0.14), rgba(168, 85, 247, 0.24), rgba(236, 72, 153, 0.12));
+}
+
+.mini-profile-card.theme-ondas {
+    --mini-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Ondas.gif");
+    --mini-card-overlay: linear-gradient(125deg, rgba(59, 130, 246, 0.14), rgba(6, 182, 212, 0.24), rgba(99, 102, 241, 0.14));
+}
+
+.mini-profile-card.theme-nebulo {
+    --mini-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Nebulo%20Azul.gif");
+    --mini-card-overlay: linear-gradient(125deg, rgba(56, 189, 248, 0.14), rgba(139, 92, 246, 0.24), rgba(59, 130, 246, 0.14));
+}
+
+.mini-profile-card.theme-stilo {
+    --mini-card-gif-url: url("imagens/Cards%20animado/Mini%20card/Stilo.gif");
+    --mini-card-overlay: linear-gradient(125deg, rgba(192, 132, 252, 0.14), rgba(236, 72, 153, 0.24), rgba(14, 165, 233, 0.12));
+}
+
+.mini-profile-card.theme-arvore-de-natal::before,
+.mini-profile-card.theme-coracao::before,
+.mini-profile-card.theme-cruz::before,
+.mini-profile-card.theme-diagonal::before,
+.mini-profile-card.theme-estante-neon::before,
+.mini-profile-card.theme-luzes-azuis::before,
+.mini-profile-card.theme-motion::before,
+.mini-profile-card.theme-ondas::before,
+.mini-profile-card.theme-nebulo::before,
+.mini-profile-card.theme-stilo::before {
+    background-image: var(--mini-card-gif-url);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.48;
+    filter: saturate(1.22) contrast(1.12) brightness(0.9);
+    animation: cardCoracaoFloat 7.2s ease-in-out infinite;
+}
+
+.mini-profile-card.theme-arvore-de-natal::after,
+.mini-profile-card.theme-coracao::after,
+.mini-profile-card.theme-cruz::after,
+.mini-profile-card.theme-diagonal::after,
+.mini-profile-card.theme-estante-neon::after,
+.mini-profile-card.theme-luzes-azuis::after,
+.mini-profile-card.theme-motion::after,
+.mini-profile-card.theme-ondas::after,
+.mini-profile-card.theme-nebulo::after,
+.mini-profile-card.theme-stilo::after {
+    background: var(--mini-card-overlay);
+    animation: cardPulseOverlay 3.2s ease-in-out infinite;
+    opacity: 0.36;
+}
+
+.mini-profile-close-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #EC4899, #6B46C1);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    width: 100%;
+}
+
+.mini-profile-close-btn:hover {
+    box-shadow: 0 0 18px rgba(236, 72, 153, 0.45);
+}
+
+@keyframes cardGridShift {
+    0% { background-position: 0 0, 0 0, center; }
+    100% { background-position: 36px 36px, -36px -36px, center; }
+}
+
+@keyframes cardGlitchShift {
+    0% { transform: translateX(0) translateY(0); filter: hue-rotate(0deg); }
+    25% { transform: translateX(-2px) translateY(1px); filter: hue-rotate(8deg); }
+    50% { transform: translateX(2px) translateY(-1px); filter: hue-rotate(-8deg); }
+    75% { transform: translateX(-1px) translateY(2px); filter: hue-rotate(4deg); }
+    100% { transform: translateX(0) translateY(0); filter: hue-rotate(0deg); }
+}
+
+@keyframes cardVoidPulse {
+    0%, 100% { transform: scale(1) rotate(0deg); filter: brightness(0.95) saturate(1); }
+    50% { transform: scale(1.08) rotate(3deg); filter: brightness(1.08) saturate(1.18); }
+}
+
+@keyframes cardAuroraFlow {
+    0% { transform: translate3d(-2%, -2%, 0) scale(1); filter: hue-rotate(0deg); }
+    100% { transform: translate3d(2%, 2%, 0) scale(1.06); filter: hue-rotate(25deg); }
+}
+
+@keyframes cardShineSweep {
+    0% { transform: translateX(-130%); }
+    55% { transform: translateX(130%); }
+    100% { transform: translateX(130%); }
+}
+
+@keyframes cardSpinGradient {
+    0% { transform: rotate(0deg) scale(1); }
+    100% { transform: rotate(360deg) scale(1.04); }
+}
+
+@keyframes cardPulseOverlay {
+    0%, 100% { opacity: 0.14; transform: scale(1); }
+    50% { opacity: 0.32; transform: scale(1.05); }
+}
+
+@keyframes cardPulseGlow {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.18); }
+}
+
+@keyframes cardStripesMove {
+    0% { transform: translateX(-18px); }
+    100% { transform: translateX(18px); }
+}
+
+@keyframes cardCometPath {
+    0%, 100% { transform: translate3d(-8%, -8%, 0); }
+    50% { transform: translate3d(10%, 10%, 0); }
+}
+
+@keyframes cardInfernoFlow {
+    0%, 100% { transform: translate3d(-2%, 1%, 0) scale(1); filter: saturate(1) brightness(1); }
+    50% { transform: translate3d(3%, -2%, 0) scale(1.08); filter: saturate(1.22) brightness(1.08); }
+}
+
+@keyframes cardEmberDrift {
+    0% { transform: translateX(-14px) translateY(2px); }
+    50% { transform: translateX(0) translateY(-2px); }
+    100% { transform: translateX(14px) translateY(2px); }
+}
+
+@keyframes cardFrostDrift {
+    0%, 100% { transform: translate3d(-3%, -2%, 0) scale(1); filter: hue-rotate(0deg); }
+    50% { transform: translate3d(3%, 2%, 0) scale(1.05); filter: hue-rotate(-15deg); }
+}
+
+@keyframes cardFrostShimmer {
+    0% { transform: translateX(-135%); opacity: 0.18; }
+    55% { transform: translateX(125%); opacity: 0.34; }
+    100% { transform: translateX(125%); opacity: 0.22; }
+}
+
+@keyframes cardCoracaoFloat {
+    0%, 100% { transform: scale(1.02) translate3d(-1%, -1%, 0); }
+    50% { transform: scale(1.08) translate3d(1.2%, 1.2%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .animated-download-card::before,
+    .animated-download-card::after,
+    .mini-profile-card::before,
+    .mini-profile-card::after {
+        animation: none !important;
+    }
+
+    .animated-download-card,
+    .mini-profile-card {
+        transform: none !important;
+        transition: none !important;
+    }
+
+    .animated-download-card .download-header,
+    .animated-download-card .download-content,
+    .animated-download-card .download-reactions,
+    .mini-profile-card > * {
+        transform: none !important;
+        transition: none !important;
+    }
+}
+
 .download-card:hover {
     border-color: #EC4899;
     box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
     transform: translateY(-2px);
+}
+
+.downloads-page-btn {
+    padding: 8px 12px;
+    min-width: 40px;
+    border-radius: 6px;
+    border: 1px solid rgba(236, 72, 153, 0.5);
+    background: rgba(107, 70, 193, 0.16);
+    color: #FBCFE8;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.downloads-page-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    border-color: rgba(236, 72, 153, 0.85);
+    background: rgba(236, 72, 153, 0.24);
+}
+
+.downloads-page-btn.active {
+    background: linear-gradient(135deg, #EC4899, #6B46C1);
+    color: #fff;
+    border-color: rgba(236, 72, 153, 0.95);
+    box-shadow: 0 8px 18px rgba(236, 72, 153, 0.35);
+}
+
+.downloads-page-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
 }
 
 .download-header {

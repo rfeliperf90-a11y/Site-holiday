@@ -3,6 +3,27 @@ let allDownloads = [];
 let userCanPost = false;
 let userCanManageDownloads = false;
 let showingFavoritesOnly = false;
+let filteredDownloadsCache = [];
+let currentDownloadsPage = 1;
+const DOWNLOADS_PER_PAGE = 15;
+const ANIMATED_PROFILE_CARD_THEMES = [
+    'theme-aurora',
+    'theme-prisma',
+    'theme-pulse',
+    'theme-comet',
+    'theme-inferno',
+    'theme-frost',
+    'theme-voltage',
+    'theme-emberstorm',
+    'theme-blizzard',
+    'theme-neon-grid',
+    'theme-liquid-metal',
+    'theme-void-rift',
+    'theme-solar-flare',
+    'theme-toxic-mist',
+    'theme-crystal-cave',
+    'theme-glitchwave'
+];
 
 const MAX_DOWNLOAD_LINKS = 3;
 const DOWNLOAD_LINK_FORMAT_OPTIONS = [
@@ -85,6 +106,104 @@ function escapeHtml(value) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
+}
+
+function hashSeed(value) {
+    const text = String(value ?? '');
+    let hash = 0;
+    for (let i = 0; i < text.length; i += 1) {
+        hash = (hash * 31 + text.charCodeAt(i)) | 0;
+    }
+    return Math.abs(hash);
+}
+
+function supportsAdvancedCardFx() {
+    try {
+        return Boolean(window?.matchMedia?.('(pointer:fine)').matches);
+    } catch {
+        return false;
+    }
+}
+
+function bindCardFx(cardElement) {
+    if (!cardElement || cardElement.dataset.fxBound === '1') return;
+    if (!supportsAdvancedCardFx()) return;
+
+    cardElement.dataset.fxBound = '1';
+    cardElement.style.setProperty('--mx', '50%');
+    cardElement.style.setProperty('--my', '50%');
+    cardElement.style.setProperty('--rx', '0deg');
+    cardElement.style.setProperty('--ry', '0deg');
+
+    const onMove = (event) => {
+        const rect = cardElement.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        const px = (x / rect.width) * 100;
+        const py = (y / rect.height) * 100;
+
+        const maxTilt = 7;
+        const rotateY = ((x / rect.width) - 0.5) * (maxTilt * 2);
+        const rotateX = (0.5 - (y / rect.height)) * (maxTilt * 2);
+
+        cardElement.style.setProperty('--mx', `${px.toFixed(2)}%`);
+        cardElement.style.setProperty('--my', `${py.toFixed(2)}%`);
+        cardElement.style.setProperty('--rx', `${rotateX.toFixed(2)}deg`);
+        cardElement.style.setProperty('--ry', `${rotateY.toFixed(2)}deg`);
+        cardElement.classList.add('fx-active');
+    };
+
+    const onLeave = () => {
+        cardElement.style.setProperty('--mx', '50%');
+        cardElement.style.setProperty('--my', '50%');
+        cardElement.style.setProperty('--rx', '0deg');
+        cardElement.style.setProperty('--ry', '0deg');
+        cardElement.classList.remove('fx-active');
+    };
+
+    cardElement.addEventListener('pointermove', onMove);
+    cardElement.addEventListener('pointerleave', onLeave);
+}
+
+function attachInteractiveCardEffects(scope = document) {
+    const root = scope && scope.querySelectorAll ? scope : document;
+    root.querySelectorAll('.animated-download-card, .mini-profile-card').forEach(bindCardFx);
+}
+
+function resolveAnimatedThemeClass(seedValue) {
+    const preferredTheme = arguments.length > 1 ? String(arguments[1] || '').trim() : '';
+    if (ANIMATED_PROFILE_CARD_THEMES.includes(preferredTheme)) {
+        return preferredTheme;
+    }
+    const index = hashSeed(seedValue) % ANIMATED_PROFILE_CARD_THEMES.length;
+    return ANIMATED_PROFILE_CARD_THEMES[index];
+}
+
+function normalizeAnimatedGifUrl(rawValue) {
+    const raw = String(rawValue || '').trim();
+    if (!raw) return '';
+    if (/^https?:\/\//i.test(raw)) return raw;
+    if (raw.startsWith('/')) return resolveMediaUrl(raw, '');
+    return '';
+}
+
+function buildAnimatedCardConfig(seedValue, themeValue, visualModeValue, gifUrlValue) {
+    const visualMode = String(visualModeValue || 'theme').trim().toLowerCase();
+    const gifUrl = normalizeAnimatedGifUrl(gifUrlValue);
+
+    if (visualMode === 'gif' && gifUrl) {
+        return {
+            className: 'animated-profile-gif',
+            inlineStyle: `--animated-card-gif-url: url('${gifUrl.replace(/'/g, "\\'")}');`
+        };
+    }
+
+    return {
+        className: resolveAnimatedThemeClass(seedValue, themeValue),
+        inlineStyle: ''
+    };
 }
 
 function normalizeDownloadLinkFormat(value) {
@@ -324,7 +443,18 @@ function handleNotificationDeepLink() {
 
     if (!downloadId) return;
 
-    const targetCard = document.querySelector(`.download-card[data-id="${downloadId}"]`);
+    let targetCard = document.querySelector(`.download-card[data-id="${downloadId}"]`);
+    if (!targetCard && filteredDownloadsCache.length > 0) {
+        const targetIndex = filteredDownloadsCache.findIndex((item) => String(item.id) === String(downloadId));
+        if (targetIndex >= 0) {
+            const targetPage = Math.floor(targetIndex / DOWNLOADS_PER_PAGE) + 1;
+            if (targetPage !== currentDownloadsPage) {
+                currentDownloadsPage = targetPage;
+                renderDownloads(filteredDownloadsCache, { preservePage: true });
+                targetCard = document.querySelector(`.download-card[data-id="${downloadId}"]`);
+            }
+        }
+    }
     if (!targetCard) return;
 
     targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -353,10 +483,70 @@ function handleNotificationDeepLink() {
     window.history.replaceState({}, document.title, cleanUrl);
 }
 
+function resolveRenderStateForPage(downloadsToRender) {
+    const totalItems = Array.isArray(downloadsToRender) ? downloadsToRender.length : 0;
+    const totalPages = Math.max(1, Math.ceil(totalItems / DOWNLOADS_PER_PAGE));
+    if (currentDownloadsPage > totalPages) currentDownloadsPage = totalPages;
+    if (currentDownloadsPage < 1) currentDownloadsPage = 1;
+
+    const startIndex = (currentDownloadsPage - 1) * DOWNLOADS_PER_PAGE;
+    const endIndex = startIndex + DOWNLOADS_PER_PAGE;
+    const pageItems = downloadsToRender.slice(startIndex, endIndex);
+
+    return { totalItems, totalPages, startIndex, endIndex, pageItems };
+}
+
+function renderDownloadsPagination(totalItems, totalPages) {
+    const paginationContainer = document.getElementById('downloadsPagination');
+    if (!paginationContainer) return;
+
+    if (totalItems <= DOWNLOADS_PER_PAGE) {
+        paginationContainer.innerHTML = '';
+        paginationContainer.style.display = 'none';
+        return;
+    }
+
+    paginationContainer.style.display = 'flex';
+    const pagesHtml = Array.from({ length: totalPages }, (_, idx) => {
+        const page = idx + 1;
+        const isActive = page === currentDownloadsPage;
+        return `<button type="button" class="downloads-page-btn ${isActive ? 'active' : ''}" data-page="${page}">${page}</button>`;
+    }).join('');
+
+    paginationContainer.innerHTML = `
+        <button type="button" class="downloads-page-btn" data-page="prev" ${currentDownloadsPage === 1 ? 'disabled' : ''}>Anterior</button>
+        ${pagesHtml}
+        <button type="button" class="downloads-page-btn" data-page="next" ${currentDownloadsPage === totalPages ? 'disabled' : ''}>Próxima</button>
+    `;
+
+    paginationContainer.querySelectorAll('.downloads-page-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const action = String(btn.dataset.page || '').trim();
+            if (!action) return;
+            if (action === 'prev') {
+                currentDownloadsPage = Math.max(1, currentDownloadsPage - 1);
+            } else if (action === 'next') {
+                currentDownloadsPage = Math.min(totalPages, currentDownloadsPage + 1);
+            } else {
+                const nextPage = Number(action);
+                if (!Number.isFinite(nextPage)) return;
+                currentDownloadsPage = Math.min(totalPages, Math.max(1, nextPage));
+            }
+            renderDownloads(filteredDownloadsCache, { preservePage: true });
+            window.scrollTo({ top: document.getElementById('downloads')?.offsetTop || 0, behavior: 'smooth' });
+        });
+    });
+}
+
 // Filtrar e renderizar downloads
-async function filterAndRender() {
+async function filterAndRender(options = {}) {
     const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
     const sortType = document.getElementById('sortSelect')?.value || 'date-desc';
+    const preservePage = Boolean(options.preservePage);
+
+    if (!preservePage) {
+        currentDownloadsPage = 1;
+    }
 
     let filtered = allDownloads.filter(download => 
         download.name.toLowerCase().includes(searchTerm) ||
@@ -365,7 +555,8 @@ async function filterAndRender() {
     );
 
     filtered = sortDownloads(filtered, sortType);
-    renderDownloads(filtered);
+    filteredDownloadsCache = filtered;
+    renderDownloads(filtered, { preservePage: true });
 }
 
 // Função para lidar com reações (like/coração)
@@ -452,18 +643,22 @@ function sortDownloads(downloadsToSort, sortType) {
     return sorted;
 }
 
-function renderDownloads(downloadsToRender = allDownloads) {
+function renderDownloads(downloadsToRender = allDownloads, options = {}) {
     const grid = document.getElementById('downloads');
     const notFound = document.getElementById('notFound');
 
     if (downloadsToRender.length === 0) {
         grid.innerHTML = '';
         notFound.style.display = 'block';
+        renderDownloadsPagination(0, 1);
         return;
     }
 
     notFound.style.display = 'none';
-    grid.innerHTML = downloadsToRender.map(download => {
+    const { totalItems, totalPages, pageItems, startIndex } = resolveRenderStateForPage(downloadsToRender);
+    renderDownloadsPagination(totalItems, totalPages);
+
+    grid.innerHTML = pageItems.map((download, idx) => {
         const dateObj = new Date(download.createdAt);
         const formattedDate = dateObj.toLocaleDateString('pt-BR', { 
             day: '2-digit', 
@@ -513,6 +708,21 @@ function renderDownloads(downloadsToRender = allDownloads) {
             : '<p style="margin: 0; font-size: 12px; color: #999;">Sem conquista</p>';
 
         const links = parseDownloadLinks(download);
+        const canUseAnimatedProfile = Boolean(download.authorCanUseAnimatedProfile) && Boolean(download.authorAnimatedDownloadCardEnabled ?? download.authorAnimatedProfileEnabled);
+        const animatedCardConfig = canUseAnimatedProfile
+            ? buildAnimatedCardConfig(
+                `${download.userId || 0}-${download.id || 0}`,
+                download.authorAnimatedProfileTheme,
+                download.authorAnimatedProfileVisualMode,
+                download.authorAnimatedProfileGifUrl
+            )
+            : { className: '', inlineStyle: '' };
+        const animatedCardClass = canUseAnimatedProfile
+            ? `animated-download-card ${animatedCardConfig.className}`.trim()
+            : '';
+        const animatedStyleAttr = canUseAnimatedProfile && animatedCardConfig.inlineStyle
+            ? ` style="${animatedCardConfig.inlineStyle}"`
+            : '';
         const downloadButtonsHTML = links.map((linkItem, idx) => {
             const formatLabel = getDownloadLinkFormatLabel(linkItem);
             const baseLabel = links.length > 1 ? `LINK ${idx + 1}` : 'DOWNLOAD';
@@ -523,7 +733,7 @@ function renderDownloads(downloadsToRender = allDownloads) {
         }).join('');
 
         return `
-            <div class="download-card" data-id="${download.id}">
+            <div class="download-card ${animatedCardClass}" data-id="${download.id}"${animatedStyleAttr}>
                 <div class="download-header">
                     <div class="user-info">
                         <img src="${resolveMediaUrl(download.avatar, 'https://guildholiday.discloud.app/imagens/login.png')}" alt="Avatar" class="user-avatar" style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer;" data-user-id="${download.userId}">
@@ -728,6 +938,8 @@ function renderDownloads(downloadsToRender = allDownloads) {
             btn.style.boxShadow = '0 0 10px rgba(236, 72, 153, 0.3)';
         });
     });
+
+    attachInteractiveCardEffects(grid);
 }
 
 // Mostrar formulário de comentários
@@ -1375,14 +1587,19 @@ async function showUserMiniProfile(userId) {
         `;
         
         const content = document.createElement('div');
-        content.style.cssText = `
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border: 2px solid #EC4899;
-            border-radius: 12px;
-            padding: 30px;
-            max-width: 400px;
-            color: white;
-        `;
+        const canUseAnimatedProfile = Boolean(profile.canUseAnimatedProfile) && Boolean(profile.animatedMiniProfileEnabled ?? profile.animatedProfileEnabled);
+        const miniCardConfig = canUseAnimatedProfile
+            ? buildAnimatedCardConfig(
+                `mini-${userId || 0}`,
+                profile.animatedProfileTheme,
+                profile.animatedProfileVisualMode,
+                profile.animatedProfileGifUrl
+            )
+            : { className: '', inlineStyle: '' };
+        content.className = `mini-profile-card${miniCardConfig.className ? ` ${miniCardConfig.className}` : ''}`;
+        if (miniCardConfig.inlineStyle) {
+            content.style.cssText = miniCardConfig.inlineStyle;
+        }
         
         const miniRanks = [];
         const addMiniRank = (rank) => {
@@ -1447,22 +1664,13 @@ async function showUserMiniProfile(userId) {
                     </div>
                 ` : ''}
                 
-                <button style="
-                    margin-top: 20px;
-                    padding: 10px 20px;
-                    background: linear-gradient(135deg, #EC4899, #6B46C1);
-                    color: white;
-                    border: none;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    font-weight: 600;
-                    width: 100%;
-                " onclick="document.getElementById('miniProfileModal').remove();">Fechar</button>
+                <button class="mini-profile-close-btn" onclick="document.getElementById('miniProfileModal').remove();">Fechar</button>
             </div>
         `;
         
         modal.appendChild(content);
         document.body.appendChild(modal);
+        attachInteractiveCardEffects(modal);
         
         // Fechar ao clicar no fundo
         modal.addEventListener('click', (e) => {

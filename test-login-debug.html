@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Login - Debug Console</title>
+    <style>
+        body {
+            background: #1a1a2e;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #16213e;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        h1 {
+            color: #00d4ff;
+        }
+        button {
+            background: #e94560;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #d93553;
+        }
+        #console {
+            background: #0f0f1e;
+            border: 1px solid #00d4ff;
+            padding: 15px;
+            height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 12px;
+            border-radius: 5px;
+        }
+        .log {
+            padding: 5px;
+            margin: 5px 0;
+            border-left: 3px solid #00d4ff;
+            padding-left: 10px;
+        }
+        .error {
+            border-left-color: #ff4444;
+            color: #ff4444;
+        }
+        .success {
+            border-left-color: #44ff44;
+            color: #44ff44;
+        }
+        .info {
+            border-left-color: #ffff44;
+            color: #ffff44;
+        }
+        input {
+            background: #0f0f1e;
+            color: #fff;
+            border: 1px solid #00d4ff;
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 5px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            color: #00d4ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Login Debug Test</h1>
+        <p>Este é um teste interativo para debugar o login</p>
+        
+        <label>Nickname/Email:</label>
+        <input type="text" id="testNickname" placeholder="Ex: fael" value="fael">
+        
+        <label>Senha:</label>
+        <input type="password" id="testPassword" placeholder="Ex: test123" value="test123">
+        
+        <div>
+            <button onclick="testLogin()">Testar Login</button>
+            <button onclick="testProfile()">Testar Perfil (com token fael)</button>
+            <button onclick="clearConsole()">Limpar Console</button>
+        </div>
+        
+        <h3>Console de Debug:</h3>
+        <div id="console"></div>
+    </div>
+
+    <script>
+        // Copy auth-api.js functions
+        const API_URL = 'http://localhost:5000/api';
+
+        class AuthAPI {
+            static getToken() {
+                return localStorage.getItem('token');
+            }
+
+            static setToken(token) {
+                localStorage.setItem('token', token);
+            }
+
+            static getHeaders(withAuth = false) {
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+                if (withAuth) {
+                    const token = this.getToken();
+                    if (token) {
+                        headers['Authorization'] = `Bearer ${token}`;
+                    }
+                }
+                return headers;
+            }
+
+            static async login(nickname, password) {
+                try {
+                    const response = await fetch(`${API_URL}/auth/login`, {
+                        method: 'POST',
+                        headers: this.getHeaders(),
+                        body: JSON.stringify({ nickname, password })
+                    });
+                    return await response.json();
+                } catch (error) {
+                    addLog('Erro na requisição de login: ' + error.message, 'error');
+                    return { success: false, message: 'Erro de conexão' };
+                }
+            }
+
+            static async getProfile() {
+                try {
+                    const response = await fetch(`${API_URL}/auth/profile`, {
+                        method: 'GET',
+                        headers: this.getHeaders(true)
+                    });
+                    return await response.json();
+                } catch (error) {
+                    addLog('Erro ao buscar perfil: ' + error.message, 'error');
+                    return { success: false, message: 'Erro de conexão' };
+                }
+            }
+        }
+
+        function addLog(message, type = 'info') {
+            const consoleEl = document.getElementById('console');
+            const logEl = document.createElement('div');
+            logEl.className = 'log ' + type;
+            const time = new Date().toLocaleTimeString();
+            logEl.textContent = `[${time}] ${message}`;
+            consoleEl.appendChild(logEl);
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+            console.log(message);
+        }
+
+        function clearConsole() {
+            document.getElementById('console').innerHTML = '';
+        }
+
+        async function testLogin() {
+            clearConsole();
+            addLog('Iniciando teste de login...', 'info');
+            
+            const nickname = document.getElementById('testNickname').value;
+            const password = document.getElementById('testPassword').value;
+            
+            if (!nickname || !password) {
+                addLog('Campos vazios!', 'error');
+                return;
+            }
+            
+            addLog(`Enviando: nickname="${nickname}", password="***"`, 'info');
+            const result = await AuthAPI.login(nickname, password);
+            
+            if (result.success) {
+                addLog('✓ Login bem-sucedido!', 'success');
+                addLog(`Token: ${result.token.substring(0, 30)}...`, 'success');
+                addLog(`Usuário: ${result.user.firstName} ${result.user.lastName}`, 'success');
+                AuthAPI.setToken(result.token);
+                addLog('Token armazenado no localStorage', 'success');
+            } else {
+                addLog(`✗ Login falhou: ${result.message}`, 'error');
+            }
+        }
+
+        async function testProfile() {
+            clearConsole();
+            addLog('Testando perfil...', 'info');
+            
+            const token = AuthAPI.getToken();
+            if (!token) {
+                addLog('Nenhum token armazenado! Execute testLogin primeiro', 'error');
+                return;
+            }
+            
+            addLog(`Token encontrado: ${token.substring(0, 30)}...`, 'info');
+            const result = await AuthAPI.getProfile();
+            
+            if (result.success && result.user) {
+                addLog('✓ Perfil carregado!', 'success');
+                addLog(`Nome: ${result.user.firstName} ${result.user.lastName}`, 'success');
+                addLog(`Email: ${result.user.email}`, 'success');
+                addLog(`Rank: ${result.rank?.name || 'N/A'}`, 'success');
+                addLog(`Custom Ranks: ${result.rankComplete?.custom?.length || 0}`, 'info');
+            } else {
+                addLog(`✗ Perfil falhou: ${result.message}`, 'error');
+            }
+        }
+
+        // Log initial state
+        addLog('Página pronta para testes', 'success');
+        addLog(`API URL: ${API_URL}`, 'info');
+    </script>
+</body>
+</html>

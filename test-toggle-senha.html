@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Toggle Senha</title>
+    <style>
+        body {
+            background: #1a1a2e;
+            color: #fff;
+            font-family: Arial;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: #16213e;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        .form-group {
+            margin: 20px 0;
+            position: relative;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #00d4ff;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            background: #0f0f1e;
+            color: #fff;
+            border: 1px solid #00d4ff;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            background: none;
+            border: none;
+            color: #EC4899;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            font-weight: bold;
+        }
+        button:hover {
+            color: #fff;
+        }
+        .info {
+            background: #0f0f1e;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 3px solid #00d4ff;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success {
+            border-left-color: #44ff44;
+            color: #44ff44;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Teste de Toggle de Senha</h1>
+        
+        <div class="form-group">
+            <label for="password">Senha:</label>
+            <input type="password" id="password" placeholder="Teste aqui" value="teste123">
+            <button type="button" id="togglePassword">⊙</button>
+        </div>
+
+        <div id="log"></div>
+    </div>
+
+    <script>
+        const toggleBtn = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const log = document.getElementById('log');
+
+        console.log('Elementos encontrados:');
+        console.log('- toggleBtn:', !!toggleBtn);
+        console.log('- passwordInput:', !!passwordInput);
+
+        function addLog(message) {
+            const div = document.createElement('div');
+            div.className = 'info success';
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(div);
+            console.log(message);
+        }
+
+        if (toggleBtn) {
+            addLog('✓ Botão encontrado, registrando evento...');
+            
+            toggleBtn.addEventListener('click', function(e) {
+                console.log('!!! CLICK DETECTADO !!!');
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const isPassword = passwordInput.type === 'password';
+                const newType = isPassword ? 'text' : 'password';
+                
+                passwordInput.type = newType;
+                toggleBtn.textContent = isPassword ? '⊗' : '⊙';
+                
+                addLog(`Senha ${isPassword ? 'VISÍVEL' : 'OCULTA'}`);
+                addLog(`Novo tipo: ${newType}`);
+                addLog(`Novo botão: ${toggleBtn.textContent}`);
+            });
+            
+            addLog('✓ EventListener registrado com sucesso');
+        } else {
+            addLog('✗ Botão NÃO foi encontrado!');
+        }
+
+        // Clique manual para teste
+        addLog('Sistema pronto - clique no botão ⊙');
+    </script>
+</body>
+</html>

@@ -1,32 +1,105 @@
 ﻿// Script para Painel Admin - Nova Versão com conquistas Customizáveis
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     console.log('Admin pages loaded');
-    
-    const token = AuthAPI.getToken();
-    if (!token) {
-        window.location.href = 'login.html';
+
+    if (typeof RouteGuard !== 'undefined') {
+        const allowed = await RouteGuard.requireAuth({
+            loginMessage: 'Faça login para acessar o painel administrativo',
+            invalidSessionMessage: 'Sessão inválida. Faça login novamente.',
+            validateSession: true
+        });
+        if (!allowed) return;
+    } else {
+        const token = AuthAPI.getToken();
+        if (!token) {
+            window.location.href = 'login.html?message=' + encodeURIComponent('Faça login para acessar o painel administrativo');
+            return;
+        }
+    }
+
+    attachEventListeners();
+    const activeTab = document.querySelector('.tab-btn.active')?.dataset?.tab || 'ranks';
+    await loadTabData(activeTab);
+});
+
+const OWNER_EMAIL_VIEWER = 'sustmanrft@hotmail.com';
+const USERS_PER_PAGE = 6;
+const loadedTabs = new Set();
+let canRevealEmails = false;
+const rawEmailByUserId = new Map();
+const userLabelByUserId = new Map();
+let cachedUsers = [];
+let currentUsersPage = 1;
+
+function isExampleEmail(userOrEmail) {
+    if (typeof userOrEmail === 'object' && userOrEmail !== null) {
+        if (typeof userOrEmail.isExampleEmail === 'boolean') {
+            return userOrEmail.isExampleEmail;
+        }
+        return String(userOrEmail.email || '').trim().toLowerCase().endsWith('@example.com');
+    }
+    return String(userOrEmail || '').trim().toLowerCase().endsWith('@example.com');
+}
+
+function maskEmail(email) {
+    const raw = String(email || '').trim();
+    const atIndex = raw.indexOf('@');
+    if (atIndex <= 0 || atIndex === raw.length - 1) return '***';
+
+    const local = raw.slice(0, atIndex);
+    const domain = raw.slice(atIndex + 1);
+
+    const localStart = local.slice(0, 2);
+    const localEnd = local.length > 2 ? local.slice(-1) : '';
+    const domainParts = domain.split('.');
+    const mainDomain = domainParts[0] || '';
+    const tld = domainParts.slice(1).join('.') || '';
+
+    const maskedLocal = `${localStart}${'*'.repeat(Math.max(2, local.length - 3))}${localEnd}`;
+    const maskedDomain = mainDomain.length > 2
+        ? `${mainDomain[0]}${'*'.repeat(mainDomain.length - 2)}${mainDomain.slice(-1)}`
+        : `${mainDomain[0] || '*'}*`;
+
+    return `${maskedLocal}@${maskedDomain}${tld ? '.' + tld : ''}`;
+}
+
+async function loadTabData(tabName, { force = false } = {}) {
+    const key = String(tabName || '').trim();
+    if (!key) return;
+    if (!force && loadedTabs.has(key)) return;
+
+    if (key === 'ranks') {
+        await Promise.all([loadDefaultRanks(), loadCustomRanks(), loadSocialLinks()]);
+        loadedTabs.add(key);
         return;
     }
-    
-    attachEventListeners();
-    loadDefaultRanks();
-    loadCustomRanks();
-    loadUsers();
-    loadBans();
-    loadSocialLinks();
-});
+
+    if (key === 'users') {
+        await loadUsers();
+        loadedTabs.add(key);
+        return;
+    }
+
+    if (key === 'post-permissions') {
+        await Promise.all([loadPostPermissions(), loadPostageRanks()]);
+        loadedTabs.add(key);
+        return;
+    }
+
+    if (key === 'bans') {
+        await loadBans();
+        loadedTabs.add(key);
+    }
+}
 
 // ===================== EVENT LISTENERS =====================
 function attachEventListeners() {
-    // Logout
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            if (confirm('Tem certeza que deseja sair?')) {
-                AuthAPI.logout();
-                window.location.href = 'login.html';
-            }
+    // Voltar para o perfil sem encerrar sessao
+    const backToProfileBtn = document.getElementById('backToProfileBtn');
+    if (backToProfileBtn) {
+        backToProfileBtn.addEventListener('click', () => {
+            window.location.href = 'profile.html';
         });
     }
 
@@ -45,6 +118,7 @@ function attachEventListeners() {
             const isVisible = document.getElementById('rankIsVisible').checked;
             const canManageDownloads = document.getElementById('rankCanManageDownloads').checked;
             const canOrderAllRanks = document.getElementById('rankCanOrderAllRanks')?.checked || false;
+            const canUseAnimatedProfile = document.getElementById('rankCanUseAnimatedProfile')?.checked || false;
             
             if (!name || !color || !description || !customText) {
                 showMessage('Preencha todos os campos obrigatórios', 'error');
@@ -53,7 +127,19 @@ function attachEventListeners() {
             
             try {
                 const resolvedBackgroundImageUrl = await resolveImageUrlFromInputs(backgroundImageUrl, backgroundImageFile);
-                const result = await AuthAPI.createCustomRank(name, color, description, customText, resolvedBackgroundImageUrl, backgroundImageFile, enableAdminPanel, isVisible, canManageDownloads, canOrderAllRanks);
+                const result = await AuthAPI.createCustomRank(
+                    name,
+                    color,
+                    description,
+                    customText,
+                    resolvedBackgroundImageUrl,
+                    backgroundImageFile,
+                    enableAdminPanel,
+                    isVisible,
+                    canManageDownloads,
+                    canOrderAllRanks,
+                    canUseAnimatedProfile
+                );
                 if (result.success) {
                     showMessage('conquista criado com sucesso!', 'success');
                     document.getElementById('rankName').value = '';
@@ -66,6 +152,8 @@ function attachEventListeners() {
                     document.getElementById('rankCanManageDownloads').checked = false;
                     const canOrderAllRanksInput = document.getElementById('rankCanOrderAllRanks');
                     if (canOrderAllRanksInput) canOrderAllRanksInput.checked = false;
+                    const canUseAnimatedProfileInput = document.getElementById('rankCanUseAnimatedProfile');
+                    if (canUseAnimatedProfileInput) canUseAnimatedProfileInput.checked = false;
                     document.getElementById('rankIsVisible').checked = true;
                     loadCustomRanks();
                 } else {
@@ -131,6 +219,21 @@ function attachEventListeners() {
                 showMessage('Especifique os dias de suspensão', 'error');
                 return;
             }
+
+            const banDescription = banType === 'suspension'
+                ? `suspender "${userToBan}" por ${banDays} dia(s)`
+                : `banir permanentemente "${userToBan}"`;
+            const keyword = banType === 'suspension' ? 'SUSPENDER' : 'BANIR';
+            const confirmed = await confirmCriticalAction({
+                title: 'Confirmar banimento',
+                message: `Você está prestes a ${banDescription}.`,
+                keyword,
+                confirmText: banType === 'suspension' ? 'Suspender usuário' : 'Banir usuário'
+            });
+            if (!confirmed) {
+                showMessage('Operação cancelada', 'error');
+                return;
+            }
             
             try {
                 const result = await AuthAPI.banUser(userToBan, banType, banDays, banReason);
@@ -173,8 +276,8 @@ function attachEventListeners() {
                 showMessage('Digite um nickname ou email', 'error');
                 return;
             }
-            
-            await grantPostPermission(username);
+
+            await saveIndividualPermissions(username);
         });
     }
 
@@ -195,12 +298,9 @@ function attachEventListeners() {
             const tabContent = document.getElementById(tabName + '-tab');
             if (tabContent) {
                 tabContent.classList.add('active');
-                
-                // Carregar dados específicos da aba
-                if (tabName === 'post-permissions') {
-                    loadPostPermissions();
-                    loadPostageRanks();
-                }
+                loadTabData(tabName).catch((error) => {
+                    console.error('Erro ao carregar aba:', tabName, error);
+                });
             }
         });
     });
@@ -432,6 +532,7 @@ async function editRank(rankId, rankName) {
         const enableAdminPanelEnabled = Number(rankData?.enableAdminPanel) === 1 || rankData?.enableAdminPanel === true;
         const canManageDownloadsEnabled = Number(rankData?.canManageDownloads) === 1 || rankData?.canManageDownloads === true;
         const canOrderAllRanksEnabled = Number(rankData?.canOrderAllRanks) === 1 || rankData?.canOrderAllRanks === true;
+        const canUseAnimatedProfileEnabled = Number(rankData?.canUseAnimatedProfile) === 1 || rankData?.canUseAnimatedProfile === true;
 
         const modal = document.createElement('div');
         modal.id = 'editRankModal';
@@ -521,6 +622,14 @@ async function editRank(rankId, rankName) {
                         <small style="color: rgba(245, 158, 11, 0.85); display: block; margin-top: 8px;">Com esta conquista, o usuário pode reordenar também conquistas fixas no perfil.</small>
                     </div>
 
+                    <div style="margin: 20px 0; padding: 15px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.45); border-radius: 5px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #38BDF8; font-weight: 600;">
+                            <input type="checkbox" id="editRankCanUseAnimatedProfile" ${canUseAnimatedProfileEnabled ? 'checked' : ''} style="width: 18px; height: 18px; cursor: pointer;">
+                            <span>Permitir usuário tenha Card animado</span>
+                        </label>
+                        <small style="color: rgba(56, 189, 248, 0.85); display: block; margin-top: 8px;">Mostra o botão "Perfil Animado" no perfil do usuário.</small>
+                    </div>
+
                     <div style="display: flex; gap: 10px; margin-top: 20px;">
                         <button type="submit" style="flex: 1; padding: 10px; background: linear-gradient(135deg, #EC4899 0%, #6B46C1 100%); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">Salvar</button>
                         <button type="button" id="closeEditModal" style="flex: 1; padding: 10px; background: rgba(255,0,0,0.2); color: white; border: 1px solid red; border-radius: 5px; cursor: pointer; font-weight: 600;">Cancelar</button>
@@ -554,6 +663,7 @@ async function editRank(rankId, rankName) {
             const isVisible = document.getElementById('editRankIsVisible').checked;
             const canManageDownloads = document.getElementById('editRankCanManageDownloads').checked;
             const canOrderAllRanks = document.getElementById('editRankCanOrderAllRanks')?.checked || false;
+            const canUseAnimatedProfile = document.getElementById('editRankCanUseAnimatedProfile')?.checked || false;
 
             if (!name || !color || !description || !customText) {
                 showMessage('Preencha todos os campos obrigatórios', 'error');
@@ -572,7 +682,8 @@ async function editRank(rankId, rankName) {
                     enableAdminPanel,
                     isVisible,
                     canManageDownloads,
-                    canOrderAllRanks
+                    canOrderAllRanks,
+                    canUseAnimatedProfile
                 );
 
                 if (result.success) {
@@ -596,38 +707,125 @@ async function loadUsers() {
     const container = document.getElementById('usersContainer');
     try {
         const result = await AuthAPI.getAdminUsers();
+        canRevealEmails = result?.canManageSensitiveAccounts === true;
+
         if (!result.success || !result.users || result.users.length === 0) {
+            cachedUsers = [];
+            currentUsersPage = 1;
             container.innerHTML = '<p>Nenhum usuário encontrado</p>';
             return;
         }
-        renderUsersList(container, result.users);
+
+        const visibleUsers = result.users.filter((user) => !isExampleEmail(user));
+        cachedUsers = visibleUsers;
+        currentUsersPage = 1;
+
+        if (cachedUsers.length === 0) {
+            container.innerHTML = '<p>Nenhum usuário encontrado</p>';
+            return;
+        }
+
+        renderUsersPage(container);
     } catch (error) {
+        cachedUsers = [];
+        currentUsersPage = 1;
         container.innerHTML = '<p style="color: red;">Erro ao carregar usuários: ' + error.message + '</p>';
     }
 }
 
+function renderUsersPage(container) {
+    const totalUsers = cachedUsers.length;
+    if (!totalUsers) {
+        container.innerHTML = '<p>Nenhum usuário encontrado</p>';
+        return;
+    }
+
+    const totalPages = Math.max(1, Math.ceil(totalUsers / USERS_PER_PAGE));
+    currentUsersPage = Math.min(Math.max(1, currentUsersPage), totalPages);
+
+    const start = (currentUsersPage - 1) * USERS_PER_PAGE;
+    const end = start + USERS_PER_PAGE;
+    const users = cachedUsers.slice(start, end);
+
+    renderUsersList(container, users);
+
+    if (totalPages <= 1) return;
+
+    const controls = document.createElement('div');
+    controls.className = 'users-pagination';
+    controls.innerHTML = `
+        <button type="button" class="users-page-btn" data-move="prev" ${currentUsersPage === 1 ? 'disabled' : ''}>Anterior</button>
+        <span class="users-page-label">Página ${currentUsersPage} de ${totalPages}</span>
+        <button type="button" class="users-page-btn" data-move="next" ${currentUsersPage === totalPages ? 'disabled' : ''}>Próxima</button>
+    `;
+
+    controls.querySelectorAll('.users-page-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const move = btn.getAttribute('data-move');
+            if (move === 'prev' && currentUsersPage > 1) {
+                currentUsersPage -= 1;
+                renderUsersPage(container);
+                return;
+            }
+            if (move === 'next' && currentUsersPage < totalPages) {
+                currentUsersPage += 1;
+                renderUsersPage(container);
+            }
+        });
+    });
+
+    container.appendChild(controls);
+}
+
 function renderUsersList(container, users) {
+    rawEmailByUserId.clear();
+    userLabelByUserId.clear();
+
     let html = `
-        <table class="users-table">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Nickname</th>
-                    <th>E-mail</th>
-                    <th>conquistas Customizáveis</th>
-                    <th>Ordenar Todos</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="users-table-wrap">
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Nickname</th>
+                        <th>E-mail</th>
+                        <th>conquistas Customizáveis</th>
+                        <th>Ordenar Todos</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
     `;
 
     users.forEach(user => {
+        const userId = String(user.id);
+        const rawEmail = String(user.email || '').trim();
+        const isOwnerAccount = Boolean(user.isOwnerAccount) || rawEmail.toLowerCase() === OWNER_EMAIL_VIEWER;
+        const displayName = `${user.firstName} ${user.lastName}`.trim();
+        userLabelByUserId.set(userId, displayName || user.nickname || `ID ${userId}`);
+
+        if (canRevealEmails) {
+            rawEmailByUserId.set(userId, rawEmail);
+        }
+
+        const emailCell = canRevealEmails
+            ? `
+                <div class="email-reveal-wrap">
+                    <span id="emailText-${userId}" data-visible="false">${maskEmail(rawEmail)}</span>
+                    <button type="button" class="toggle-email-btn" data-user-id="${userId}">Mostrar</button>
+                </div>
+            `
+            : rawEmail;
+
+        const deleteAction = canRevealEmails && !isOwnerAccount
+            ? `<button class="delete-account-btn" data-user-id="${user.id}">Excluir conta</button>`
+            : '';
+
         html += `
             <tr>
                 <td>${user.firstName} ${user.lastName}</td>
                 <td><strong>${user.nickname}</strong></td>
-                <td>${user.email}</td>
+                <td>${emailCell}</td>
                 <td id="ranks-${user.id}"><span class="loading">Carregando...</span></td>
                 <td>
                     <span style="font-size:12px; color:${user.canOrderFixedRanks ? '#10B981' : '#999'}; font-weight:600;">
@@ -635,19 +833,33 @@ function renderUsersList(container, users) {
                     </span>
                 </td>
                 <td>
-                    <div class="rank-select">
-                        <select id="rankSelect-${user.id}">
-                            <option value="">-- Adicionar conquista --</option>
-                        </select>
-                        <button class="add-rank-btn" data-user-id="${user.id}">Adicionar</button>
+                    <div class="user-actions-stack">
+                        <div class="rank-select">
+                            <select id="rankSelect-${user.id}">
+                                <option value="">-- Adicionar conquista --</option>
+                            </select>
+                            <button class="add-rank-btn" data-user-id="${user.id}">Adicionar</button>
+                        </div>
+                        ${deleteAction}
                     </div>
                 </td>
             </tr>
         `;
     });
 
-    html += '</tbody></table>';
+    html += `
+                </tbody>
+            </table>
+        </div>
+    `;
     container.innerHTML = html;
+
+    container.querySelectorAll('.toggle-email-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const userId = String(e.currentTarget.dataset.userId || '');
+            toggleEmailVisibility(userId);
+        });
+    });
 
     container.querySelectorAll('.add-rank-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -656,28 +868,75 @@ function renderUsersList(container, users) {
         });
     });
 
+    container.querySelectorAll('.delete-account-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const userId = e.currentTarget.dataset.userId;
+            deleteUserAccount(userId);
+        });
+    });
+
     users.forEach(user => {
         loadUserRanks(user.id);
         loadRankSelectOptions(user.id);
     });
 }
+
+function toggleEmailVisibility(userId) {
+    if (!canRevealEmails) return;
+
+    const emailTextEl = document.getElementById(`emailText-${userId}`);
+    const buttonEl = document.querySelector(`.toggle-email-btn[data-user-id="${userId}"]`);
+    const rawEmail = rawEmailByUserId.get(String(userId));
+
+    if (!emailTextEl || !buttonEl || !rawEmail) return;
+
+    const isVisible = emailTextEl.dataset.visible === 'true';
+    if (isVisible) {
+        emailTextEl.textContent = maskEmail(rawEmail);
+        emailTextEl.dataset.visible = 'false';
+        buttonEl.textContent = 'Mostrar';
+        return;
+    }
+
+    emailTextEl.textContent = rawEmail;
+    emailTextEl.dataset.visible = 'true';
+    buttonEl.textContent = 'Ocultar';
+}
+
+function renderUserRankBadge(userId, rank) {
+    return `
+        <span class="user-rank-badge" style="background-color: ${rank.color}40; border-color: ${rank.color}; color: ${rank.color};" data-user-id="${userId}" data-rank-id="${rank.id}">
+            ${rank.icon ? `<span class="user-rank-icon">${rank.icon}</span>` : ''}
+            <span class="user-rank-label" title="${rank.name}">${rank.name}</span>
+            <button class="remove-rank-btn" style="background: none; border: none; color: ${rank.color}; cursor: pointer; padding: 0; margin-left: 4px; font-weight: bold;">×</button>
+        </span>
+    `;
+}
+
 async function loadUserRanks(userId) {
     try {
         const result = await AuthAPI.getUserCustomRanks(userId);
         const container = document.getElementById(`ranks-${userId}`);
+        if (!container) return;
         
         if (result.success && result.ranks && result.ranks.length > 0) {
-            let html = '<div class="user-ranks">';
-            result.ranks.forEach(rank => {
+            const compactLimit = 4;
+            const visibleRanks = result.ranks.slice(0, compactLimit);
+            const hiddenRanks = result.ranks.slice(compactLimit);
+
+            let html = `<div class="user-ranks">${visibleRanks.map((rank) => renderUserRankBadge(userId, rank)).join('')}</div>`;
+
+            if (hiddenRanks.length > 0) {
                 html += `
-                    <span class="user-rank-badge" style="background-color: ${rank.color}40; border-color: ${rank.color}; color: ${rank.color};" data-user-id="${userId}" data-rank-id="${rank.id}">
-                        ${rank.icon}
-                        <span>${rank.name}</span>
-                        <button class="remove-rank-btn" style="background: none; border: none; color: ${rank.color}; cursor: pointer; padding: 0; margin-left: 5px; font-weight: bold;">×</button>
-                    </span>
+                    <button type="button" class="toggle-user-ranks-btn" data-user-id="${userId}" data-expanded="false">
+                        +${hiddenRanks.length} mais
+                    </button>
+                    <div id="hiddenRanks-${userId}" class="user-ranks user-ranks-hidden" style="display: none;">
+                        ${hiddenRanks.map((rank) => renderUserRankBadge(userId, rank)).join('')}
+                    </div>
                 `;
-            });
-            html += '</div>';
+            }
+
             container.innerHTML = html;
             
             // Attach remove buttons listeners
@@ -689,6 +948,26 @@ async function loadUserRanks(userId) {
                     removeUserRank(userId, rankId);
                 });
             });
+
+            const toggleBtn = container.querySelector('.toggle-user-ranks-btn');
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    const hiddenContainer = container.querySelector(`#hiddenRanks-${userId}`);
+                    if (!hiddenContainer) return;
+
+                    const expanded = toggleBtn.dataset.expanded === 'true';
+                    if (expanded) {
+                        hiddenContainer.style.display = 'none';
+                        toggleBtn.dataset.expanded = 'false';
+                        toggleBtn.textContent = `+${hiddenRanks.length} mais`;
+                        return;
+                    }
+
+                    hiddenContainer.style.display = 'flex';
+                    toggleBtn.dataset.expanded = 'true';
+                    toggleBtn.textContent = 'Ocultar';
+                });
+            }
         } else {
             container.innerHTML = '<p style="color: #999; font-size: 12px;">Nenhum conquista atribuído</p>';
         }
@@ -701,6 +980,7 @@ async function loadRankSelectOptions(userId) {
     try {
         const result = await AuthAPI.getAllCustomRanks();
         const select = document.getElementById(`rankSelect-${userId}`);
+        if (!select) return;
         
         if (result.success && result.ranks) {
             result.ranks.forEach(rank => {
@@ -753,6 +1033,43 @@ async function removeUserRank(userId, customRankId) {
         }
     } catch (error) {
         showMessage('Erro ao remover conquista: ' + error.message, 'error');
+    }
+}
+
+async function deleteUserAccount(userId) {
+    if (!canRevealEmails) {
+        showMessage('Somente o dono da conta pode excluir usuários', 'error');
+        return;
+    }
+
+    const normalizedId = Number(userId);
+    if (!Number.isInteger(normalizedId) || normalizedId <= 0) {
+        showMessage('ID de usuário inválido', 'error');
+        return;
+    }
+
+    const label = userLabelByUserId.get(String(normalizedId)) || `ID ${normalizedId}`;
+    const confirmed = await confirmCriticalAction({
+        title: 'Excluir conta',
+        message: `Tem certeza que deseja excluir completamente a conta de ${label}? Esta ação remove perfil, conquistas, downloads e histórico relacionado.`,
+        confirmText: 'Excluir conta',
+        keyword: 'EXCLUIR'
+    });
+
+    if (!confirmed) return;
+
+    try {
+        const result = await AuthAPI.deleteUserAccount(normalizedId);
+        if (result.success) {
+            showMessage(result.message || 'Conta excluída com sucesso!', 'success');
+            await loadUsers();
+            loadBans();
+            loadPostPermissions();
+        } else {
+            showMessage('Erro: ' + (result.message || 'Falha ao excluir conta'), 'error');
+        }
+    } catch (error) {
+        showMessage('Erro ao excluir conta: ' + error.message, 'error');
     }
 }
 
@@ -838,6 +1155,92 @@ function showThemeConfirm(title, message, options = {}) {
     });
 }
 
+function showKeywordConfirm(title, message, keyword) {
+    return new Promise((resolve) => {
+        const expected = String(keyword || '').trim().toUpperCase();
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.78);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 21000;
+            padding: 16px;
+        `;
+
+        overlay.innerHTML = `
+            <div style="
+                width: 100%;
+                max-width: 460px;
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                border: 1px solid rgba(236, 72, 153, 0.55);
+                border-radius: 14px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+                padding: 22px;
+                color: #fff;
+            ">
+                <h3 style="margin: 0 0 10px 0; font-size: 22px; color: #EC4899;">${title}</h3>
+                <p style="margin: 0 0 12px 0; line-height: 1.45; color: rgba(255,255,255,0.9);">${message}</p>
+                <p style="margin: 0 0 10px 0; color: #FBCFE8; font-size: 13px;">Digite <strong>${expected}</strong> para confirmar:</p>
+                <input id="keywordConfirmInput" type="text" autocomplete="off" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(236,72,153,0.45); background: rgba(15, 23, 42, 0.65); color: #fff; outline: none;">
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px;">
+                    <button type="button" id="keywordConfirmCancel" style="padding: 10px 16px; border-radius: 8px; border: 1px solid rgba(236,72,153,0.45); background: transparent; color: #fff; cursor: pointer; font-weight: 600;">Cancelar</button>
+                    <button type="button" id="keywordConfirmOk" style="padding: 10px 16px; border-radius: 8px; border: none; background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%); color: #fff; cursor: pointer; font-weight: 700;" disabled>Confirmar</button>
+                </div>
+            </div>
+        `;
+
+        const input = overlay.querySelector('#keywordConfirmInput');
+        const confirmBtn = overlay.querySelector('#keywordConfirmOk');
+
+        const cleanup = (result) => {
+            overlay.remove();
+            resolve(result);
+        };
+
+        input?.addEventListener('input', () => {
+            const current = String(input.value || '').trim().toUpperCase();
+            confirmBtn.disabled = current !== expected;
+        });
+
+        overlay.querySelector('#keywordConfirmCancel')?.addEventListener('click', () => cleanup(false));
+        confirmBtn?.addEventListener('click', () => cleanup(true));
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) cleanup(false);
+        });
+
+        document.body.appendChild(overlay);
+        input?.focus();
+    });
+}
+
+async function confirmCriticalAction(options = {}) {
+    const {
+        title = 'Confirmar ação',
+        message = 'Tem certeza que deseja continuar?',
+        confirmText = 'Confirmar',
+        keyword = ''
+    } = options;
+
+    const firstStep = await showThemeConfirm(title, message, {
+        confirmText,
+        cancelText: 'Cancelar',
+        danger: true
+    });
+    if (!firstStep) return false;
+
+    const normalizedKeyword = String(keyword || '').trim();
+    if (!normalizedKeyword) return true;
+
+    return showKeywordConfirm(
+        'Confirmação adicional',
+        'Ação crítica detectada.',
+        normalizedKeyword
+    );
+}
+
 function showMessage(message, type) {
     const messageDiv = document.getElementById('message');
     messageDiv.className = 'message ' + type;
@@ -857,6 +1260,10 @@ async function loadBans() {
         if (result.success && result.bans && result.bans.length > 0) {
             let html = '';
             result.bans.forEach(ban => {
+                if (isExampleEmail(ban.email)) {
+                    return;
+                }
+
                 const banDate = new Date(ban.createdAt).toLocaleDateString('pt-BR');
                 const expiryDate = ban.banType === 'suspension' && ban.expiresAt ? 
                     new Date(ban.expiresAt).toLocaleDateString('pt-BR') : 
@@ -866,7 +1273,7 @@ async function loadBans() {
                 html += `
                     <div class="ban-card" data-ban-id="${ban.id}">
                         <div class="ban-info">
-                            <h3>${ban.nickname} (${ban.email})</h3>
+                            <h3>${ban.nickname} (${maskEmail(ban.email)})</h3>
                             <div class="ban-details">
                                 <strong>Tipo:</strong> ${ban.banType === 'suspension' ? 'Suspensão Temporária' : 'Ban Permanente'} ${isExpired ? '(Expirado)' : ''}
                             </div>
@@ -895,7 +1302,13 @@ async function loadBans() {
 }
 
 async function unbanUser(banId) {
-    if (!confirm('Tem certeza que deseja desbanir este usuário?')) {
+    const confirmed = await confirmCriticalAction({
+        title: 'Desbanir usuário',
+        message: 'Tem certeza que deseja remover este banimento?',
+        confirmText: 'Desbanir',
+        keyword: 'DESBANIR'
+    });
+    if (!confirmed) {
         return;
     }
     
@@ -921,14 +1334,28 @@ async function loadPostPermissions() {
     try {
         const result = await AuthAPI.getUsersWithPostPermission();
         
-        if (result.success && result.users && result.users.length > 0) {
-            tbody.innerHTML = result.users.map(user => `
+        const users = (result.users || []).filter((user) => !isExampleEmail(user.email));
+
+        if (result.success && users.length > 0) {
+            tbody.innerHTML = users.map(user => `
                 <tr>
                     <td><strong>${user.nickname}</strong></td>
-                    <td>${user.email}</td>
+                    <td>${maskEmail(user.email)}</td>
                     <td><span style="background: rgba(236, 72, 153, 0.3); padding: 4px 8px; border-radius: 3px;">${user.downloadCount}</span></td>
                     <td>
-                        <button onclick="revokePostPermission('${user.nickname}')" style="padding: 6px 12px; background: #FF6B6B; border: none; border-radius: 3px; color: white; cursor: pointer; font-weight: 600;">Revogar</button>
+                        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                            ${user.canPostDownloads ? '<span style="padding: 3px 8px; border-radius: 999px; background: rgba(244,114,182,0.2); border: 1px solid rgba(244,114,182,0.45); color: #F9A8D4; font-size: 11px;">Postar</span>' : ''}
+                            ${user.canManageDownloads ? '<span style="padding: 3px 8px; border-radius: 999px; background: rgba(236,72,153,0.2); border: 1px solid rgba(236,72,153,0.45); color: #F472B6; font-size: 11px;">Gerenciar Downloads</span>' : ''}
+                            ${user.canOrderFixedRanks ? '<span style="padding: 3px 8px; border-radius: 999px; background: rgba(245,158,11,0.2); border: 1px solid rgba(245,158,11,0.45); color: #FBBF24; font-size: 11px;">Ordenar Fixos</span>' : ''}
+                            ${user.canAccessAdminPanel ? '<span style="padding: 3px 8px; border-radius: 999px; background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.45); color: #34D399; font-size: 11px;">Painel Admin</span>' : ''}
+                            ${user.canUseAnimatedProfile ? '<span style="padding: 3px 8px; border-radius: 999px; background: rgba(56,189,248,0.2); border: 1px solid rgba(56,189,248,0.45); color: #38BDF8; font-size: 11px;">Card Animado</span>' : ''}
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display:flex; gap:8px; flex-wrap: wrap;">
+                            <button onclick="prefillPermissionsForm('${user.nickname}', ${Number(user.canPostDownloads) === 1}, ${Number(user.canManageDownloads) === 1}, ${Number(user.canOrderFixedRanks) === 1}, ${Number(user.canAccessAdminPanel) === 1}, ${Number(user.canUseAnimatedProfile) === 1})" style="padding: 6px 12px; background: #6B46C1; border: none; border-radius: 3px; color: white; cursor: pointer; font-weight: 600;">Editar</button>
+                            <button onclick="clearIndividualPermissions('${user.nickname}')" style="padding: 6px 12px; background: #FF6B6B; border: none; border-radius: 3px; color: white; cursor: pointer; font-weight: 600;">Revogar tudo</button>
+                        </div>
                     </td>
                 </tr>
             `).join('');
@@ -936,12 +1363,12 @@ async function loadPostPermissions() {
             table.style.display = 'table';
             container.style.display = 'none';
         } else {
-            container.innerHTML = '<p style="text-align: center; color: #999;">Nenhum usuário com permissão ainda</p>';
+            container.innerHTML = '<p style="text-align: center; color: #999;">Nenhum usuário com permissões individuais</p>';
             container.style.display = 'block';
             table.style.display = 'none';
         }
     } catch (error) {
-        container.innerHTML = '<p style="color: red;">Erro ao carregar permissões de postagem</p>';
+        container.innerHTML = '<p style="color: red;">Erro ao carregar permissões</p>';
         console.error('Erro ao carregar permissões:', error);
     }
 }
@@ -977,36 +1404,90 @@ async function loadPostageRanks() {
     }
 }
 
-async function grantPostPermission(username) {
+function getPermissionsFromForm() {
+    return {
+        canPostDownloads: Boolean(document.getElementById('permCanPostDownloads')?.checked),
+        canManageDownloads: Boolean(document.getElementById('permCanManageDownloads')?.checked),
+        canOrderFixedRanks: Boolean(document.getElementById('permCanOrderFixedRanks')?.checked),
+        canAccessAdminPanel: Boolean(document.getElementById('permCanAccessAdminPanel')?.checked),
+        canUseAnimatedProfile: Boolean(document.getElementById('permCanUseAnimatedProfile')?.checked)
+    };
+}
+
+function applyPermissionsToForm(permissions = {}) {
+    if (document.getElementById('permCanPostDownloads')) {
+        document.getElementById('permCanPostDownloads').checked = Boolean(permissions.canPostDownloads);
+    }
+    if (document.getElementById('permCanManageDownloads')) {
+        document.getElementById('permCanManageDownloads').checked = Boolean(permissions.canManageDownloads);
+    }
+    if (document.getElementById('permCanOrderFixedRanks')) {
+        document.getElementById('permCanOrderFixedRanks').checked = Boolean(permissions.canOrderFixedRanks);
+    }
+    if (document.getElementById('permCanAccessAdminPanel')) {
+        document.getElementById('permCanAccessAdminPanel').checked = Boolean(permissions.canAccessAdminPanel);
+    }
+    if (document.getElementById('permCanUseAnimatedProfile')) {
+        document.getElementById('permCanUseAnimatedProfile').checked = Boolean(permissions.canUseAnimatedProfile);
+    }
+}
+
+function prefillPermissionsForm(username, canPostDownloads, canManageDownloads, canOrderFixedRanks, canAccessAdminPanel, canUseAnimatedProfile) {
+    const userInput = document.getElementById('userForPermission');
+    if (userInput) userInput.value = username;
+    applyPermissionsToForm({
+        canPostDownloads,
+        canManageDownloads,
+        canOrderFixedRanks,
+        canAccessAdminPanel,
+        canUseAnimatedProfile
+    });
+}
+
+async function saveIndividualPermissions(username) {
+    const permissions = getPermissionsFromForm();
     try {
-        const result = await AuthAPI.grantPostPermission(username);
+        const result = await AuthAPI.setUserPermissions(username, permissions);
         if (result.success) {
-            showMessage(`Permissão concedida a ${username}!`, 'success');
+            showMessage(`Permissões salvas para ${username}!`, 'success');
             document.getElementById('userForPermission').value = '';
+            applyPermissionsToForm({
+                canPostDownloads: false,
+                canManageDownloads: false,
+                canOrderFixedRanks: false,
+                canAccessAdminPanel: false,
+                canUseAnimatedProfile: false
+            });
             loadPostPermissions();
         } else {
             showMessage('Erro: ' + result.message, 'error');
         }
     } catch (error) {
-        showMessage('Erro ao conceder permissão: ' + error.message, 'error');
+        showMessage('Erro ao salvar permissões: ' + error.message, 'error');
     }
 }
 
-async function revokePostPermission(username) {
-    if (!confirm(`Tem certeza que deseja revogar a permissão de ${username}?`)) {
+async function clearIndividualPermissions(username) {
+    if (!confirm(`Tem certeza que deseja revogar todas as permissões de ${username}?`)) {
         return;
     }
     
     try {
-        const result = await AuthAPI.revokePostPermission(username);
+        const result = await AuthAPI.setUserPermissions(username, {
+            canPostDownloads: false,
+            canManageDownloads: false,
+            canOrderFixedRanks: false,
+            canAccessAdminPanel: false,
+            canUseAnimatedProfile: false
+        });
         if (result.success) {
-            showMessage(`Permissão removida de ${username}!`, 'success');
+            showMessage(`Permissões removidas de ${username}!`, 'success');
             loadPostPermissions();
         } else {
             showMessage('Erro: ' + result.message, 'error');
         }
     } catch (error) {
-        showMessage('Erro ao remover permissão: ' + error.message, 'error');
+        showMessage('Erro ao remover permissões: ' + error.message, 'error');
     }
 }
 

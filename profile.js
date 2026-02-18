@@ -14,6 +14,32 @@ const MAX_SELECTED_PROFILE_RANKS = 3;
 let isApplyingNotificationSettings = false;
 let isSavingNotificationSettings = false;
 let previousAllNotificationsToggleState = false;
+let currentTwoFactorSetupSecret = '';
+let currentTwoFactorOtpAuthUri = '';
+let animatedGifSearchNextPos = '';
+let animatedGifSearchLoading = false;
+let selectedAnimatedProfileGifUrl = '';
+const ALLOWED_ANIMATED_PROFILE_THEMES = [
+    'auto',
+    'theme-aurora',
+    'theme-prisma',
+    'theme-pulse',
+    'theme-comet',
+    'theme-inferno',
+    'theme-frost',
+    'theme-voltage',
+    'theme-emberstorm',
+    'theme-blizzard',
+    'theme-neon-grid',
+    'theme-liquid-metal',
+    'theme-void-rift',
+    'theme-solar-flare',
+    'theme-toxic-mist',
+    'theme-crystal-cave',
+    'theme-glitchwave'
+];
+const ALLOWED_ANIMATED_VISUAL_MODES = ['theme', 'gif'];
+const MAX_CUSTOM_ANIMATED_GIF_BYTES = 500 * 1024;
 const POST_ACHIEVEMENT_RANKS = [
     { minPosts: 5, name: 'Autor de Bronze', color: '#60A5FA' },
     { minPosts: 10, name: 'Autor de Prata', color: '#93C5FD' },
@@ -48,7 +74,7 @@ const LIKE_ACHIEVEMENT_RANKS = [
     { minLikes: 95, name: 'Supremo dos Likes', color: '#84CC16' },
     { minLikes: 100, name: 'Soberano dos Likes', color: '#EAB308' }
 ];
-const PROFILE_TAGLINE_SUGGESTIONS = [
+const PROFILE_TAGLINE_SUGGESTIONS = Array.from(new Set([
     'Vivendo um dia de cada vez',
     'Energia boa atrai coisa boa',
     'Menos drama mais café',
@@ -68,8 +94,224 @@ const PROFILE_TAGLINE_SUGGESTIONS = [
     'Colecionando momentos não coisas',
     'A vida é curta demais para não ser intensa',
     'Sempre pronto(a) para a próxima aventura',
-    'Autenticidade acima de tudo'
-];
+    'Autenticidade acima de tudo',
+    ...`Brilho onde a vida me coloca
+Sou minha melhor versão em construção
+Energia boa atrai coisa boa
+O impossível é só questão de opinião
+Viver é colecionar momentos não coisas
+Gratidão muda tudo
+O sorriso é meu cartão de visita
+Fé no futuro força no presente
+Quem acredita sempre alcança
+A vida é agora
+Dormir é meu esporte favorito
+Café meu combustível oficial
+Ironia é meu idioma nativo
+Quem não gosta de meme não gosta de mim
+Sou 50% risada 50% caos
+Minha vibe é paz e pizza
+Se não for pra rir nem me chama
+Drama só na Netflix
+Wi-Fi forte coração leve
+Sou edição limitada
+O silêncio também fala
+O tempo cura ensina e revela
+O que é verdadeiro permanece
+A vida é feita de ciclos
+O essencial é invisível aos olhos
+Cada fim é um novo começo
+O coração sabe antes da razão
+O caminho importa mais que o destino
+O amor é sempre a resposta
+Nada é por acaso
+Amar é minha forma favorita de existir
+O coração é meu guia
+Amor próprio é meu primeiro amor
+Quem ama cuida
+O amor é infinito em detalhes
+Meu coração é poesia
+Amar é viver duas vezes
+O amor é minha religião
+O sorriso de quem amo é meu sol
+Amor é liberdade
+Não sigo regras sigo meu coração
+Sou dono da minha história
+Quem me subestima me fortalece
+Ousadia é meu sobrenome
+Não vim pra competir vim pra conquistar
+Minha vibe não é pra qualquer um
+Sou intensidade pura
+Quem não arrisca não vive
+Minha energia não é negociável
+Sou tempestade e calmaria
+Mundo pequeno sonhos gigantes
+Viajar é meu vício favorito
+O mundo é meu quintal
+Cada lugar tem uma história
+A vida é feita de encontros
+O planeta é lindo demais pra ficar parado
+Quero colecionar passaportes carimbados
+Cultura é riqueza
+O mundo é diverso e eu também
+Sou cidadão do universo
+Vivo em ritmo de música
+Minha playlist é meu diário
+Música é terapia
+Cada batida é um pedaço de mim
+A vida tem trilha sonora
+Sou nota fora da escala
+Música é linguagem universal
+Vivo em acordes e versos
+O fone é meu refúgio
+Música é minha alma cantando
+Não sou para todos
+Quem entende fica
+Sou intensidade sem manual
+Não me decifrem me sintam
+Sou caos organizado
+Minha essência não se copia
+Quem não aguenta não acompanha
+Sou fogo e calmaria
+Não sou opção sou escolha
+Sou raro não perfeito
+Floresço onde sou regada
+Sou pétala e espinho
+A vida é jardim eu sou flor
+Delicadeza é força
+O vento leva mas eu renasço
+Sou poesia em movimento
+Beleza está nos detalhes
+Sou brisa leve
+A vida é feita de cores suaves
+Sou primavera eterna
+Nem tudo que mostro é tudo que sou
+Mistério é meu charme
+Sou enigma em carne e osso
+Quem sabe entende
+Nem sempre revelo mas sempre sinto
+Sou segredo bem guardado
+O mistério me define
+Nem tudo precisa ser explicado
+Sou sombra e luz
+Descobrir-me é aventura
+Sou luz em dias nublados
+A vida é feita de escolhas
+O tempo é meu melhor conselheiro
+Sou feito de sonhos e coragem
+A vida é curta demais pra esperar
+Sou paz em meio ao caos
+Cada dia é uma nova chance
+Sou feito de histórias
+A vida é movimento
+Sou força e delicadeza
+O futuro é agora
+Sou feito de momentos
+A vida é aprendizado
+Sou coragem em forma de gente
+O amanhã é promessa
+Sou intensidade em cada detalhe
+A vida é presente
+Sou feito de fé
+O tempo é tesouro
+Sou esperança em pessoa
+A vida é poesia
+Sou feito de amor
+O mundo é meu palco
+Sou feito de liberdade
+A vida é descoberta
+Sou feito de risos
+O tempo é arte
+Sou feito de verdades
+A vida é mágica
+Sou feito de cores
+O mundo é inspiração
+Sou feito de sonhos grandes
+A vida é aventura
+Sou feito de fé e força
+O tempo é caminho
+Sou feito de esperança
+A vida é música
+Sou feito de coragem
+O mundo é oportunidade
+Sou feito de gratidão
+A vida é luz
+Sou feito de intensidade
+O tempo é mestre
+Sou feito de escolhas
+A vida é jornada
+Sou feito de paz
+O mundo é diverso
+Sou feito de energia boa
+A vida é presente constante
+Sou feito de simplicidade
+O tempo é resposta
+Sou feito de alegria
+A vida é surpresa
+Sou feito de fé no impossível
+O mundo é infinito
+Sou feito de amor próprio
+A vida é transformação
+Sou feito de sonhos reais
+O tempo é aliado
+Sou feito de esperança viva
+A vida é movimento constante
+Sou feito de coragem diária
+O mundo é meu lugar
+Sou feito de gratidão sincera
+A vida é feita de detalhes
+Sou feito de intensidade pura
+O tempo é revelação
+Sou feito de fé verdadeira
+A vida é feita de encontros
+Sou feito de amor sem limites
+O mundo é feito de possibilidades
+Sou feito de paz interior
+A vida é feita de escolhas simples
+Sou feito de alegria contagiante
+O tempo é cura
+Sou feito de esperança constante
+A vida é feita de momentos únicos
+Sou feito de coragem sem medo
+O mundo é feito de diversidade
+Sou feito de gratidão infinita
+A vida é feita de surpresas boas
+Sou feito de intensidade sem fim
+O tempo é sabedoria
+Sou feito de fé que move
+A vida é feita de sonhos possíveis
+Sou feito de amor que transforma
+O mundo é feito de cores
+Sou feito de paz que acalma
+A vida é feita de risos
+Sou feito de esperança que guia
+O tempo é aprendizado
+Sou feito de coragem que inspira
+A vida é feita de luz
+Sou feito de gratidão que fortalece
+O mundo é feito de encontros
+Sou feito de intensidade que marca
+A vida é feita de fé
+Sou feito de amor que liberta
+O tempo é oportunidade
+Sou feito de paz que ilumina
+A vida é feita de escolhas certas
+Sou feito de esperança que renova
+O mundo é feito de sonhos
+Sou feito de coragem que constrói
+A vida é feita de gratidão
+Sou feito de intensidade que contagia
+O tempo é presente
+Sou feito de fé que sustenta
+A vida é feita de amor
+Sou feito de paz que transforma
+O mundo é feito de fé
+Sou feito de esperança que floresce
+A vida é feita de coragem
+Sou feito de gratidão que inspira
+O tempo é vida
+Sou feito de intensidade que vive`.split('\n').map((item) => item.trim()).filter(Boolean)
+]));
 
 function getApiOrigin() {
     const baseFromApi = typeof API_URL === 'string'
@@ -232,19 +474,27 @@ function showNotification(message, type = 'success') {
     }, 4000);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     console.log('Profile DOMContentLoaded fired');
-    
-    const token = AuthAPI.getToken();
-    console.log('Token found:', token ? 'YES (length: ' + token.length + ')' : 'NO');
-    
-    if (!token) {
-        window.location.href = 'login.html?message=' + encodeURIComponent('Faça login para acessar seu perfil');
-        return;
+
+    if (typeof RouteGuard !== 'undefined') {
+        const allowed = await RouteGuard.requireAuth({
+            loginMessage: 'Faça login para acessar seu perfil',
+            invalidSessionMessage: 'Sessão inválida. Faça login novamente.',
+            validateSession: true
+        });
+        if (!allowed) return;
     } else {
-        console.log('Token exists, loading profile directly...');
-        loadProfile();
+        const token = AuthAPI.getToken();
+        console.log('Token found:', token ? 'YES (length: ' + token.length + ')' : 'NO');
+        if (!token) {
+            window.location.href = 'login.html?message=' + encodeURIComponent('Faça login para acessar seu perfil');
+            return;
+        }
     }
+
+    console.log('Session ok, loading profile directly...');
+    loadProfile();
 });
 
 // Carregar perfil
@@ -389,6 +639,8 @@ async function renderProfileData(result) {
                 });
             }
         }
+
+        syncAnimatedProfileButton();
 
         // Inicializar currentCustomRanks como array vazio ANTES de renderizar histórico
         if (!currentCustomRanks) {
@@ -892,71 +1144,88 @@ function addCheckboxEventListeners() {
     console.log('Event listeners added to ' + document.querySelectorAll('.rank-checkbox').length + ' checkboxes');
 }
 
-async function moveSelectedRankOrder(rankId, direction) {
-    try {
-        const selectedResult = await AuthAPI.getSelectedProfileRanks();
-        if (!selectedResult.success || !Array.isArray(selectedResult.rankIds)) return;
-        canOrderFixedRanks = Boolean(selectedResult?.canOrderFixedRanks || canOrderFixedRanks);
+function setupSelectedRanksDragAndDrop(display) {
+    if (!display) return;
 
-        const currentOrder = selectedResult.rankIds
-            .map((id) => normalizeRankOrderKey(id))
-            .filter(Boolean);
-        const fetchedOrder = Array.isArray(selectedResult.ranks)
-            ? selectedResult.ranks
-                .map((rank) => getRankOrderKeyFromRank(rank))
-                .filter(Boolean)
-            : [];
-        const fixedRankKeys = new Set(
-            (Array.isArray(selectedResult.ranks) ? selectedResult.ranks : [])
-                .filter((rank) => isFixedRankEntry(rank))
-                .map((rank) => getRankOrderKeyFromRank(rank))
-                .filter(Boolean)
-        );
+    const badges = Array.from(display.querySelectorAll('.selected-conquista-badge'));
+    if (badges.length === 0) return;
 
-        const resolvedOrder = currentOrder.length > 0 ? [...currentOrder] : [...fetchedOrder];
-        if (canOrderFixedRanks) {
-            for (const key of fetchedOrder) {
-                if (!resolvedOrder.includes(key)) resolvedOrder.push(key);
-            }
-        }
+    const clearDropTargets = () => {
+        badges.forEach((badge) => badge.classList.remove('rank-drop-target'));
+    };
 
-        const movable = canOrderFixedRanks
-            ? [...resolvedOrder]
-            : resolvedOrder.filter((key) => !fixedRankKeys.has(key));
-        const targetRankKey = normalizeRankOrderKey(rankId);
-        const index = movable.indexOf(targetRankKey);
-        if (index < 0) return;
+    const canMoveBadge = (badge) => {
+        if (!badge) return false;
+        const isFixed = badge.dataset.fixed === '1';
+        return canOrderFixedRanks || !isFixed;
+    };
 
-        const target = index + direction;
-        if (target < 0 || target >= movable.length) return;
+    const moveBadge = (draggedBadge, targetBadge) => {
+        if (!draggedBadge || !targetBadge || draggedBadge === targetBadge) return;
+        if (!canMoveBadge(draggedBadge) || !canMoveBadge(targetBadge)) return;
 
-        [movable[index], movable[target]] = [movable[target], movable[index]];
+        const ordered = Array.from(display.querySelectorAll('.selected-conquista-badge'));
+        const draggedIndex = ordered.indexOf(draggedBadge);
+        const targetIndex = ordered.indexOf(targetBadge);
+        if (draggedIndex < 0 || targetIndex < 0) return;
 
-        const reordered = canOrderFixedRanks ? movable : (() => {
-            const mergedOrder = [];
-            let movablePointer = 0;
-            for (const key of resolvedOrder) {
-                if (fixedRankKeys.has(key)) mergedOrder.push(key);
-                else mergedOrder.push(movable[movablePointer++]);
-            }
-            return mergedOrder;
-        })();
-
-        const uniqueOrder = reordered.filter((key, idx, arr) => arr.indexOf(key) === idx);
-        const payloadOrder = uniqueOrder
-            .map((key) => rankOrderKeyToPayload(key))
-            .filter((value) => value !== null);
-        const saveResult = await AuthAPI.selectProfileRanks(payloadOrder);
-        if (!saveResult.success) {
-            showNotification('Erro ao mudar ordem dos conquistas', 'error');
+        if (draggedIndex < targetIndex) {
+            display.insertBefore(draggedBadge, targetBadge.nextElementSibling);
             return;
         }
+        display.insertBefore(draggedBadge, targetBadge);
+    };
 
-        await loadSelectedRanksDisplay();
-    } catch (err) {
-        console.warn('Error moving selected rank order:', err);
-        showNotification('Erro ao mudar ordem dos conquistas', 'error');
-    }
+    let draggedBadge = null;
+
+    badges.forEach((badge) => {
+        const movable = isRankOrderMode && canMoveBadge(badge);
+
+        badge.setAttribute('draggable', movable ? 'true' : 'false');
+        badge.classList.toggle('rank-order-mode', isRankOrderMode);
+        badge.classList.toggle('rank-order-draggable', movable);
+        badge.classList.toggle('rank-order-locked', isRankOrderMode && !movable);
+
+        badge.addEventListener('dragstart', (event) => {
+            if (!isRankOrderMode || !movable) {
+                event.preventDefault();
+                return;
+            }
+            draggedBadge = badge;
+            badge.classList.add('dragging');
+            if (event.dataTransfer) {
+                event.dataTransfer.effectAllowed = 'move';
+                event.dataTransfer.setData('text/plain', badge.dataset.rankId || '');
+            }
+        });
+
+        badge.addEventListener('dragover', (event) => {
+            if (!isRankOrderMode || !draggedBadge || draggedBadge === badge) return;
+            if (!canMoveBadge(draggedBadge) || !canMoveBadge(badge)) return;
+            event.preventDefault();
+            if (event.dataTransfer) {
+                event.dataTransfer.dropEffect = 'move';
+            }
+            badge.classList.add('rank-drop-target');
+        });
+
+        badge.addEventListener('dragleave', () => {
+            badge.classList.remove('rank-drop-target');
+        });
+
+        badge.addEventListener('drop', (event) => {
+            event.preventDefault();
+            if (!isRankOrderMode || !draggedBadge || draggedBadge === badge) return;
+            moveBadge(draggedBadge, badge);
+            clearDropTargets();
+        });
+
+        badge.addEventListener('dragend', () => {
+            badge.classList.remove('dragging');
+            clearDropTargets();
+            draggedBadge = null;
+        });
+    });
 }
 
 async function loadSelectedRanksDisplay() {
@@ -1057,7 +1326,8 @@ async function loadSelectedRanksDisplay() {
         }
 
         const displayedRanksCount = orderedSelectedRanks.length;
-        const shouldShowOrderButton = displayedRanksCount >= 2;
+        const movableRanksCount = orderedSelectedRanks.filter((rank) => canOrderFixedRanks || !isFixedRankEntry(rank)).length;
+        const shouldShowOrderButton = movableRanksCount >= 2;
 
         if (!shouldShowOrderButton && isRankOrderMode) {
             isRankOrderMode = false;
@@ -1067,7 +1337,8 @@ async function loadSelectedRanksDisplay() {
             selectedRanks: fetchedRanks.length,
             mandatoryRanks: mandatoryRanks.length,
             totalRanks: orderedSelectedRanks.length,
-            displayedRanksCount
+            displayedRanksCount,
+            movableRanksCount
         });
 
         if (orderedSelectedRanks.length > 0) {
@@ -1075,17 +1346,26 @@ async function loadSelectedRanksDisplay() {
             if (orderBtn) {
                 orderBtn.style.display = shouldShowOrderButton ? 'inline-flex' : 'none';
                 orderBtn.textContent = isRankOrderMode ? 'Concluir' : 'Ordenar';
+                orderBtn.title = isRankOrderMode
+                    ? 'Salvar nova ordem das conquistas'
+                    : 'Arrastar e soltar conquistas';
                 orderBtn.onclick = async () => {
-                    if (isRankOrderMode) {
-                        const payloadOrder = getDisplayedRankOrderPayload();
-                        const saveResult = await AuthAPI.selectProfileRanks(payloadOrder);
-                        if (!saveResult?.success) {
-                            showNotification(saveResult?.message || 'Erro ao salvar ordem dos conquistas', 'error');
-                            return;
-                        }
-                        showNotification('Ordem das conquistas salva com sucesso!', 'success');
+                    if (!isRankOrderMode) {
+                        isRankOrderMode = true;
+                        await loadSelectedRanksDisplay();
+                        showNotification('Arraste as conquistas para ordenar e clique em Concluir para salvar.', 'success');
+                        return;
                     }
-                    isRankOrderMode = !isRankOrderMode;
+
+                    const payloadOrder = getDisplayedRankOrderPayload();
+                    const saveResult = await AuthAPI.selectProfileRanks(payloadOrder);
+                    if (!saveResult?.success) {
+                        showNotification(saveResult?.message || 'Erro ao salvar ordem dos conquistas', 'error');
+                        return;
+                    }
+
+                    isRankOrderMode = false;
+                    showNotification('Ordem das conquistas salva com sucesso!', 'success');
                     await loadSelectedRanksDisplay();
                 };
             }
@@ -1096,33 +1376,17 @@ async function loadSelectedRanksDisplay() {
                 .map((rank) => getRankOrderKeyFromRank(rank))
                 .filter(Boolean)
         );
-        const displayedSelectedIds = orderedSelectedRanks
-            .map((rank) => getRankOrderKeyFromRank(rank))
-            .filter(Boolean);
-        const resolvedSelectedIds = selectedKeysOrdered.length > 0
-            ? [...selectedKeysOrdered]
-            : [...displayedSelectedIds];
-        if (canOrderFixedRanks) {
-            for (const displayedId of displayedSelectedIds) {
-                if (!resolvedSelectedIds.includes(displayedId)) {
-                    resolvedSelectedIds.push(displayedId);
-                }
-            }
-        }
-        const movableSelectedIds = canOrderFixedRanks
-            ? resolvedSelectedIds
-            : resolvedSelectedIds.filter(id => !fixedIds.has(id));
             const html = orderedSelectedRanks.map(rank => {
                 const rankKey = getRankOrderKeyFromRank(rank);
                 if (!rankKey) return '';
                 const rankId = String(rank?.id ?? '');
                 const isFixed = fixedIds.has(rankKey);
-                const movableIndex = movableSelectedIds.indexOf(rankKey);
-                const canMoveUp = movableIndex > 0;
-                const canMoveDown = movableIndex >= 0 && movableIndex < movableSelectedIds.length - 1;
+                const canMove = canOrderFixedRanks || !isFixed;
+                const showDragHandle = isRankOrderMode && shouldShowOrderButton && canMove;
+                const lockTitle = isRankOrderMode && !canMove ? 'Conquista fixo não pode ser movido' : '';
 
                 return `
-                <div class="selected-conquista-badge" data-rank-id="${rankId}" style="
+                <div class="selected-conquista-badge" data-rank-id="${rankId}" data-fixed="${isFixed ? '1' : '0'}" title="${lockTitle}" style="
                     border-color: ${rank.color};
                     color: ${rank.color};
                     background-color: ${rank.color}33;
@@ -1131,12 +1395,7 @@ async function loadSelectedRanksDisplay() {
                     gap: 8px;
                 ">
                     <span>${rank.name}</span>
-                    ${((!isFixed || canOrderFixedRanks) && isRankOrderMode && shouldShowOrderButton) ? `
-                        <span style="display: inline-flex; gap: 4px;">
-                            <button type="button" class="rank-order-btn rank-up" data-rank-id="${rankId}" ${canMoveUp ? '' : 'disabled'} style="padding: 2px 6px; border: 1px solid ${rank.color}66; background: transparent; color: ${rank.color}; border-radius: 4px; cursor: ${canMoveUp ? 'pointer' : 'not-allowed'}; opacity: ${canMoveUp ? '1' : '0.35'};">↑</button>
-                            <button type="button" class="rank-order-btn rank-down" data-rank-id="${rankId}" ${canMoveDown ? '' : 'disabled'} style="padding: 2px 6px; border: 1px solid ${rank.color}66; background: transparent; color: ${rank.color}; border-radius: 4px; cursor: ${canMoveDown ? 'pointer' : 'not-allowed'}; opacity: ${canMoveDown ? '1' : '0.35'};">↓</button>
-                        </span>
-                    ` : ''}
+                    ${showDragHandle ? '<span class="rank-drag-handle" aria-hidden="true">::</span>' : ''}
                 </div>
             `;
             }).join('');
@@ -1144,12 +1403,7 @@ async function loadSelectedRanksDisplay() {
             display.innerHTML = html;
             const hasFixedInUnifiedStrip = orderedSelectedRanks.some((rank) => isFixedRankEntry(rank));
             syncUnifiedRankStripMode(Boolean(canOrderFixedRanks && hasFixedInUnifiedStrip));
-            display.querySelectorAll('.rank-order-btn.rank-up').forEach(btn => {
-                btn.addEventListener('click', () => moveSelectedRankOrder(btn.dataset.rankId, -1));
-            });
-            display.querySelectorAll('.rank-order-btn.rank-down').forEach(btn => {
-                btn.addEventListener('click', () => moveSelectedRankOrder(btn.dataset.rankId, 1));
-            });
+            setupSelectedRanksDragAndDrop(display);
             console.log('Selected conquistas display rendered with', orderedSelectedRanks.length, 'ranks (selected + mandatory)');
         } else {
             syncUnifiedRankStripMode(false);
@@ -1218,6 +1472,169 @@ function attachEventListeners() {
             });
         }
 
+        const animatedProfileBtn = document.getElementById('animatedProfileBtn');
+        if (animatedProfileBtn) {
+            animatedProfileBtn.addEventListener('click', openAnimatedProfileModal);
+        }
+
+        const animatedMiniProfileEnabledToggle = document.getElementById('animatedMiniProfileEnabledToggle');
+        const animatedDownloadCardEnabledToggle = document.getElementById('animatedDownloadCardEnabledToggle');
+        const animatedVisualModeSelect = document.getElementById('animatedProfileVisualModeSelect');
+        const animatedProfileThemeSelect = document.getElementById('animatedProfileThemeSelect');
+        const animatedGifSearchInput = document.getElementById('animatedGifSearchInput');
+        const animatedGifSearchBtn = document.getElementById('animatedGifSearchBtn');
+        const animatedGifSearchMoreBtn = document.getElementById('animatedGifSearchMoreBtn');
+        const animatedCustomGifUrl = document.getElementById('animatedCustomGifUrl');
+        const uploadAnimatedGifBtn = document.getElementById('uploadAnimatedGifBtn');
+        const animatedCustomGifFile = document.getElementById('animatedCustomGifFile');
+
+        const handleAnimatedToggleChange = () => {
+            const miniEnabled = Boolean(animatedMiniProfileEnabledToggle?.checked);
+            const downloadEnabled = Boolean(animatedDownloadCardEnabledToggle?.checked);
+            applyAnimatedProfileThemeState(miniEnabled || downloadEnabled);
+            renderAnimatedProfilePreview(
+                miniEnabled,
+                animatedProfileThemeSelect?.value || 'auto',
+                downloadEnabled,
+                animatedVisualModeSelect?.value || 'theme',
+                selectedAnimatedProfileGifUrl
+            );
+        };
+        if (animatedMiniProfileEnabledToggle) {
+            animatedMiniProfileEnabledToggle.addEventListener('change', handleAnimatedToggleChange);
+        }
+        if (animatedDownloadCardEnabledToggle) {
+            animatedDownloadCardEnabledToggle.addEventListener('change', handleAnimatedToggleChange);
+        }
+
+        if (animatedProfileThemeSelect) {
+            animatedProfileThemeSelect.addEventListener('change', () => {
+                const miniEnabled = Boolean(document.getElementById('animatedMiniProfileEnabledToggle')?.checked);
+                const downloadEnabled = Boolean(document.getElementById('animatedDownloadCardEnabledToggle')?.checked);
+                renderAnimatedProfilePreview(
+                    miniEnabled,
+                    animatedProfileThemeSelect.value,
+                    downloadEnabled,
+                    animatedVisualModeSelect?.value || 'theme',
+                    selectedAnimatedProfileGifUrl
+                );
+            });
+        }
+
+        if (animatedVisualModeSelect) {
+            animatedVisualModeSelect.addEventListener('change', async () => {
+                const miniEnabled = Boolean(document.getElementById('animatedMiniProfileEnabledToggle')?.checked);
+                const downloadEnabled = Boolean(document.getElementById('animatedDownloadCardEnabledToggle')?.checked);
+                applyAnimatedProfileThemeState(miniEnabled || downloadEnabled);
+                if (animatedVisualModeSelect.value === 'gif') {
+                    const resultsGrid = document.getElementById('animatedGifResults');
+                    if (resultsGrid && !resultsGrid.children.length) {
+                        animatedGifSearchNextPos = '';
+                        await searchAnimatedGifs({ append: false, useTrending: true });
+                    }
+                }
+                renderAnimatedProfilePreview(
+                    miniEnabled,
+                    animatedProfileThemeSelect?.value || 'auto',
+                    downloadEnabled,
+                    animatedVisualModeSelect.value,
+                    selectedAnimatedProfileGifUrl
+                );
+            });
+        }
+
+        if (animatedGifSearchBtn) {
+            animatedGifSearchBtn.addEventListener('click', async () => {
+                animatedGifSearchNextPos = '';
+                await searchAnimatedGifs({ append: false, useTrending: false });
+            });
+        }
+        if (animatedGifSearchInput) {
+            animatedGifSearchInput.addEventListener('keydown', async (event) => {
+                if (event.key !== 'Enter') return;
+                event.preventDefault();
+                animatedGifSearchNextPos = '';
+                await searchAnimatedGifs({ append: false, useTrending: false });
+            });
+        }
+        if (animatedGifSearchMoreBtn) {
+            animatedGifSearchMoreBtn.addEventListener('click', async () => {
+                if (!animatedGifSearchNextPos) return;
+                await searchAnimatedGifs({ append: true, useTrending: false });
+            });
+        }
+
+        if (animatedCustomGifUrl) {
+            animatedCustomGifUrl.addEventListener('change', () => {
+                if (animatedVisualModeSelect) animatedVisualModeSelect.value = 'gif';
+                selectedAnimatedProfileGifUrl = normalizeAnimatedProfileGifUrl(animatedCustomGifUrl.value);
+                const miniEnabled = Boolean(document.getElementById('animatedMiniProfileEnabledToggle')?.checked);
+                const downloadEnabled = Boolean(document.getElementById('animatedDownloadCardEnabledToggle')?.checked);
+                applyAnimatedProfileThemeState(miniEnabled || downloadEnabled);
+                renderAnimatedProfilePreview(
+                    miniEnabled,
+                    animatedProfileThemeSelect?.value || 'auto',
+                    downloadEnabled,
+                    'gif',
+                    selectedAnimatedProfileGifUrl
+                );
+            });
+        }
+
+        if (uploadAnimatedGifBtn) {
+            uploadAnimatedGifBtn.addEventListener('click', async () => {
+                const file = animatedCustomGifFile?.files?.[0];
+                if (!file) {
+                    showNotification('Selecione um GIF para enviar.', 'error');
+                    return;
+                }
+                if (file.size > MAX_CUSTOM_ANIMATED_GIF_BYTES) {
+                    showNotification('GIF muito grande. Máximo: 500KB.', 'error');
+                    return;
+                }
+                if (String(file.type || '').toLowerCase() !== 'image/gif') {
+                    showNotification('Envie apenas arquivo .gif', 'error');
+                    return;
+                }
+
+                uploadAnimatedGifBtn.disabled = true;
+                const originalText = uploadAnimatedGifBtn.textContent;
+                uploadAnimatedGifBtn.textContent = 'Enviando...';
+                try {
+                    const result = await AuthAPI.uploadAnimatedProfileGif(file);
+                    if (!result?.success || !result?.gifUrl) {
+                        showNotification(result?.message || 'Erro ao enviar GIF.', 'error');
+                        return;
+                    }
+                    if (animatedVisualModeSelect) animatedVisualModeSelect.value = 'gif';
+                    selectedAnimatedProfileGifUrl = normalizeAnimatedProfileGifUrl(result.gifUrl);
+                    if (animatedCustomGifUrl) animatedCustomGifUrl.value = selectedAnimatedProfileGifUrl;
+                    showNotification('GIF enviado com sucesso!', 'success');
+                    const miniEnabled = Boolean(document.getElementById('animatedMiniProfileEnabledToggle')?.checked);
+                    const downloadEnabled = Boolean(document.getElementById('animatedDownloadCardEnabledToggle')?.checked);
+                    applyAnimatedProfileThemeState(miniEnabled || downloadEnabled);
+                    renderAnimatedProfilePreview(
+                        miniEnabled,
+                        animatedProfileThemeSelect?.value || 'auto',
+                        downloadEnabled,
+                        'gif',
+                        selectedAnimatedProfileGifUrl
+                    );
+                } catch (error) {
+                    console.error('Erro no upload de GIF:', error);
+                    showNotification('Erro ao enviar GIF.', 'error');
+                } finally {
+                    uploadAnimatedGifBtn.disabled = false;
+                    uploadAnimatedGifBtn.textContent = originalText;
+                }
+            });
+        }
+
+        const saveAnimatedProfileBtn = document.getElementById('saveAnimatedProfileBtn');
+        if (saveAnimatedProfileBtn) {
+            saveAnimatedProfileBtn.addEventListener('click', saveAnimatedProfileSettings);
+        }
+
         // ===== MODAL TABS FUNCTIONALITY =====
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -1230,6 +1647,11 @@ function attachEventListeners() {
                 // Adiciona active no botão e conteúdo clicado
                 btn.classList.add('active');
                 document.getElementById(tabName).classList.add('active');
+
+                if (tabName === 'password-tab') {
+                    resetTwoFactorMessages();
+                    loadTwoFactorStatus();
+                }
             });
         });
 
@@ -1540,6 +1962,8 @@ function attachEventListeners() {
             });
         }
 
+        initializeTwoFactorControls();
+
         console.log('Event listeners attached successfully');
     } catch (err) {
         console.warn('Error attaching listeners:', err.message);
@@ -1606,10 +2030,775 @@ async function checkAdminPanelAccess() {
     }
 }
 
+function userCanUseAnimatedProfile() {
+    const rawValue = currentUser?.canUseAnimatedProfile;
+    return rawValue === true || Number(rawValue) === 1;
+}
+
+function normalizeAnimatedProfileTheme(themeValue) {
+    const selected = String(themeValue || 'auto').trim();
+    return ALLOWED_ANIMATED_PROFILE_THEMES.includes(selected) ? selected : 'auto';
+}
+
+function normalizeAnimatedProfileVisualMode(modeValue) {
+    const selected = String(modeValue || 'theme').trim().toLowerCase();
+    return ALLOWED_ANIMATED_VISUAL_MODES.includes(selected) ? selected : 'theme';
+}
+
+function normalizeAnimatedProfileGifUrl(urlValue) {
+    const raw = String(urlValue || '').trim();
+    if (!raw) return '';
+    if (/^https?:\/\//i.test(raw)) return raw;
+    if (raw.startsWith('/')) return resolveMediaUrl(raw, '');
+    return '';
+}
+
+function hashAnimatedThemeSeed(value) {
+    const raw = String(value || '');
+    let hash = 0;
+    for (let i = 0; i < raw.length; i += 1) {
+        hash = (hash * 31 + raw.charCodeAt(i)) | 0;
+    }
+    return Math.abs(hash);
+}
+
+function resolveAnimatedPreviewTheme(themeValue) {
+    const normalized = normalizeAnimatedProfileTheme(themeValue);
+    if (normalized !== 'auto') return normalized;
+
+    const variants = ALLOWED_ANIMATED_PROFILE_THEMES.filter((item) => item !== 'auto');
+    if (!variants.length) return 'theme-aurora';
+
+    const seed = `${currentUser?.id || 0}-${currentUser?.nickname || 'guest'}`;
+    const index = hashAnimatedThemeSeed(seed) % variants.length;
+    return variants[index];
+}
+
+function setAnimatedPreviewGif(url) {
+    const card = document.getElementById('animatedProfilePreviewCard');
+    if (!card) return;
+    const normalizedUrl = normalizeAnimatedProfileGifUrl(url);
+    if (normalizedUrl) {
+        card.style.setProperty('--preview-gif-url', `url('${normalizedUrl.replace(/'/g, "\\'")}')`);
+    } else {
+        card.style.removeProperty('--preview-gif-url');
+    }
+}
+
+function renderAnimatedProfilePreview(miniEnabled, themeValue, downloadEnabled = false, visualMode = 'theme', gifUrl = '') {
+    const card = document.getElementById('animatedProfilePreviewCard');
+    if (!card) return;
+
+    const variants = ALLOWED_ANIMATED_PROFILE_THEMES.filter((item) => item !== 'auto');
+    variants.forEach((themeClass) => card.classList.remove(themeClass));
+    card.classList.remove('animated-profile-gif');
+
+    const normalizedMode = normalizeAnimatedProfileVisualMode(visualMode);
+    if (normalizedMode === 'gif' && normalizeAnimatedProfileGifUrl(gifUrl)) {
+        card.classList.add('animated-profile-gif');
+        setAnimatedPreviewGif(gifUrl);
+    } else {
+        const resolvedTheme = resolveAnimatedPreviewTheme(themeValue);
+        card.classList.add(resolvedTheme);
+        setAnimatedPreviewGif('');
+    }
+    card.classList.toggle('preview-disabled', !miniEnabled);
+
+    const previewName = card.querySelector('.animated-profile-preview-name');
+    if (previewName) {
+        previewName.textContent = `@${currentUser?.nickname || 'SeuPerfil'}`;
+    }
+
+    const previewSubtitle = card.querySelector('.animated-profile-preview-subtitle');
+    if (previewSubtitle) {
+        if (!miniEnabled && !downloadEnabled) {
+            previewSubtitle.textContent = 'Mini perfil: desativado | Download: desativado';
+        } else {
+            previewSubtitle.textContent = `Mini perfil: ${miniEnabled ? 'ativo' : 'desativado'} | Download: ${downloadEnabled ? 'ativo' : 'desativado'}`;
+        }
+    }
+}
+
+function bindAnimatedPreviewFx() {
+    const card = document.getElementById('animatedProfilePreviewCard');
+    if (!card || card.dataset.fxBound === '1') return;
+
+    const supportsPointer = (() => {
+        try {
+            return Boolean(window?.matchMedia?.('(pointer:fine)').matches);
+        } catch {
+            return false;
+        }
+    })();
+
+    if (!supportsPointer) return;
+
+    card.dataset.fxBound = '1';
+    card.style.setProperty('--mx', '50%');
+    card.style.setProperty('--my', '50%');
+    card.style.setProperty('--rx', '0deg');
+    card.style.setProperty('--ry', '0deg');
+
+    card.addEventListener('pointermove', (event) => {
+        const rect = card.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        const px = (x / rect.width) * 100;
+        const py = (y / rect.height) * 100;
+        const maxTilt = 8;
+        const rotateY = ((x / rect.width) - 0.5) * (maxTilt * 2);
+        const rotateX = (0.5 - (y / rect.height)) * (maxTilt * 2);
+
+        card.style.setProperty('--mx', `${px.toFixed(2)}%`);
+        card.style.setProperty('--my', `${py.toFixed(2)}%`);
+        card.style.setProperty('--rx', `${rotateX.toFixed(2)}deg`);
+        card.style.setProperty('--ry', `${rotateY.toFixed(2)}deg`);
+        card.classList.add('fx-active');
+    });
+
+    card.addEventListener('pointerleave', () => {
+        card.style.setProperty('--mx', '50%');
+        card.style.setProperty('--my', '50%');
+        card.style.setProperty('--rx', '0deg');
+        card.style.setProperty('--ry', '0deg');
+        card.classList.remove('fx-active');
+    });
+}
+
+function applyAnimatedProfileThemeState(enabled) {
+    const themeSelect = document.getElementById('animatedProfileThemeSelect');
+    const visualModeSelect = document.getElementById('animatedProfileVisualModeSelect');
+    const gifSearchInput = document.getElementById('animatedGifSearchInput');
+    const gifSearchBtn = document.getElementById('animatedGifSearchBtn');
+    const gifSearchMoreBtn = document.getElementById('animatedGifSearchMoreBtn');
+    const customGifUrlInput = document.getElementById('animatedCustomGifUrl');
+    const customGifFileInput = document.getElementById('animatedCustomGifFile');
+    const uploadGifBtn = document.getElementById('uploadAnimatedGifBtn');
+    const gifOptionsWrap = document.getElementById('animatedGifOptions');
+
+    const mode = normalizeAnimatedProfileVisualMode(visualModeSelect?.value);
+    const canUseTheme = enabled && mode === 'theme';
+    const canUseGif = enabled && mode === 'gif';
+
+    if (visualModeSelect) {
+        visualModeSelect.disabled = !enabled;
+        visualModeSelect.style.opacity = enabled ? '1' : '0.6';
+    }
+    if (themeSelect) {
+        themeSelect.disabled = !canUseTheme;
+        themeSelect.style.opacity = canUseTheme ? '1' : '0.6';
+    }
+    if (gifOptionsWrap) {
+        gifOptionsWrap.style.display = canUseGif ? 'block' : 'none';
+    }
+    [gifSearchInput, gifSearchBtn, gifSearchMoreBtn, customGifUrlInput, customGifFileInput, uploadGifBtn].forEach((el) => {
+        if (!el) return;
+        el.disabled = !canUseGif;
+        el.style.opacity = canUseGif ? '1' : '0.6';
+    });
+}
+
+function renderAnimatedGifSearchResults(items = [], append = false) {
+    const grid = document.getElementById('animatedGifResults');
+    if (!grid) return;
+
+    if (!append) {
+        grid.innerHTML = '';
+    }
+
+    if (!Array.isArray(items) || items.length === 0) {
+        if (!append) {
+            grid.innerHTML = '<div class="animated-gif-empty">Nenhum GIF encontrado.</div>';
+        }
+        return;
+    }
+
+    const fragment = document.createDocumentFragment();
+    items.forEach((gif) => {
+        const url = normalizeAnimatedProfileGifUrl(gif?.gifUrl);
+        const preview = normalizeAnimatedProfileGifUrl(gif?.previewUrl || gif?.gifUrl);
+        if (!url || !preview) return;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'animated-gif-item';
+        btn.dataset.gifUrl = url;
+        btn.innerHTML = `<img src="${preview}" alt="GIF">`;
+        if (selectedAnimatedProfileGifUrl && selectedAnimatedProfileGifUrl === url) {
+            btn.classList.add('selected');
+        }
+        btn.addEventListener('click', () => {
+            selectedAnimatedProfileGifUrl = url;
+            const customGifUrlInput = document.getElementById('animatedCustomGifUrl');
+            const visualModeSelect = document.getElementById('animatedProfileVisualModeSelect');
+            if (customGifUrlInput) customGifUrlInput.value = selectedAnimatedProfileGifUrl;
+            if (visualModeSelect) visualModeSelect.value = 'gif';
+            applyAnimatedProfileThemeState(Boolean(document.getElementById('animatedMiniProfileEnabledToggle')?.checked) || Boolean(document.getElementById('animatedDownloadCardEnabledToggle')?.checked));
+            document.querySelectorAll('.animated-gif-item').forEach((item) => item.classList.remove('selected'));
+            btn.classList.add('selected');
+            renderAnimatedProfilePreview(
+                Boolean(document.getElementById('animatedMiniProfileEnabledToggle')?.checked),
+                document.getElementById('animatedProfileThemeSelect')?.value || 'auto',
+                Boolean(document.getElementById('animatedDownloadCardEnabledToggle')?.checked),
+                'gif',
+                selectedAnimatedProfileGifUrl
+            );
+        });
+        fragment.appendChild(btn);
+    });
+
+    grid.appendChild(fragment);
+}
+
+async function searchAnimatedGifs({ append = false, useTrending = false } = {}) {
+    if (animatedGifSearchLoading) return;
+    const searchInput = document.getElementById('animatedGifSearchInput');
+    const searchBtn = document.getElementById('animatedGifSearchBtn');
+    const moreBtn = document.getElementById('animatedGifSearchMoreBtn');
+    const query = String(searchInput?.value || '').trim();
+
+    if (!useTrending && !query) {
+        showNotification('Digite um termo para buscar GIF.', 'error');
+        return;
+    }
+
+    animatedGifSearchLoading = true;
+    if (searchBtn) searchBtn.disabled = true;
+    if (moreBtn) moreBtn.disabled = true;
+
+    try {
+        const result = useTrending
+            ? await AuthAPI.getTrendingAnimatedGifs(18, append ? animatedGifSearchNextPos : '')
+            : await AuthAPI.searchAnimatedGifs(query, 18, append ? animatedGifSearchNextPos : '');
+
+        if (!result?.success) {
+            showNotification(result?.message || 'Não foi possível buscar GIFs agora.', 'error');
+            return;
+        }
+
+        animatedGifSearchNextPos = String(result.next || '');
+        renderAnimatedGifSearchResults(result.results || [], append);
+        if (moreBtn) {
+            moreBtn.style.display = animatedGifSearchNextPos ? 'inline-flex' : 'none';
+        }
+    } catch (error) {
+        console.error('Erro ao buscar GIFs:', error);
+        showNotification('Erro ao buscar GIFs.', 'error');
+    } finally {
+        animatedGifSearchLoading = false;
+        if (searchBtn) searchBtn.disabled = false;
+        if (moreBtn) moreBtn.disabled = false;
+    }
+}
+
+function syncAnimatedProfileButton() {
+    const animatedProfileBtn = document.getElementById('animatedProfileBtn');
+    if (!animatedProfileBtn) return;
+    animatedProfileBtn.style.display = userCanUseAnimatedProfile() ? 'inline-flex' : 'none';
+}
+
+async function openAnimatedProfileModal() {
+    if (!userCanUseAnimatedProfile()) {
+        showNotification('Você não tem permissão para usar Perfil Animado.', 'error');
+        return;
+    }
+
+    const modal = document.getElementById('animatedProfileModal');
+    const miniEnabledToggle = document.getElementById('animatedMiniProfileEnabledToggle');
+    const downloadEnabledToggle = document.getElementById('animatedDownloadCardEnabledToggle');
+    const themeSelect = document.getElementById('animatedProfileThemeSelect');
+    const visualModeSelect = document.getElementById('animatedProfileVisualModeSelect');
+    const customGifUrlInput = document.getElementById('animatedCustomGifUrl');
+    const gifResultsGrid = document.getElementById('animatedGifResults');
+    const gifSearchMoreBtn = document.getElementById('animatedGifSearchMoreBtn');
+    const errorEl = document.getElementById('animatedProfileError');
+    const saveBtn = document.getElementById('saveAnimatedProfileBtn');
+
+    if (!modal || !miniEnabledToggle || !downloadEnabledToggle || !themeSelect || !visualModeSelect || !saveBtn) {
+        return;
+    }
+
+    if (errorEl) errorEl.textContent = '';
+    saveBtn.disabled = true;
+    const originalBtnText = saveBtn.textContent;
+    saveBtn.textContent = 'Carregando...';
+
+    let miniEnabled = Boolean(currentUser?.animatedMiniProfileEnabled ?? currentUser?.animatedProfileEnabled);
+    let downloadEnabled = Boolean(currentUser?.animatedDownloadCardEnabled ?? currentUser?.animatedProfileEnabled);
+    let theme = normalizeAnimatedProfileTheme(currentUser?.animatedProfileTheme);
+    let visualMode = normalizeAnimatedProfileVisualMode(currentUser?.animatedProfileVisualMode);
+    let gifUrl = normalizeAnimatedProfileGifUrl(currentUser?.animatedProfileGifUrl);
+
+    try {
+        const result = await AuthAPI.getAnimatedProfileSettings();
+        if (result?.success && result?.settings) {
+            miniEnabled = Boolean(result.settings.animatedMiniProfileEnabled ?? result.settings.animatedProfileEnabled);
+            downloadEnabled = Boolean(result.settings.animatedDownloadCardEnabled ?? result.settings.animatedProfileEnabled);
+            theme = normalizeAnimatedProfileTheme(result.settings.animatedProfileTheme);
+            visualMode = normalizeAnimatedProfileVisualMode(result.settings.animatedProfileVisualMode);
+            gifUrl = normalizeAnimatedProfileGifUrl(result.settings.animatedProfileGifUrl);
+            if (currentUser) {
+                currentUser.animatedProfileEnabled = miniEnabled || downloadEnabled;
+                currentUser.animatedMiniProfileEnabled = miniEnabled;
+                currentUser.animatedDownloadCardEnabled = downloadEnabled;
+                currentUser.animatedProfileTheme = theme;
+                currentUser.animatedProfileVisualMode = visualMode;
+                currentUser.animatedProfileGifUrl = gifUrl;
+            }
+        } else if (result?.message && errorEl) {
+            errorEl.textContent = result.message;
+        }
+    } catch (error) {
+        console.error('Erro ao carregar configuração de Perfil Animado:', error);
+        if (errorEl) errorEl.textContent = 'Não foi possível carregar as configurações.';
+    } finally {
+        miniEnabledToggle.checked = miniEnabled;
+        downloadEnabledToggle.checked = downloadEnabled;
+        themeSelect.value = theme;
+        visualModeSelect.value = visualMode;
+        selectedAnimatedProfileGifUrl = gifUrl;
+        if (customGifUrlInput) {
+            customGifUrlInput.value = selectedAnimatedProfileGifUrl;
+        }
+        animatedGifSearchNextPos = '';
+        if (gifResultsGrid) gifResultsGrid.innerHTML = '';
+        if (gifSearchMoreBtn) gifSearchMoreBtn.style.display = 'none';
+        applyAnimatedProfileThemeState(miniEnabled || downloadEnabled);
+        renderAnimatedProfilePreview(miniEnabled, theme, downloadEnabled, visualMode, selectedAnimatedProfileGifUrl);
+        bindAnimatedPreviewFx();
+        saveBtn.disabled = false;
+        saveBtn.textContent = originalBtnText;
+    }
+
+    modal.style.display = 'block';
+
+    if (visualMode === 'gif') {
+        await searchAnimatedGifs({ append: false, useTrending: true });
+    }
+}
+
+async function saveAnimatedProfileSettings() {
+    if (!userCanUseAnimatedProfile()) {
+        showNotification('Você não tem permissão para usar Perfil Animado.', 'error');
+        return;
+    }
+
+    const miniEnabledToggle = document.getElementById('animatedMiniProfileEnabledToggle');
+    const downloadEnabledToggle = document.getElementById('animatedDownloadCardEnabledToggle');
+    const themeSelect = document.getElementById('animatedProfileThemeSelect');
+    const visualModeSelect = document.getElementById('animatedProfileVisualModeSelect');
+    const customGifUrlInput = document.getElementById('animatedCustomGifUrl');
+    const saveBtn = document.getElementById('saveAnimatedProfileBtn');
+    const errorEl = document.getElementById('animatedProfileError');
+
+    if (!miniEnabledToggle || !downloadEnabledToggle || !themeSelect || !visualModeSelect || !saveBtn) {
+        return;
+    }
+
+    const animatedMiniProfileEnabled = Boolean(miniEnabledToggle.checked);
+    const animatedDownloadCardEnabled = Boolean(downloadEnabledToggle.checked);
+    const animatedProfileEnabled = animatedMiniProfileEnabled || animatedDownloadCardEnabled;
+    const animatedProfileTheme = normalizeAnimatedProfileTheme(themeSelect.value);
+    const animatedProfileVisualMode = normalizeAnimatedProfileVisualMode(visualModeSelect.value);
+    const gifUrlFromInput = normalizeAnimatedProfileGifUrl(customGifUrlInput?.value || selectedAnimatedProfileGifUrl);
+    const animatedProfileGifUrl = animatedProfileVisualMode === 'gif' ? gifUrlFromInput : '';
+
+    if (animatedProfileVisualMode === 'gif' && !animatedProfileGifUrl) {
+        if (errorEl) errorEl.textContent = 'Escolha um GIF (busca, URL ou upload) antes de salvar.';
+        return;
+    }
+
+    if (errorEl) errorEl.textContent = '';
+    saveBtn.disabled = true;
+    const originalBtnText = saveBtn.textContent;
+    saveBtn.textContent = 'Salvando...';
+
+    try {
+        const result = await AuthAPI.updateAnimatedProfileSettings({
+            animatedProfileEnabled,
+            animatedMiniProfileEnabled,
+            animatedDownloadCardEnabled,
+            animatedProfileTheme,
+            animatedProfileVisualMode,
+            animatedProfileGifUrl
+        });
+        if (result?.success) {
+            if (currentUser) {
+                currentUser.animatedProfileEnabled = animatedProfileEnabled;
+                currentUser.animatedMiniProfileEnabled = animatedMiniProfileEnabled;
+                currentUser.animatedDownloadCardEnabled = animatedDownloadCardEnabled;
+                currentUser.animatedProfileTheme = animatedProfileTheme;
+                currentUser.animatedProfileVisualMode = animatedProfileVisualMode;
+                currentUser.animatedProfileGifUrl = animatedProfileGifUrl;
+            }
+            showNotification('Perfil animado atualizado com sucesso!', 'success');
+            const modal = document.getElementById('animatedProfileModal');
+            if (modal) modal.style.display = 'none';
+            return;
+        }
+        if (errorEl) errorEl.textContent = result?.message || 'Não foi possível salvar as configurações.';
+    } catch (error) {
+        console.error('Erro ao salvar configuração de Perfil Animado:', error);
+        if (errorEl) errorEl.textContent = 'Erro ao salvar configuração.';
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = originalBtnText;
+    }
+}
+
 function showError(message) {
     document.getElementById('loadingScreen').style.display = 'none';
     document.getElementById('profileContent').style.display = 'block';
     document.getElementById('profileContent').innerHTML = `<p style="color: red; text-align: center; margin-top: 50px;">${message}</p>`;
+}
+
+function getTwoFactorElements() {
+    return {
+        statusBadge: document.getElementById('twoFactorStatusBadge'),
+        setupBtn: document.getElementById('setupTwoFactorBtn'),
+        settingsRow: document.getElementById('twoFactorSettingsRow'),
+        rememberDaysSelect: document.getElementById('twoFactorRememberDays'),
+        saveSettingsBtn: document.getElementById('saveTwoFactorSettingsBtn'),
+        setupPanel: document.getElementById('twoFactorSetupPanel'),
+        enableCodeInput: document.getElementById('twoFactorEnableCode'),
+        enableBtn: document.getElementById('enableTwoFactorBtn'),
+        disablePanel: document.getElementById('twoFactorDisablePanel'),
+        showDisableFormBtn: document.getElementById('showDisableTwoFactorFormBtn'),
+        disableFormWrap: document.getElementById('disableTwoFactorFormWrap'),
+        disableCodeInput: document.getElementById('twoFactorDisableCode'),
+        disableBtn: document.getElementById('disableTwoFactorBtn'),
+        generateQrBtn: document.getElementById('generateTwoFactorQrBtn'),
+        qrWrap: document.getElementById('twoFactorQrWrap'),
+        qrImage: document.getElementById('twoFactorQrImage'),
+        error: document.getElementById('twoFactorError')
+    };
+}
+
+function resetTwoFactorMessages() {
+    const els = getTwoFactorElements();
+    if (els.error) {
+        els.error.textContent = '';
+    }
+}
+
+function setTwoFactorError(message) {
+    const els = getTwoFactorElements();
+    if (!els.error) return;
+    els.error.textContent = String(message || '');
+}
+
+function showDisableTwoFactorForm() {
+    const els = getTwoFactorElements();
+    if (els.disableFormWrap) {
+        els.disableFormWrap.style.display = 'block';
+    }
+    if (els.showDisableFormBtn) {
+        els.showDisableFormBtn.style.display = 'none';
+    }
+    if (els.disableCodeInput) {
+        els.disableCodeInput.focus();
+    }
+}
+
+function hideDisableTwoFactorForm() {
+    const els = getTwoFactorElements();
+    if (els.disableFormWrap) {
+        els.disableFormWrap.style.display = 'none';
+    }
+    if (els.showDisableFormBtn) {
+        els.showDisableFormBtn.style.display = 'block';
+    }
+    if (els.disableCodeInput) {
+        els.disableCodeInput.value = '';
+    }
+}
+
+function clearTwoFactorQr() {
+    const els = getTwoFactorElements();
+    if (els.qrWrap) els.qrWrap.style.display = 'none';
+    if (els.qrImage) els.qrImage.removeAttribute('src');
+}
+
+async function renderTwoFactorQr() {
+    const els = getTwoFactorElements();
+    const uri = String(currentTwoFactorOtpAuthUri || '').trim();
+    if (!uri) {
+        clearTwoFactorQr();
+        return;
+    }
+    resetTwoFactorMessages();
+    if (!els.qrWrap || !els.qrImage) return;
+
+    // Fallback quando a lib externa é bloqueada pelo navegador/AdBlock.
+    if (!window.QRCode || typeof window.QRCode.toDataURL !== 'function') {
+        const fallbackUrl = `https://quickchart.io/qr?size=220&text=${encodeURIComponent(uri)}`;
+        els.qrImage.onerror = () => {
+            setTwoFactorError('Não foi possível carregar o QR. Tente novamente ou use o login por e-mail.');
+        };
+        els.qrImage.src = fallbackUrl;
+        els.qrWrap.style.display = 'flex';
+        return;
+    }
+
+    try {
+        const qrDataUrl = await window.QRCode.toDataURL(uri, {
+            width: 220,
+            margin: 1,
+            color: {
+                dark: '#1A1338',
+                light: '#FFFFFF'
+            }
+        });
+        els.qrImage.src = qrDataUrl;
+        els.qrWrap.style.display = 'flex';
+    } catch (error) {
+        console.error('Erro ao gerar QR do 2FA:', error);
+        setTwoFactorError('Não foi possível gerar o QR Code. Tente novamente em alguns segundos.');
+    }
+}
+
+function applyTwoFactorStatus(enabled) {
+    const els = getTwoFactorElements();
+    const isEnabled = Boolean(enabled);
+
+    if (els.statusBadge) {
+        els.statusBadge.textContent = isEnabled ? 'Ativado' : 'Desativado';
+        els.statusBadge.classList.remove('on', 'off');
+        els.statusBadge.classList.add(isEnabled ? 'on' : 'off');
+    }
+
+    if (els.setupBtn) {
+        els.setupBtn.style.display = isEnabled ? 'none' : 'block';
+    }
+    if (els.settingsRow) {
+        els.settingsRow.style.display = isEnabled ? 'flex' : 'none';
+    }
+    if (els.rememberDaysSelect) {
+        els.rememberDaysSelect.disabled = !isEnabled;
+    }
+    if (els.saveSettingsBtn) {
+        els.saveSettingsBtn.disabled = !isEnabled;
+        els.saveSettingsBtn.style.opacity = isEnabled ? '1' : '0.6';
+        els.saveSettingsBtn.style.cursor = isEnabled ? 'pointer' : 'not-allowed';
+    }
+    if (els.setupPanel) {
+        els.setupPanel.style.display = 'none';
+    }
+    currentTwoFactorSetupSecret = '';
+    currentTwoFactorOtpAuthUri = '';
+    clearTwoFactorQr();
+    if (els.enableCodeInput) els.enableCodeInput.value = '';
+    if (els.disableCodeInput) els.disableCodeInput.value = '';
+    if (els.disablePanel) {
+        els.disablePanel.style.display = isEnabled ? 'block' : 'none';
+    }
+    hideDisableTwoFactorForm();
+}
+
+async function loadTwoFactorStatus() {
+    const els = getTwoFactorElements();
+    if (!els.statusBadge) return;
+
+    try {
+        const result = await AuthAPI.getTwoFactorStatus();
+        if (result?.success) {
+            applyTwoFactorStatus(Boolean(result.enabled));
+            if (els.rememberDaysSelect) {
+                const dayOptions = Array.isArray(result.rememberDayOptions) && result.rememberDayOptions.length > 0
+                    ? result.rememberDayOptions
+                    : [0, 3, 7, 30, 90];
+                const normalizedOptions = dayOptions
+                    .map((item) => Number(item))
+                    .filter((item) => Number.isFinite(item));
+
+                if (normalizedOptions.length > 0) {
+                    els.rememberDaysSelect.innerHTML = normalizedOptions
+                        .map((days) => days === 0
+                            ? '<option value="0">Desativado</option>'
+                            : `<option value="${days}">${days} dias</option>`)
+                        .join('');
+                }
+
+                const selectedDays = Number(result.rememberDays || 3);
+                els.rememberDaysSelect.value = String(
+                    normalizedOptions.includes(selectedDays) ? selectedDays : (normalizedOptions[0] || 3)
+                );
+            }
+        }
+    } catch (error) {
+        console.error('Erro ao carregar status 2FA:', error);
+    }
+}
+
+async function saveTwoFactorSettings() {
+    resetTwoFactorMessages();
+    const els = getTwoFactorElements();
+    const rememberDays = Number(els.rememberDaysSelect?.value || 3);
+    if (!Number.isFinite(rememberDays)) {
+        setTwoFactorError('Escolha um prazo válido.');
+        return;
+    }
+
+    try {
+        const result = await AuthAPI.updateTwoFactorSettings(rememberDays);
+        if (result?.success) {
+            if (els.rememberDaysSelect && result.rememberDays !== undefined && result.rememberDays !== null) {
+                els.rememberDaysSelect.value = String(result.rememberDays);
+            }
+            const selectedValue = Number(result?.rememberDays ?? rememberDays);
+            if (selectedValue === 0) {
+                showNotification('2FA configurado para solicitar código em todo login.', 'success');
+            } else {
+                showNotification(`2FA configurado para pedir novo código a cada ${selectedValue} dia(s).`, 'success');
+            }
+            return;
+        }
+        setTwoFactorError(result?.message || 'Não foi possível salvar o prazo do 2FA.');
+    } catch (error) {
+        console.error('Erro ao salvar prazo do 2FA:', error);
+        setTwoFactorError('Erro ao salvar prazo do 2FA.');
+    }
+}
+
+async function setupTwoFactor() {
+    resetTwoFactorMessages();
+    const els = getTwoFactorElements();
+    if (!els.setupPanel) return;
+
+    const setupPanelVisible = getComputedStyle(els.setupPanel).display !== 'none';
+    if (setupPanelVisible && currentTwoFactorSetupSecret) {
+        if (els.enableCodeInput) {
+            els.enableCodeInput.focus();
+        }
+        return;
+    }
+
+    try {
+        const result = await AuthAPI.setupTwoFactor();
+        if (!result?.success) {
+            setTwoFactorError(result?.message || 'Erro ao iniciar configuração do 2FA');
+            return;
+        }
+
+        currentTwoFactorSetupSecret = String(result.secret || '').trim();
+        if (!currentTwoFactorSetupSecret) {
+            setTwoFactorError('Falha ao gerar chave do Authenticator.');
+            return;
+        }
+        currentTwoFactorOtpAuthUri = String(result.otpauthUri || '').trim();
+
+        els.setupPanel.style.display = 'block';
+        clearTwoFactorQr();
+        if (els.enableCodeInput) {
+            els.enableCodeInput.value = '';
+            els.enableCodeInput.focus();
+        }
+    } catch (error) {
+        console.error('Erro ao configurar 2FA:', error);
+        setTwoFactorError('Erro ao iniciar configuração do 2FA');
+    }
+}
+
+async function enableTwoFactor() {
+    resetTwoFactorMessages();
+    const els = getTwoFactorElements();
+    const code = String(els.enableCodeInput?.value || '').replace(/\s+/g, '').trim();
+    if (!/^\d{6}$/.test(code)) {
+        setTwoFactorError('Digite o código de 6 dígitos do Authenticator.');
+        return;
+    }
+
+    try {
+        const result = await AuthAPI.enableTwoFactor(code);
+        if (result?.success) {
+            currentTwoFactorSetupSecret = '';
+            currentTwoFactorOtpAuthUri = '';
+            clearTwoFactorQr();
+            if (els.setupPanel) els.setupPanel.style.display = 'none';
+            if (els.enableCodeInput) els.enableCodeInput.value = '';
+            showNotification('2FA ativado com sucesso!', 'success');
+            await loadTwoFactorStatus();
+            return;
+        }
+        setTwoFactorError(result?.message || 'Não foi possível ativar o 2FA.');
+    } catch (error) {
+        console.error('Erro ao ativar 2FA:', error);
+        setTwoFactorError('Erro ao ativar 2FA.');
+    }
+}
+
+async function disableTwoFactor() {
+    resetTwoFactorMessages();
+    const els = getTwoFactorElements();
+    const code = String(els.disableCodeInput?.value || '').replace(/\s+/g, '').trim();
+    if (!/^\d{6}$/.test(code)) {
+        setTwoFactorError('Digite um código válido de 6 dígitos para desativar.');
+        return;
+    }
+
+    try {
+        const result = await AuthAPI.disableTwoFactor(code);
+        if (result?.success) {
+            currentTwoFactorSetupSecret = '';
+            currentTwoFactorOtpAuthUri = '';
+            clearTwoFactorQr();
+            hideDisableTwoFactorForm();
+            showNotification('2FA desativado com sucesso.', 'success');
+            await loadTwoFactorStatus();
+            return;
+        }
+        setTwoFactorError(result?.message || 'Não foi possível desativar o 2FA.');
+    } catch (error) {
+        console.error('Erro ao desativar 2FA:', error);
+        setTwoFactorError('Erro ao desativar 2FA.');
+    }
+}
+
+function initializeTwoFactorControls() {
+    const els = getTwoFactorElements();
+    if (!els.statusBadge) return;
+
+    if (els.setupBtn && els.setupBtn.dataset.bound2fa !== '1') {
+        els.setupBtn.dataset.bound2fa = '1';
+        els.setupBtn.addEventListener('click', setupTwoFactor);
+    }
+
+    if (els.enableBtn && els.enableBtn.dataset.bound2fa !== '1') {
+        els.enableBtn.dataset.bound2fa = '1';
+        els.enableBtn.addEventListener('click', enableTwoFactor);
+    }
+
+    if (els.saveSettingsBtn && els.saveSettingsBtn.dataset.bound2fa !== '1') {
+        els.saveSettingsBtn.dataset.bound2fa = '1';
+        els.saveSettingsBtn.addEventListener('click', saveTwoFactorSettings);
+    }
+
+    if (els.disableBtn && els.disableBtn.dataset.bound2fa !== '1') {
+        els.disableBtn.dataset.bound2fa = '1';
+        els.disableBtn.addEventListener('click', disableTwoFactor);
+    }
+
+    if (els.showDisableFormBtn && els.showDisableFormBtn.dataset.bound2fa !== '1') {
+        els.showDisableFormBtn.dataset.bound2fa = '1';
+        els.showDisableFormBtn.addEventListener('click', () => {
+            resetTwoFactorMessages();
+            showDisableTwoFactorForm();
+        });
+    }
+
+    if (els.generateQrBtn && els.generateQrBtn.dataset.bound2fa !== '1') {
+        els.generateQrBtn.dataset.bound2fa = '1';
+        els.generateQrBtn.addEventListener('click', async () => {
+            resetTwoFactorMessages();
+            if (!currentTwoFactorOtpAuthUri) {
+                setTwoFactorError('Clique em "Configurar Authenticator" para gerar uma nova chave primeiro.');
+                return;
+            }
+            await renderTwoFactorQr();
+        });
+    }
 }
 // ========== MINHAS CONQUISTAS E POSTAGENS ==========
 
@@ -2043,6 +3232,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     await loadPostageAchievements();
                 } else if (tabName === 'postages-tab') {
                     await loadMyPostages();
+                } else if (tabName === 'password-tab') {
+                    resetTwoFactorMessages();
+                    await loadTwoFactorStatus();
                 }
             }
         });

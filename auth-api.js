@@ -107,16 +107,48 @@ class AuthAPI {
         }
     }
 
-    static async login(nickname, password) {
+    static async login(nickname, password, trustedDeviceToken = '') {
         try {
+            const payload = { nickname, password };
+            if (trustedDeviceToken) {
+                payload.trustedDeviceToken = trustedDeviceToken;
+            }
             const response = await fetch(`${API_URL}/auth/login`, {
                 method: 'POST',
                 headers: this.getHeaders(),
-                body: JSON.stringify({ nickname, password })
+                body: JSON.stringify(payload)
             });
             return await response.json();
         } catch (error) {
             console.error('Erro na requisição de login:', error);
+            return { success: false, message: 'Erro de conexão' };
+        }
+    }
+
+    static async verifyTwoFactorLogin(loginTicket, code, method = 'authenticator') {
+        try {
+            const response = await fetch(`${API_URL}/auth/2fa/verify-login`, {
+                method: 'POST',
+                headers: this.getHeaders(),
+                body: JSON.stringify({ loginTicket, code, method })
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Erro na verificação 2FA do login:', error);
+            return { success: false, message: 'Erro de conexão' };
+        }
+    }
+
+    static async sendTwoFactorEmailCode(loginTicket) {
+        try {
+            const response = await fetch(`${API_URL}/auth/2fa/send-email-code`, {
+                method: 'POST',
+                headers: this.getHeaders(),
+                body: JSON.stringify({ loginTicket })
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Erro ao enviar código 2FA por email:', error);
             return { success: false, message: 'Erro de conexão' };
         }
     }
@@ -292,6 +324,74 @@ class AuthAPI {
         }
     }
 
+    static async getTwoFactorStatus() {
+        try {
+            const response = await fetch(`${API_URL}/auth/2fa/status`, {
+                method: 'GET',
+                headers: this.getHeaders(true)
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Erro ao obter status do 2FA:', error);
+            return { success: false, message: 'Erro de conexão' };
+        }
+    }
+
+    static async setupTwoFactor() {
+        try {
+            const response = await fetch(`${API_URL}/auth/2fa/setup`, {
+                method: 'POST',
+                headers: this.getHeaders(true)
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Erro ao iniciar setup do 2FA:', error);
+            return { success: false, message: 'Erro de conexão' };
+        }
+    }
+
+    static async enableTwoFactor(code) {
+        try {
+            const response = await fetch(`${API_URL}/auth/2fa/enable`, {
+                method: 'POST',
+                headers: this.getHeaders(true),
+                body: JSON.stringify({ code })
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Erro ao ativar 2FA:', error);
+            return { success: false, message: 'Erro de conexão' };
+        }
+    }
+
+    static async disableTwoFactor(code) {
+        try {
+            const response = await fetch(`${API_URL}/auth/2fa/disable`, {
+                method: 'POST',
+                headers: this.getHeaders(true),
+                body: JSON.stringify({ code })
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Erro ao desativar 2FA:', error);
+            return { success: false, message: 'Erro de conexão' };
+        }
+    }
+
+    static async updateTwoFactorSettings(rememberDays) {
+        try {
+            const response = await fetch(`${API_URL}/auth/2fa/settings`, {
+                method: 'POST',
+                headers: this.getHeaders(true),
+                body: JSON.stringify({ rememberDays })
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Erro ao atualizar configurações do 2FA:', error);
+            return { success: false, message: 'Erro de conexão' };
+        }
+    }
+
     static async sendEmailChangeCode(email) {
         try {
             const response = await fetch(`${API_URL}/users/send-email-code`, {
@@ -376,6 +476,19 @@ class AuthAPI {
         }
     }
 
+    static async deleteUserAccount(userId) {
+        try {
+            const response = await fetch(`${API_URL}/admin/users/${userId}`, {
+                method: 'DELETE',
+                headers: this.getHeaders(true)
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Erro ao excluir conta:', error);
+            return { success: false, message: 'Erro de conexão' };
+        }
+    }
+
     // Gerenciamento de conquistas Customizáveis
     static async getCustomRanks() {
         try {
@@ -403,7 +516,19 @@ class AuthAPI {
         }
     }
 
-    static async createCustomRank(name, color, description = '', customText = '', backgroundImageUrl = '', backgroundImageFile = null, enableAdminPanel = false, isVisible = true, canManageDownloads = false, canOrderAllRanks = false) {
+    static async createCustomRank(
+        name,
+        color,
+        description = '',
+        customText = '',
+        backgroundImageUrl = '',
+        backgroundImageFile = null,
+        enableAdminPanel = false,
+        isVisible = true,
+        canManageDownloads = false,
+        canOrderAllRanks = false,
+        canUseAnimatedProfile = false
+    ) {
         try {
             const body = JSON.stringify({ 
                 name, 
@@ -414,7 +539,8 @@ class AuthAPI {
                 enableAdminPanel,
                 isVisible,
                 canManageDownloads,
-                canOrderAllRanks
+                canOrderAllRanks,
+                canUseAnimatedProfile
             });
 
             const response = await fetch(`${API_URL}/ranks/custom`, {
@@ -439,7 +565,8 @@ class AuthAPI {
         enableAdminPanel = false,
         isVisible = true,
         canManageDownloads = false,
-        canOrderAllRanks = false
+        canOrderAllRanks = false,
+        canUseAnimatedProfile = false
     ) {
         try {
             const response = await fetch(`${API_URL}/ranks/custom/${rankId}`, {
@@ -454,7 +581,8 @@ class AuthAPI {
                     enableAdminPanel,
                     isVisible,
                     canManageDownloads,
-                    canOrderAllRanks
+                    canOrderAllRanks,
+                    canUseAnimatedProfile
                 })
             });
             return await response.json();
@@ -766,6 +894,112 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao listar usuários:', error);
+            return { success: false, message: 'Erro de conexão' };
+        }
+    }
+
+    static async setUserPermissions(userIdentifier, permissions = {}) {
+        try {
+            const response = await fetch(`${API_URL}/admin/set-user-permissions`, {
+                method: 'POST',
+                headers: this.getHeaders(true),
+                body: JSON.stringify({ userIdentifier, permissions })
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Erro ao salvar permissões do usuário:', error);
+            return { success: false, message: 'Erro de conexão' };
+        }
+    }
+
+    static async getAnimatedProfileSettings() {
+        try {
+            const response = await fetch(`${API_URL}/users/animated-profile-settings`, {
+                method: 'GET',
+                headers: this.getHeaders(true)
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Erro ao buscar configuração de card animado:', error);
+            return { success: false, message: 'Erro de conexão' };
+        }
+    }
+
+    static async updateAnimatedProfileSettings(settingsOrEnabled, animatedProfileTheme = 'auto') {
+        const payload = (settingsOrEnabled && typeof settingsOrEnabled === 'object')
+            ? settingsOrEnabled
+            : {
+                animatedProfileEnabled: Boolean(settingsOrEnabled),
+                animatedMiniProfileEnabled: Boolean(settingsOrEnabled),
+                animatedDownloadCardEnabled: Boolean(settingsOrEnabled),
+                animatedProfileTheme
+            };
+        try {
+            const response = await fetch(`${API_URL}/users/animated-profile-settings`, {
+                method: 'PUT',
+                headers: this.getHeaders(true),
+                body: JSON.stringify(payload)
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Erro ao salvar configuração de card animado:', error);
+            return { success: false, message: 'Erro de conexão' };
+        }
+    }
+
+    static async searchAnimatedGifs(query, limit = 18, pos = '') {
+        try {
+            const q = String(query || '').trim();
+            if (!q) return { success: false, message: 'Digite algo para buscar GIF.' };
+            const params = new URLSearchParams({
+                q,
+                limit: String(limit || 18)
+            });
+            if (pos) params.set('pos', String(pos));
+
+            const response = await fetch(`${API_URL}/gifs/search?${params.toString()}`, {
+                method: 'GET',
+                headers: this.getHeaders()
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Erro ao buscar GIFs:', error);
+            return { success: false, message: 'Erro de conexão' };
+        }
+    }
+
+    static async getTrendingAnimatedGifs(limit = 18, pos = '') {
+        try {
+            const params = new URLSearchParams({
+                limit: String(limit || 18)
+            });
+            if (pos) params.set('pos', String(pos));
+
+            const response = await fetch(`${API_URL}/gifs/trending?${params.toString()}`, {
+                method: 'GET',
+                headers: this.getHeaders()
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Erro ao carregar GIFs em alta:', error);
+            return { success: false, message: 'Erro de conexão' };
+        }
+    }
+
+    static async uploadAnimatedProfileGif(file) {
+        try {
+            const formData = new FormData();
+            formData.append('gif', file);
+
+            const token = this.getToken();
+            const response = await fetch(`${API_URL}/users/animated-profile/upload-gif`, {
+                method: 'POST',
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
+                body: formData
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Erro ao enviar GIF personalizado:', error);
             return { success: false, message: 'Erro de conexão' };
         }
     }

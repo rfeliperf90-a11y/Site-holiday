@@ -112,6 +112,58 @@
     box-sizing: border-box;
 }
 
+.twofactor-method-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.twofactor-method-btn {
+    flex: 1;
+    border: 1px solid rgba(107, 70, 193, 0.45);
+    background: rgba(107, 70, 193, 0.12);
+    color: rgba(255, 255, 255, 0.85);
+    border-radius: 4px;
+    padding: 8px 10px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.twofactor-method-btn:hover {
+    border-color: #6B46C1;
+    background: rgba(107, 70, 193, 0.22);
+}
+
+.twofactor-method-btn.active {
+    border-color: #EC4899;
+    background: rgba(236, 72, 153, 0.18);
+    color: #FBCFE8;
+}
+
+.twofactor-email-btn {
+    margin-top: 10px;
+    border: 1px solid rgba(236, 72, 153, 0.5);
+    background: rgba(236, 72, 153, 0.16);
+    color: #FBCFE8;
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.twofactor-email-btn:hover {
+    background: rgba(236, 72, 153, 0.26);
+}
+
+.twofactor-email-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
 .forgot-link {
     color: #6B46C1;
     text-decoration: none;

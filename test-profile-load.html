@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Profile Load</title>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial; padding: 20px; background: #1a1a2e; color: white; }
+        .log { background: #0f3460; padding: 20px; border-radius: 5px; height: 400px; overflow-y: auto; margin: 20px 0; font-size: 12px; }
+        .log-entry { margin: 5px 0; padding: 5px; border-bottom: 1px solid #333; }
+        .log-entry.success { color: #00ff00; }
+        .log-entry.error { color: #ff0000; }
+        .log-entry.info { color: #0099ff; }
+        button { padding: 10px 20px; background: #e94560; color: white; border: none; border-radius: 3px; cursor: pointer; margin: 10px 5px 10px 0; }
+        button:hover { background: #ff6b7a; }
+        .result { background: #0f3460; padding: 15px; border-radius: 5px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>Test Profile Load (No Cache)</h1>
+    <button onclick="testLogin()">1. Test Login</button>
+    <button onclick="testProfile()">2. Test Get Profile</button>
+    <button onclick="testBoth()">3. Test Both (Auto)</button>
+    <button onclick="clearLogs()">Clear Logs</button>
+    
+    <div id="logs" class="log"></div>
+    <div id="result" class="result" style="display: none;"></div>
+    
+    <script>
+        function log(msg, type = 'info') {
+            const logs = document.getElementById('logs');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            logs.appendChild(entry);
+            logs.scrollTop = logs.scrollHeight;
+        }
+        
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+        }
+        
+        async function testLogin() {
+            log('Starting login test...', 'info');
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nickname: 'fael',
+                        password: 'test123'
+                    })
+                });
+                
+                log(`Login response: Status ${response.status}`, 'info');
+                const data = await response.json();
+                
+                if (data.success) {
+                    log('✓ Login successful!', 'success');
+                    log(`Token: ${data.token.substring(0, 30)}...`, 'success');
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('test-token', data.token);
+                    log('Token saved to localStorage', 'success');
+                } else {
+                    log(`✗ Login failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                log(`✗ Error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testProfile() {
+            const token = localStorage.getItem('token') || localStorage.getItem('test-token');
+            
+            if (!token) {
+                log('✗ No token found, run login first', 'error');
+                return;
+            }
+            
+            log('Getting profile with token...', 'info');
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                log(`Profile response: Status ${response.status}`, 'info');
+                const data = await response.json();
+                
+                if (data.success && data.user) {
+                    log(`✓ Profile loaded!`, 'success');
+                    log(`User: ${data.user.firstName} ${data.user.lastName}`, 'success');
+                    log(`Rank: ${data.rank.name}`, 'success');
+                    
+                    const result = document.getElementById('result');
+                    result.style.display = 'block';
+                    result.innerHTML = `<strong>Success!</strong><br>
+                        Name: ${data.user.firstName} ${data.user.lastName}<br>
+                        Email: ${data.user.email}<br>
+                        Rank: ${data.rank.name}<br>
+                        Verified: ${data.user.emailVerified ? 'Yes' : 'No'}`;
+                } else {
+                    log(`✗ Failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                log(`✗ Error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testBoth() {
+            clearLogs();
+            await testLogin();
+            await new Promise(r => setTimeout(r, 1000));
+            await testProfile();
+        }
+        
+        // Auto-run on load
+        window.addEventListener('load', () => {
+            log('Page loaded, ready to test', 'info');
+        });
+    </script>
+</body>
+</html>

@@ -465,6 +465,40 @@ class NavbarManager {
     }
 }
 
+class RouteGuard {
+    static redirectToLogin(message) {
+        const loginMessage = String(message || 'Faça login para continuar');
+        window.location.href = `login.html?message=${encodeURIComponent(loginMessage)}`;
+    }
+
+    static async requireAuth(options = {}) {
+        const {
+            loginMessage = 'Faça login para acessar esta página',
+            invalidSessionMessage = 'Sessão inválida. Faça login novamente.',
+            validateSession = true
+        } = options;
+
+        const token = AuthManager.getToken();
+        if (!token) {
+            this.redirectToLogin(loginMessage);
+            return false;
+        }
+
+        if (!validateSession) {
+            return true;
+        }
+
+        const isValid = await NavbarManager.isSessionValid();
+        if (!isValid) {
+            AuthManager.removeToken();
+            this.redirectToLogin(invalidSessionMessage);
+            return false;
+        }
+
+        return true;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     NavbarManager.init();
 });

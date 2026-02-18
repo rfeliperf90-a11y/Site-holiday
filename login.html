@@ -53,6 +53,17 @@
                     </div>
                 </div>
 
+                <div class="form-group" id="twoFactorGroup" style="display: none;">
+                    <label for="twoFactorCode" id="twoFactorCodeLabel">Código 2FA</label>
+                    <div id="twoFactorMethodGroup" class="twofactor-method-group" style="display: none;">
+                        <button type="button" id="twoFactorMethodAuthenticator" class="twofactor-method-btn active">Authenticator</button>
+                        <button type="button" id="twoFactorMethodEmail" class="twofactor-method-btn">Código por e-mail</button>
+                    </div>
+                    <input type="text" id="twoFactorCode" name="twoFactorCode" maxlength="6" inputmode="numeric" autocomplete="one-time-code" placeholder="Digite os 6 dígitos">
+                    <button type="button" id="sendTwoFactorEmailBtn" class="twofactor-email-btn" style="display: none;">Enviar código por e-mail</button>
+                    <div id="twoFactorInfo" class="success-message" style="display: none;"></div>
+                </div>
+
                 <div class="form-options">
                     <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #999;">
                         <input type="checkbox" id="rememberAccount" style="cursor: pointer; width: 16px; height: 16px;">

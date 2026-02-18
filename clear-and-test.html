@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Cache and Test</title>
+</head>
+<body>
+    <h1>Clearing cache and redirecting...</h1>
+    <script>
+        // Clear all cache
+        localStorage.clear();
+        sessionStorage.clear();
+        console.log('Cache cleared');
+        
+        // Small delay then redirect
+        setTimeout(() => {
+            window.location.href = 'http://localhost:3000/profile.html?t=' + Date.now();
+        }, 500);
+    </script>
+</body>
+</html>

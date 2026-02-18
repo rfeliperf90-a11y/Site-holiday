@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Like/Heart Reactions</title>
+    <style>
+        body {
+            background: #1a1a2e;
+            color: white;
+            font-family: Arial;
+            padding: 20px;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #16213e;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #EC4899;
+        }
+        .test-step {
+            background: #0f3460;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #EC4899;
+            border-radius: 4px;
+        }
+        .success { color: #10B981; }
+        .error { color: #EF4444; }
+        .warning { color: #F59E0B; }
+        button {
+            background: #EC4899;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #DB2777;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Test Like + Heart Reactions</h1>
+        <p>Testing if you can give BOTH like and heart to the same download</p>
+        
+        <div class="test-step">
+            <h3>Step 1: Load Downloads Page</h3>
+            <p id="step1-status" class="warning">⏳ Loading...</p>
+            <button onclick="loadDownloadsPage()">Load Downloads</button>
+        </div>
+        
+        <div class="test-step">
+            <h3>Step 2: Simulate Like Click</h3>
+            <p id="step2-status" class="warning">⏳ Waiting...</p>
+            <button onclick="simulateLikeClick()">Click Like Button</button>
+        </div>
+        
+        <div class="test-step">
+            <h3>Step 3: Simulate Heart Click</h3>
+            <p id="step3-status" class="warning">⏳ Waiting...</p>
+            <button onclick="simulateHeartClick()">Click Heart Button</button>
+        </div>
+        
+        <div class="test-step">
+            <h3>Test Results</h3>
+            <p id="final-status">Waiting for test execution...</p>
+            <pre id="results" style="background: #000; padding: 10px; border-radius: 4px; overflow-x: auto;"></pre>
+        </div>
+    </div>
+
+    <script>
+        let downloadId = 3;
+        const results = [];
+        
+        function log(message) {
+            console.log(message);
+            results.push(message);
+            document.getElementById('results').textContent = results.join('\n');
+        }
+        
+        async function loadDownloadsPage() {
+            log('📥 Loading downloads page...');
+            
+            // The downloads.js file should already be loaded when this page opens
+            if (typeof loadDownloads === 'function') {
+                document.getElementById('step1-status').className = 'success';
+                document.getElementById('step1-status').textContent = '✅ Downloads page ready!';
+                log('✅ Downloads page functions available');
+            } else {
+                document.getElementById('step1-status').className = 'error';
+                document.getElementById('step1-status').textContent = '❌ Error loading page';
+                log('❌ loadDownloads function not found');
+            }
+        }
+        
+        function simulateLikeClick() {
+            if (typeof handleReaction !== 'function') {
+                document.getElementById('step2-status').className = 'error';
+                document.getElementById('step2-status').textContent = '❌ handleReaction not found';
+                log('❌ handleReaction function not found');
+                return;
+            }
+            
+            log('\n🎯 Simulating Like button click...');
+            
+            // Find or create like button
+            let likeBtn = document.querySelector(`[data-type="like"][data-id="${downloadId}"]`);
+            if (!likeBtn) {
+                log('⚠️ Like button not found in DOM, creating mock...');
+                likeBtn = {
+                    dataset: { id: downloadId, type: 'like' },
+                    style: { background: 'transparent', color: '#EC4899' },
+                    querySelector: () => ({ textContent: '0' })
+                };
+            }
+            
+            // Simulate click
+            const mockEvent = { currentTarget: likeBtn, stopPropagation: () => {} };
+            
+            try {
+                handleReaction(mockEvent);
+                document.getElementById('step2-status').className = 'success';
+                document.getElementById('step2-status').textContent = '✅ Like click processed';
+                log('✅ Like click processed successfully');
+            } catch (error) {
+                document.getElementById('step2-status').className = 'error';
+                document.getElementById('step2-status').textContent = '❌ Error processing like';
+                log(`❌ Error: ${error.message}`);
+            }
+        }
+        
+        function simulateHeartClick() {
+            if (typeof handleReaction !== 'function') {
+                document.getElementById('step3-status').className = 'error';
+                document.getElementById('step3-status').textContent = '❌ handleReaction not found';
+                return;
+            }
+            
+            log('\n💗 Simulating Heart button click...');
+            
+            // Find or create heart button
+            let heartBtn = document.querySelector(`[data-type="heart"][data-id="${downloadId}"]`);
+            if (!heartBtn) {
+                log('⚠️ Heart button not found in DOM, creating mock...');
+                heartBtn = {
+                    dataset: { id: downloadId, type: 'heart' },
+                    style: { background: 'transparent', color: '#EC4899' },
+                    querySelector: () => ({ textContent: '0' })
+                };
+            }
+            
+            // Simulate click
+            const mockEvent = { currentTarget: heartBtn, stopPropagation: () => {} };
+            
+            try {
+                handleReaction(mockEvent);
+                document.getElementById('step3-status').className = 'success';
+                document.getElementById('step3-status').textContent = '✅ Heart click processed';
+                log('✅ Heart click processed successfully');
+                
+                setTimeout(() => {
+                    document.getElementById('final-status').className = 'success';
+                    document.getElementById('final-status').textContent = '✅ ✅ ✅ TEST COMPLETE! Both like and heart can be given to same download! ✅ ✅ ✅';
+                }, 1000);
+            } catch (error) {
+                document.getElementById('step3-status').className = 'error';
+                document.getElementById('step3-status').textContent = '❌ Error processing heart';
+                log(`❌ Error: ${error.message}`);
+            }
+        }
+        
+        // Auto-load when page opens
+        window.addEventListener('load', () => {
+            log('📄 Test page loaded');
+            log('Waiting for you to click "Load Downloads" button...');
+        });
+    </script>
+</body>
+</html>

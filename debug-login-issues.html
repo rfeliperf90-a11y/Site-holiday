@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Debug Login Issues</title>
+    <style>
+        body {
+            background: #1a1a2e;
+            color: #fff;
+            font-family: Arial;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #00d4ff;
+        }
+        section {
+            background: #16213e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: #0f0f1e;
+            color: #fff;
+            border: 1px solid #00d4ff;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #e94560;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #d93553;
+        }
+        .log {
+            background: #0f0f1e;
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 3px solid #00d4ff;
+            padding-left: 10px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success {
+            border-left-color: #44ff44;
+            color: #44ff44;
+        }
+        .error {
+            border-left-color: #ff4444;
+            color: #ff4444;
+        }
+        .toggle-demo {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .toggle-demo input {
+            width: calc(100% - 50px);
+        }
+        .toggle-demo button {
+            position: absolute;
+            right: 0;
+            top: 10px;
+            width: 40px;
+            padding: 10px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Debug: Problemas de Login</h1>
+        
+        <section>
+            <h2>1. Teste do Toggle de Senha</h2>
+            <label>Digite algo e clique no botão ⊙ para alternar:</label>
+            <div class="toggle-demo">
+                <input type="password" id="testPassword" value="test123">
+                <button id="testToggle" type="button">⊙</button>
+            </div>
+            <div id="toggleLog" style="margin-top: 10px;"></div>
+        </section>
+
+        <section>
+            <h2>2. Teste de Login Completo</h2>
+            <input type="text" id="testNickname" placeholder="Nickname" value="fael">
+            <input type="password" id="testPass" placeholder="Senha" value="test123">
+            <button onclick="testLoginFlow()">Testar Login (sem redirecionar)</button>
+            <div id="loginLog" style="margin-top: 10px;"></div>
+        </section>
+
+        <section>
+            <h2>3. Teste de Redirecionamento</h2>
+            <button onclick="testRedirect()">Fazer login E redirecionar</button>
+            <p style="color: #FFD700;">⚠️ Aviso: Este botão irá redirecionar para profile.html!</p>
+            <div id="redirectLog" style="margin-top: 10px;"></div>
+        </section>
+    </div>
+
+    <script src="auth-api.js"></script>
+    <script>
+        // Teste 1: Toggle de Senha
+        document.getElementById('testToggle').addEventListener('click', (e) => {
+            e.preventDefault();
+            const input = document.getElementById('testPassword');
+            const btn = document.getElementById('testToggle');
+            const log = document.getElementById('toggleLog');
+            
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            btn.textContent = isPassword ? '⊗' : '⊙';
+            
+            addLog(log, `Toggle: ${isPassword ? 'Mostrando' : 'Ocultando'} senha`, 'success');
+        });
+
+        // Teste 2: Login sem redirecionar
+        async function testLoginFlow() {
+            const log = document.getElementById('loginLog');
+            log.innerHTML = '';
+            
+            const nickname = document.getElementById('testNickname').value;
+            const password = document.getElementById('testPass').value;
+            
+            addLog(log, `Tentando login com: ${nickname} / ***`, 'info');
+            
+            if (!AuthAPI) {
+                addLog(log, 'ERRO: AuthAPI não está disponível!', 'error');
+                return;
+            }
+            
+            addLog(log, 'AuthAPI disponível ✓', 'success');
+            
+            try {
+                const result = await AuthAPI.login(nickname, password);
+                addLog(log, `Resposta: ${JSON.stringify(result)}`, 'info');
+                
+                if (result.success) {
+                    addLog(log, `✓ Login bem-sucedido!`, 'success');
+                    addLog(log, `Token: ${result.token.substring(0, 30)}...`, 'success');
+                    AuthAPI.setToken(result.token);
+                    addLog(log, `✓ Token salvo no localStorage`, 'success');
+                } else {
+                    addLog(log, `✗ Erro: ${result.message}`, 'error');
+                }
+            } catch (e) {
+                addLog(log, `✗ Exceção: ${e.message}`, 'error');
+            }
+        }
+
+        // Teste 3: Login com redirecionamento
+        async function testRedirect() {
+            const log = document.getElementById('redirectLog');
+            log.innerHTML = '';
+            
+            const nickname = 'fael';
+            const password = 'test123';
+            
+            addLog(log, 'Iniciando login com redirecionamento...', 'info');
+            
+            try {
+                const result = await AuthAPI.login(nickname, password);
+                
+                if (result.success) {
+                    addLog(log, '✓ Login bem-sucedido, preparando redirecionamento...', 'success');
+                    AuthAPI.setToken(result.token);
+                    addLog(log, '✓ Token salvo, REDIRECIONANDO EM 2 SEGUNDOS', 'success');
+                    
+                    setTimeout(() => {
+                        addLog(log, 'REDIRECIONANDO AGORA...', 'success');
+                        window.location.href = 'profile.html';
+                    }, 2000);
+                } else {
+                    addLog(log, `✗ Login falhou: ${result.message}`, 'error');
+                }
+            } catch (e) {
+                addLog(log, `✗ Erro: ${e.message}`, 'error');
+            }
+        }
+
+        function addLog(element, message, type = 'info') {
+            const logDiv = document.createElement('div');
+            logDiv.className = `log ${type}`;
+            const time = new Date().toLocaleTimeString();
+            logDiv.textContent = `[${time}] ${message}`;
+            element.appendChild(logDiv);
+        }
+
+        // Log inicial
+        const initLog = document.getElementById('loginLog');
+        addLog(initLog, `AuthAPI disponível? ${typeof AuthAPI !== 'undefined'}`, 'success');
+    </script>
+</body>
+</html>
