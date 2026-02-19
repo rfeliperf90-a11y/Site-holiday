@@ -575,7 +575,7 @@ async function renderProfileData(result) {
         // Email verification
         const verificationBadge = document.getElementById('emailVerificationStatus');
         if (currentUser.emailVerified) {
-            verificationBadge.innerHTML = '<img src="https://guildholiday.discloud.app/imagens/Verificado.png" alt="Verificado" style="width: 28px; height: 28px; cursor: pointer;" title="E-mail Verificado">';
+            verificationBadge.innerHTML = '<img src="/imagens/Verificado.png" alt="Verificado" style="width: 28px; height: 28px; cursor: pointer;" title="E-mail Verificado">';
             verificationBadge.className = 'verification-badge verified';
         } else {
             verificationBadge.textContent = 'Não Verificado';
@@ -3240,6 +3240,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
 
 
 

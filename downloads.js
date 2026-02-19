@@ -736,7 +736,7 @@ function renderDownloads(downloadsToRender = allDownloads, options = {}) {
             <div class="download-card ${animatedCardClass}" data-id="${download.id}"${animatedStyleAttr}>
                 <div class="download-header">
                     <div class="user-info">
-                        <img src="${resolveMediaUrl(download.avatar, 'https://guildholiday.discloud.app/imagens/login.png')}" alt="Avatar" class="user-avatar" style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer;" data-user-id="${download.userId}">
+                        <img src="${resolveMediaUrl(download.avatar, '/imagens/login.png')}" alt="Avatar" class="user-avatar" style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer;" data-user-id="${download.userId}">
                         <div>
                             <strong class="user-name" style="cursor: pointer; color: #EC4899;" data-user-id="${download.userId}">@${escapeHtml(download.nickname)}</strong>
                             <div style="margin-top: 4px;">
@@ -1640,7 +1640,7 @@ async function showUserMiniProfile(userId) {
         
         content.innerHTML = `
             <div style="text-align: center;">
-                <img src="${resolveMediaUrl(profile.avatar, 'https://guildholiday.discloud.app/imagens/login.png')}" alt="${profile.nickname}" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px; border: 3px solid #EC4899;">
+                <img src="${resolveMediaUrl(profile.avatar, '/imagens/login.png')}" alt="${profile.nickname}" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px; border: 3px solid #EC4899;">
                 <h3 style="margin: 10px 0; color: #EC4899;">@${profile.nickname}</h3>
                 <p style="margin: 5px 0; font-size: 14px; color: #ccc;">${profile.firstName} ${profile.lastName}</p>
                 ${((profile.profileTagline || profile.currentRank?.description) ? `<p style="margin: 8px 0 10px; font-size: 13px; color: #F9A8D4; font-style: italic;">${profile.profileTagline || profile.currentRank?.description}</p>` : '')}
@@ -1697,6 +1697,7 @@ document.addEventListener('click', (e) => {
         miniModal.style.display = 'none';
     }
 });
+
 
 
 

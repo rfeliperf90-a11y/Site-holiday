@@ -1,4 +1,4 @@
-// ============================================
+﻿// ============================================
 // SISTEMA CENTRALIZADO DE AUTENTICACAO
 // ============================================
 // Este arquivo gerencia todo o estado de autenticacao do site
@@ -351,7 +351,7 @@ class NavbarManager {
                     const notifId = Number(notif.id) || 0;
                     const downloadId = Number(notif.downloadId) || 0;
                     const isComment = notif.type === 'comment';
-                    const avatar = notif.avatar || 'https://guildholiday.discloud.app/imagens/login.png';
+                    const avatar = notif.avatar || '/imagens/login.png';
                     const text = this.formatNotificationText(notif);
                     const time = new Date(notif.createdAt).toLocaleString('pt-BR');
 
@@ -467,14 +467,14 @@ class NavbarManager {
 
 class RouteGuard {
     static redirectToLogin(message) {
-        const loginMessage = String(message || 'Faça login para continuar');
+        const loginMessage = String(message || 'FaÃ§a login para continuar');
         window.location.href = `login.html?message=${encodeURIComponent(loginMessage)}`;
     }
 
     static async requireAuth(options = {}) {
         const {
-            loginMessage = 'Faça login para acessar esta página',
-            invalidSessionMessage = 'Sessão inválida. Faça login novamente.',
+            loginMessage = 'FaÃ§a login para acessar esta pÃ¡gina',
+            invalidSessionMessage = 'SessÃ£o invÃ¡lida. FaÃ§a login novamente.',
             validateSession = true
         } = options;
 
@@ -502,4 +502,5 @@ class RouteGuard {
 document.addEventListener('DOMContentLoaded', () => {
     NavbarManager.init();
 });
+
 
