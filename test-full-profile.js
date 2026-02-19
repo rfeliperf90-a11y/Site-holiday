@@ -5,7 +5,7 @@ async function testFullProfileFlow() {
     
     const API_URL = 'http://localhost:5000/api';
     
-    // Gerar um token vÃ¡lido
+    // Gerar um token v�lido
     const loginRes = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -14,7 +14,7 @@ async function testFullProfileFlow() {
     const loginData = await loginRes.json();
     const token = loginData.token;
     
-    console.log('âœ“ Token obtido:', token.substring(0, 20) + '...');
+    console.log('?o" Token obtido:', token.substring(0, 20) + '...');
     
     try {
         // ETAPA 1: Buscar perfil
@@ -30,33 +30,33 @@ async function testFullProfileFlow() {
         if (!profileData.success) {
             throw new Error('Profile API falhou: ' + profileData.message);
         }
-        console.log('âœ“ Perfil carregado');
-        console.log('  - UsuÃ¡rio:', profileData.user.firstName, profileData.user.lastName);
+        console.log('?o" Perfil carregado');
+        console.log('  - Usu�rio:', profileData.user.firstName, profileData.user.lastName);
         console.log('  - Email:', profileData.user.email);
         console.log('  - conquista:', profileData.rank?.name || 'nenhum');
-        console.log('  - HistÃ³rico de conquistas:', profileData.rankHistory?.length || 0);
+        console.log('  - Hist�rico de conquistas:', profileData.rankHistory?.length || 0);
         
-        // Simular atribuiÃ§Ã£o de variÃ¡veis como profile.js faz
+        // Simular atribui��o de vari�veis como profile.js faz
         const currentUser = profileData.user;
         const userId = currentUser.id;
         
         // ETAPA 2: Renderizar perfil no DOM (simulado)
         console.log('\n--- ETAPA 2: Atualizando UI ---');
-        console.log('âœ“ Nome completo:', currentUser.firstName + ' ' + currentUser.lastName);
-        console.log('âœ“ Bio:', currentUser.bio || '(vazia)');
+        console.log('?o" Nome completo:', currentUser.firstName + ' ' + currentUser.lastName);
+        console.log('?o" Bio:', currentUser.bio || '(vazia)');
         
-        // ETAPA 3: Carregar histÃ³rico
-        console.log('\n--- ETAPA 3: HistÃ³rico de conquistas ---');
+        // ETAPA 3: Carregar hist�rico
+        console.log('\n--- ETAPA 3: Hist�rico de conquistas ---');
         if (profileData.rankHistory && profileData.rankHistory.length > 0) {
-            console.log('âœ“ HistÃ³rico encontrado:', profileData.rankHistory.length, 'conquistas');
+            console.log('?o" Hist�rico encontrado:', profileData.rankHistory.length, 'conquistas');
             profileData.rankHistory.forEach((item, idx) => {
                 console.log(`  ${idx + 1}. ${item.rankName} em ${item.achievedAt}`);
             });
         } else {
-            console.log('âœ“ Nenhum histÃ³rico ainda (normal para novo usuÃ¡rio)');
+            console.log('?o" Nenhum hist�rico ainda (normal para novo usu�rio)');
         }
         
-        // ETAPA 4: Carregar conquistas customizados do usuÃ¡rio
+        // ETAPA 4: Carregar conquistas customizados do usu�rio
         console.log('\n--- ETAPA 4: conquistas customizados ---');
         const elosRes = await fetch(`${API_URL}/ranks/user/${userId}`, {
             headers: { 
@@ -67,18 +67,18 @@ async function testFullProfileFlow() {
         const elosData = await elosRes.json();
         
         if (elosData.success && elosData.ranks && elosData.ranks.length > 0) {
-            console.log('âœ“ conquistas customizados encontrados:', elosData.ranks.length);
+            console.log('?o" conquistas customizados encontrados:', elosData.ranks.length);
             elosData.ranks.forEach(rank => {
                 console.log(`  - ${rank.name} (${rank.color})`);
             });
         } else {
-            console.log('âœ“ Nenhum conquista customizado atribuÃ­do');
+            console.log('?o" Nenhum conquista customizado atribu�do');
         }
         
-        console.log('\nâœ… TESTE COMPLETO - Tudo funcionando normalmente!');
+        console.log('\n?o. TESTE COMPLETO - Tudo funcionando normalmente!');
         
     } catch (err) {
-        console.error('\nâŒ ERRO:', err.message);
+        console.error('\n?O ERRO:', err.message);
         console.error('Stack:', err.stack);
     }
 }

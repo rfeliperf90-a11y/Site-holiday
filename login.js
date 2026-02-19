@@ -1,10 +1,10 @@
-﻿// ========== LOGIN SCRIPT v2 - SUPER SIMPLES ==========
+// ========== LOGIN SCRIPT v2 - SUPER SIMPLES ==========
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('=== DOM CARREGADO ===');
     const TRUSTED_DEVICE_TOKEN_KEY = 'holidayTrustedDeviceToken';
 
-    // Se veio mensagem de redirecionamento (ex.: sessão inválida/bloqueada), exibir no formulário.
+    // Se veio mensagem de redirecionamento (ex.: sess�o inv�lida/bloqueada), exibir no formul�rio.
     const urlParams = new URLSearchParams(window.location.search);
     const messageParam = urlParams.get('message');
     const formErrorEl = document.getElementById('formError');
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (toggleBtn && passwordInput) {
         const updateToggleVisual = () => {
             const isVisible = passwordInput.type === 'text';
-            toggleBtn.textContent = isVisible ? '⊗' : '⊙';
+            toggleBtn.textContent = isVisible ? '?' : '?';
             toggleBtn.setAttribute('aria-label', isVisible ? 'Ocultar senha' : 'Mostrar senha');
             toggleBtn.setAttribute('title', isVisible ? 'Ocultar senha' : 'Mostrar senha');
         };
@@ -40,9 +40,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             updateToggleVisual();
         });
-        console.log('✓ Toggle de senha configurado');
+        console.log('? Toggle de senha configurado');
     } else {
-        console.error('✗ Elementos não encontrados:', { toggleBtn, passwordInput });
+        console.error('? Elementos n�o encontrados:', { toggleBtn, passwordInput });
     }
     
     // ===== LOGIN =====
@@ -108,13 +108,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (twoFactorCodeLabel) {
             twoFactorCodeLabel.textContent = normalized === 'email'
-                ? 'Código enviado por e-mail'
-                : 'Código Authenticator (2FA)';
+                ? 'C�digo enviado por e-mail'
+                : 'C�digo Authenticator (2FA)';
         }
         if (twoFactorCodeInput) {
             twoFactorCodeInput.placeholder = normalized === 'email'
-                ? 'Digite o código recebido no e-mail'
-                : 'Digite os 6 dígitos do Authenticator';
+                ? 'Digite o c�digo recebido no e-mail'
+                : 'Digite os 6 d�gitos do Authenticator';
         }
         if (sendTwoFactorEmailBtn) {
             sendTwoFactorEmailBtn.style.display = normalized === 'email' ? 'block' : 'none';
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const setSubmitLoading = (loading, text = 'Entrar') => {
         if (!submitBtn) return;
         submitBtn.disabled = Boolean(loading);
-        submitBtn.textContent = loading ? text : (pendingTwoFactorTicket ? 'Verificar código' : 'Entrar');
+        submitBtn.textContent = loading ? text : (pendingTwoFactorTicket ? 'Verificar c�digo' : 'Entrar');
     };
 
     const setTwoFactorMode = (enabled, methods = []) => {
@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formOptions.style.pointerEvents = active ? 'none' : '';
         }
         if (submitBtn) {
-            submitBtn.textContent = active ? 'Verificar código' : 'Entrar';
+            submitBtn.textContent = active ? 'Verificar c�digo' : 'Entrar';
         }
 
         if (active) {
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const sendTwoFactorEmailCode = async () => {
         if (!pendingTwoFactorTicket) {
-            formError.textContent = 'Sessão 2FA inválida. Tente fazer login novamente.';
+            formError.textContent = 'Sess�o 2FA inv�lida. Tente fazer login novamente.';
             return;
         }
 
@@ -188,17 +188,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await AuthAPI.sendTwoFactorEmailCode(pendingTwoFactorTicket);
             if (result?.success) {
                 formError.textContent = '';
-                setTwoFactorInfo(result.message || 'Código enviado para seu e-mail.');
+                setTwoFactorInfo(result.message || 'C�digo enviado para seu e-mail.');
             } else {
-                formError.textContent = result?.message || 'Erro ao enviar código por e-mail';
+                formError.textContent = result?.message || 'Erro ao enviar c�digo por e-mail';
             }
         } catch (error) {
-            console.error('Erro ao enviar código 2FA por e-mail:', error);
-            formError.textContent = 'Erro ao enviar código por e-mail';
+            console.error('Erro ao enviar c�digo 2FA por e-mail:', error);
+            formError.textContent = 'Erro ao enviar c�digo por e-mail';
         } finally {
             if (sendTwoFactorEmailBtn) {
                 sendTwoFactorEmailBtn.disabled = false;
-                sendTwoFactorEmailBtn.textContent = 'Enviar código por e-mail';
+                sendTwoFactorEmailBtn.textContent = 'Enviar c�digo por e-mail';
             }
         }
     };
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (urlNick && urlPass) {
         nicknameInput.value = urlNick;
         passwordInput.value = urlPass;
-        console.log('✓ Formulário preenchido com params da URL');
+        console.log('? Formul�rio preenchido com params da URL');
     }
 
     if (twoFactorMethodAuthenticatorBtn) {
@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            console.log('=== SUBMIT DO FORMULÁRIO ===');
+            console.log('=== SUBMIT DO FORMUL�RIO ===');
 
             const nickname = nicknameInput.value.trim();
             const password = passwordInput.value;
@@ -264,8 +264,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 const code = String(twoFactorCodeInput?.value || '').replace(/\s+/g, '').trim();
                 if (!/^\d{6}$/.test(code)) {
                     formError.textContent = currentTwoFactorMethod === 'email'
-                        ? 'Digite o código de 6 dígitos enviado por e-mail'
-                        : 'Digite o código de 6 dígitos do Authenticator';
+                        ? 'Digite o c�digo de 6 d�gitos enviado por e-mail'
+                        : 'Digite o c�digo de 6 d�gitos do Authenticator';
                     return;
                 }
 
@@ -297,10 +297,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                     AuthAPI.removeToken();
-                    formError.textContent = verifyResult.message || 'Código inválido';
+                    formError.textContent = verifyResult.message || 'C�digo inv�lido';
                 } catch (error) {
-                    console.error('Erro na verificação 2FA:', error);
-                    formError.textContent = 'Erro ao validar código';
+                    console.error('Erro na verifica��o 2FA:', error);
+                    formError.textContent = 'Erro ao validar c�digo';
                 } finally {
                     setSubmitLoading(false);
                 }
@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setSubmitLoading(true, 'Entrando...');
 
             try {
-                // Impede reutilização de sessão anterior (ex.: outro usuário logado no mesmo navegador).
+                // Impede reutiliza��o de sess�o anterior (ex.: outro usu�rio logado no mesmo navegador).
                 AuthAPI.removeToken();
                 const trustedDeviceToken = getTrustedDeviceToken();
 
@@ -331,19 +331,19 @@ document.addEventListener('DOMContentLoaded', function() {
                         clearTrustedDeviceToken();
                     }
                     if (!result.loginTicket) {
-                        formError.textContent = 'Falha ao iniciar validação 2FA';
+                        formError.textContent = 'Falha ao iniciar valida��o 2FA';
                         setSubmitLoading(false);
                         return;
                     }
                     pendingTwoFactorTicket = result.loginTicket;
                     setTwoFactorMode(true, result.twoFactorMethods);
-                    formError.textContent = result.message || 'Digite o código 2FA para continuar.';
+                    formError.textContent = result.message || 'Digite o c�digo 2FA para continuar.';
                     setSubmitLoading(false);
                     return;
                 }
 
                 if (result.success) {
-                    console.log('✓ Login bem-sucedido!');
+                    console.log('? Login bem-sucedido!');
                     
                     // Salvar dados
                     if (rememberCheckbox.checked) {
@@ -354,7 +354,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Salvar token
                     AuthAPI.setToken(result.token);
-                    console.log('✓ Token armazenado');
+                    console.log('? Token armazenado');
                     
                     // Redirecionar
                     console.log('Redirecionando para profile.html...');
@@ -362,14 +362,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         window.location.href = 'profile.html';
                     }, 100);
                 } else {
-                    // Em falha de login (incluindo banimento), garantir que não exista token residual.
+                    // Em falha de login (incluindo banimento), garantir que n�o exista token residual.
                     AuthAPI.removeToken();
                     formError.textContent = result.message || 'Erro ao fazer login';
                     console.error('Erro:', result.message);
                     setSubmitLoading(false);
                 }
             } catch (error) {
-                console.error('Erro na requisição:', error);
+                console.error('Erro na requisi��o:', error);
                 formError.textContent = 'Erro ao conectar ao servidor';
                 setSubmitLoading(false);
             }

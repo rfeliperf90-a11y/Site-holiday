@@ -11,14 +11,14 @@ db.get(`SELECT id, nickname, bio FROM users WHERE nickname = 'fael'`, (err, row)
     if (err) {
         console.error('Erro:', err);
     } else if (row) {
-        console.log('\nBio do usuário fael:');
+        console.log('\nBio do usu�rio fael:');
         console.log('Valor:', row.bio);
         console.log('Tipo:', typeof row.bio);
         console.log('Tamanho:', row.bio ? row.bio.length : 0);
         
         if (row.bio && row.bio.includes('[object Object]')) {
-            console.log('\n⚠️ PROBLEMA ENCONTRADO: Bio contém "[object Object]"');
-            console.log('Isso causa erro no JSON.parse ou na renderização da página');
+            console.log('\n?? PROBLEMA ENCONTRADO: Bio cont�m "[object Object]"');
+            console.log('Isso causa erro no JSON.parse ou na renderiza��o da p�gina');
         }
     }
     db.close();

@@ -67,12 +67,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>🔐 Teste de Toggle de Senha</h1>
+        <h1>?? Teste de Toggle de Senha</h1>
         
         <div class="form-group">
             <label for="password">Senha:</label>
             <input type="password" id="password" placeholder="Teste aqui" value="teste123">
-            <button type="button" id="togglePassword">⊙</button>
+            <button type="button" id="togglePassword">?</button>
         </div>
 
         <div id="log"></div>
@@ -96,7 +96,7 @@
         }
 
         if (toggleBtn) {
-            addLog('✓ Botão encontrado, registrando evento...');
+            addLog('? Bot�o encontrado, registrando evento...');
             
             toggleBtn.addEventListener('click', function(e) {
                 console.log('!!! CLICK DETECTADO !!!');
@@ -107,20 +107,20 @@
                 const newType = isPassword ? 'text' : 'password';
                 
                 passwordInput.type = newType;
-                toggleBtn.textContent = isPassword ? '⊗' : '⊙';
+                toggleBtn.textContent = isPassword ? '?' : '?';
                 
-                addLog(`Senha ${isPassword ? 'VISÍVEL' : 'OCULTA'}`);
+                addLog(`Senha ${isPassword ? 'VIS�VEL' : 'OCULTA'}`);
                 addLog(`Novo tipo: ${newType}`);
-                addLog(`Novo botão: ${toggleBtn.textContent}`);
+                addLog(`Novo bot�o: ${toggleBtn.textContent}`);
             });
             
-            addLog('✓ EventListener registrado com sucesso');
+            addLog('? EventListener registrado com sucesso');
         } else {
-            addLog('✗ Botão NÃO foi encontrado!');
+            addLog('? Bot�o N�O foi encontrado!');
         }
 
         // Clique manual para teste
-        addLog('Sistema pronto - clique no botão ⊙');
+        addLog('Sistema pronto - clique no bot�o ?');
     </script>
 </body>
 </html>

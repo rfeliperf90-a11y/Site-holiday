@@ -1,4 +1,4 @@
-﻿// API Configuration
+// API Configuration
 function normalizeApiBase(rawUrl) {
     const sanitized = String(rawUrl || '').trim().replace(/\/+$/, '');
     if (!sanitized) return '';
@@ -19,7 +19,7 @@ function resolveApiUrl() {
         return 'http://localhost:8080/api';
     }
 
-    // Produção: fallback fixo para evitar erro quando não existir rewrite /api no host estático.
+    // Produ��o: fallback fixo para evitar erro quando n�o existir rewrite /api no host est�tico.
     return 'https://guildholiday.discloud.app/api';
 }
 
@@ -27,12 +27,12 @@ const API_URL = resolveApiUrl();
 
 class AuthAPI {
     static getToken() {
-        // Usar AuthManager se disponível, senão fallback para localStorage
+        // Usar AuthManager se dispon�vel, sen�o fallback para localStorage
         return typeof AuthManager !== 'undefined' ? AuthManager.getToken() : localStorage.getItem('token');
     }
 
     static setToken(token) {
-        // Usar AuthManager se disponível para notificar mudanças
+        // Usar AuthManager se dispon�vel para notificar mudan�as
         if (typeof AuthManager !== 'undefined') {
             AuthManager.setToken(token);
         } else {
@@ -41,7 +41,7 @@ class AuthAPI {
     }
 
     static removeToken() {
-        // Usar AuthManager se disponível para notificar mudanças
+        // Usar AuthManager se dispon�vel para notificar mudan�as
         if (typeof AuthManager !== 'undefined') {
             AuthManager.removeToken();
         } else {
@@ -74,7 +74,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao buscar links da comunidade:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -88,11 +88,11 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao atualizar links da comunidade:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Autenticação
+    // Autentica��o
     static async register(firstName, lastName, nickname, email, birthDate, password, confirmPassword) {
         try {
             const response = await fetch(`${API_URL}/auth/register`, {
@@ -102,8 +102,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro na requisição de registro:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro na requisi��o de registro:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -120,8 +120,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro na requisição de login:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro na requisi��o de login:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -134,8 +134,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro na verificação 2FA do login:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro na verifica��o 2FA do login:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -148,8 +148,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao enviar código 2FA por email:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao enviar c�digo 2FA por email:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -162,8 +162,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro na verificação de email:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro na verifica��o de email:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -176,8 +176,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao reenviar verificação:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao reenviar verifica��o:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -190,8 +190,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro na recuperação de senha:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro na recupera��o de senha:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -205,7 +205,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao resetar senha:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -218,8 +218,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao verificar código de reset:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao verificar c�digo de reset:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -232,12 +232,12 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao reenviar código de reset:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao reenviar c�digo de reset:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Perfil do usuário
+    // Perfil do usu�rio
     static async getProfile() {
         try {
             const response = await fetch(`${API_URL}/auth/profile`, {
@@ -247,13 +247,13 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao buscar perfil:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
     static async updateProfile(formData) {
         try {
-            // Para FormData, não enviar Content-Type (navegador faz isso automaticamente)
+            // Para FormData, n�o enviar Content-Type (navegador faz isso automaticamente)
             const headers = {
                 'Authorization': `Bearer ${this.getToken()}`
             };
@@ -279,7 +279,7 @@ class AuthAPI {
             return payload;
         } catch (error) {
             console.error('Erro ao atualizar perfil:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -293,7 +293,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao atualizar bio:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -305,8 +305,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao buscar usuário:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao buscar usu�rio:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -320,7 +320,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao mudar senha:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -333,7 +333,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao obter status do 2FA:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -346,7 +346,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao iniciar setup do 2FA:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -360,7 +360,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao ativar 2FA:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -374,7 +374,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao desativar 2FA:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -387,8 +387,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao atualizar configurações do 2FA:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao atualizar configura��es do 2FA:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -401,8 +401,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao enviar código de email:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao enviar c�digo de email:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -416,11 +416,11 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao alterar email:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Funções de Admin
+    // Fun��es de Admin
     static async getAdminUsers() {
         try {
             const response = await fetch(`${API_URL}/admin/users`, {
@@ -429,8 +429,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao buscar usuários:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao buscar usu�rios:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -444,7 +444,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao atribuir conquista:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -458,7 +458,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao remover conquista:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -472,7 +472,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao renomear conta:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -485,11 +485,11 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao excluir conta:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Gerenciamento de conquistas Customizáveis
+    // Gerenciamento de conquistas Customiz�veis
     static async getCustomRanks() {
         try {
             const response = await fetch(`${API_URL}/ranks/custom`, {
@@ -499,7 +499,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao buscar conquistas:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -511,8 +511,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao buscar conquistas padrão:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao buscar conquistas padr�o:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -551,7 +551,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao criar conquista:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -588,7 +588,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao atualizar conquista:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -600,8 +600,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao buscar conquistas customizáveis:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao buscar conquistas customiz�veis:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -616,7 +616,7 @@ class AuthAPI {
             return data;
         } catch (error) {
             console.error('Erro ao buscar todos os conquistas:', error);
-            return { success: false, message: 'Erro de conexão: ' + error.message };
+            return { success: false, message: 'Erro de conex�o: ' + error.message };
         }
     }
 
@@ -629,7 +629,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao deletar conquista:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -643,7 +643,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao atribuir conquista:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -656,7 +656,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao remover conquista:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -668,8 +668,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao buscar conquistas do usuário:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao buscar conquistas do usu�rio:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -683,7 +683,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao buscar downloads:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -695,8 +695,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao verificar permissão:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao verificar permiss�o:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -708,8 +708,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao obter reação:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao obter rea��o:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -722,7 +722,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao deletar download:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -736,7 +736,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao atualizar download:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -748,15 +748,15 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao buscar perfil do usuário:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao buscar perfil do usu�rio:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Selecionar conquistas customizáveis para exibir no perfil (máximo 4)
+    // Selecionar conquistas customiz�veis para exibir no perfil (m�ximo 4)
     static async selectProfileRanks(rankIds) {
         try {
-            // rankIds deve ser um array com até 4 IDs de custom ranks
+            // rankIds deve ser um array com at� 4 IDs de custom ranks
             const response = await fetch(`${API_URL}/users/selected-ranks`, {
                 method: 'POST',
                 headers: this.getHeaders(true),
@@ -765,11 +765,11 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao selecionar conquistas:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Recuperar conquistas selecionados do perfil do usuário
+    // Recuperar conquistas selecionados do perfil do usu�rio
     static async getSelectedProfileRanks() {
         try {
             const response = await fetch(`${API_URL}/users/selected-ranks`, {
@@ -779,11 +779,11 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao buscar conquistas selecionados:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Banir ou suspender usuário
+    // Banir ou suspender usu�rio
     static async banUser(userIdentifier, banType, banDays, reason) {
         try {
             const response = await fetch(`${API_URL}/admin/ban-user`, {
@@ -793,8 +793,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao banir usuário:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao banir usu�rio:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -808,11 +808,11 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao buscar banimentos:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Desbanir usuário
+    // Desbanir usu�rio
     static async unbanUser(banId) {
         try {
             const response = await fetch(`${API_URL}/admin/unban/${banId}`, {
@@ -821,12 +821,12 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao desbanir usuário:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao desbanir usu�rio:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Conceder permissão de postagem
+    // Conceder permiss�o de postagem
     static async grantPostPermission(userIdentifier) {
         try {
             const response = await fetch(`${API_URL}/admin/grant-post-permission`, {
@@ -836,12 +836,12 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao conceder permissão:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao conceder permiss�o:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Remover permissão de postagem
+    // Remover permiss�o de postagem
     static async revokePostPermission(userIdentifier) {
         try {
             const response = await fetch(`${API_URL}/admin/revoke-post-permission`, {
@@ -851,8 +851,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao remover permissão:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao remover permiss�o:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -865,8 +865,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao conceder permissão de ordenação fixa:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao conceder permiss�o de ordena��o fixa:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -879,12 +879,12 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao remover permissão de ordenação fixa:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao remover permiss�o de ordena��o fixa:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Listar usuários com permissão de postagem
+    // Listar usu�rios com permiss�o de postagem
     static async getUsersWithPostPermission() {
         try {
             const response = await fetch(`${API_URL}/admin/users-with-post-permission`, {
@@ -893,8 +893,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao listar usuários:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao listar usu�rios:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -907,8 +907,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao salvar permissões do usuário:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao salvar permiss�es do usu�rio:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -920,8 +920,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao buscar configuração de card animado:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao buscar configura��o de card animado:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -942,8 +942,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao salvar configuração de card animado:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao salvar configura��o de card animado:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -964,7 +964,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao buscar GIFs:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -982,7 +982,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao carregar GIFs em alta:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -1000,7 +1000,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao enviar GIF personalizado:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -1014,7 +1014,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao obter conquistas de postagem:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -1028,7 +1028,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao sincronizar conquistas de postagens:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -1041,7 +1041,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao sincronizar conquistas de likes:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -1050,7 +1050,7 @@ class AuthAPI {
     // Criar postagem
     static async createDownload(name, description, link) {
         try {
-            // Suportar tanto formato antigo (link único) quanto novo (array)
+            // Suportar tanto formato antigo (link �nico) quanto novo (array)
             let body;
             if (typeof link === 'object' && link.links) {
                 body = { name, description, ...link, links: link.links };
@@ -1070,11 +1070,11 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao criar download:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Verificar permissão de postagem
+    // Verificar permiss�o de postagem
     static async checkCanPostDownloads() {
         try {
             const response = await fetch(`${API_URL}/downloads/can-post`, {
@@ -1083,12 +1083,12 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao verificar permissão:', error);
+            console.error('Erro ao verificar permiss�o:', error);
             return { success: false, canPost: false };
         }
     }
 
-    // Verificar permissão de gerenciar downloads (editar/excluir)
+    // Verificar permiss�o de gerenciar downloads (editar/excluir)
     static async checkCanManageDownloads() {
         try {
             const response = await fetch(`${API_URL}/downloads/can-manage`, {
@@ -1097,12 +1097,12 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao verificar permissão:', error);
+            console.error('Erro ao verificar permiss�o:', error);
             return { success: false, canManage: false };
         }
     }
 
-    // Obter perfil do usuário com conquistas de postagem
+    // Obter perfil do usu�rio com conquistas de postagem
     static async getUserPostageProfile(userId) {
         try {
             const response = await fetch(`${API_URL}/downloads/user-profile/${userId}`, {
@@ -1112,7 +1112,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao obter perfil:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -1126,7 +1126,7 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao obter downloads:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -1140,11 +1140,11 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao obter downloads:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Dar reação/like em um download
+    // Dar rea��o/like em um download
     static async addDownloadReaction(downloadId, reactionType) {
         try {
             const response = await fetch(`${API_URL}/downloads/${downloadId}/reaction`, {
@@ -1154,8 +1154,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao adicionar reação:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao adicionar rea��o:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -1169,11 +1169,11 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao adicionar favorito:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Verificar se é favorito
+    // Verificar se � favorito
     static async checkIsFavorite(downloadId) {
         try {
             const response = await fetch(`${API_URL}/downloads/${downloadId}/is-favorite`, {
@@ -1187,7 +1187,7 @@ class AuthAPI {
         }
     }
 
-    // Obter favoritos do usuário
+    // Obter favoritos do usu�rio
     static async getFavoriteDownloads() {
         try {
             const response = await fetch(`${API_URL}/downloads/favorites/list`, {
@@ -1197,11 +1197,11 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao obter favoritos:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Obter downloads de um usuário específico
+    // Obter downloads de um usu�rio espec�fico
     static async getUserDownloads(userId) {
         try {
             const response = await fetch(`${API_URL}/downloads/user/${userId}/downloads`, {
@@ -1210,12 +1210,12 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao obter downloads do usuário:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao obter downloads do usu�rio:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Obter estatísticas do usuário (postagens, likes, etc)
+    // Obter estat�sticas do usu�rio (postagens, likes, etc)
     static async getUserDownloadStats(userId) {
         try {
             const response = await fetch(`${API_URL}/downloads/user/${userId}/stats`, {
@@ -1224,8 +1224,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao obter estatísticas:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao obter estat�sticas:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -1237,14 +1237,14 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao verificar permissão de admin:', error);
+            console.error('Erro ao verificar permiss�o de admin:', error);
             return { success: false, hasAccess: false };
         }
     }
 
-    // ===================== COMENTÁRIOS =====================
+    // ===================== COMENT�RIOS =====================
 
-    // Adicionar comentário
+    // Adicionar coment�rio
     static async addDownloadComment(downloadId, content) {
         try {
             const response = await fetch(`${API_URL}/downloads/${downloadId}/comments`, {
@@ -1254,12 +1254,12 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao adicionar comentário:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao adicionar coment�rio:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Obter comentários de um download
+    // Obter coment�rios de um download
     static async getDownloadComments(downloadId) {
         try {
             const response = await fetch(`${API_URL}/downloads/${downloadId}/comments`, {
@@ -1268,12 +1268,12 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao obter comentários:', error);
+            console.error('Erro ao obter coment�rios:', error);
             return { success: false, comments: [] };
         }
     }
 
-    // Deletar comentário
+    // Deletar coment�rio
     static async deleteDownloadComment(commentId) {
         try {
             const response = await fetch(`${API_URL}/downloads/comments/${commentId}`, {
@@ -1282,14 +1282,14 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao deletar comentário:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao deletar coment�rio:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // ===================== NOTIFICAÇÕES =====================
+    // ===================== NOTIFICA��ES =====================
 
-    // Obter notificações não lidas
+    // Obter notifica��es n�o lidas
     static async getUnreadNotifications() {
         try {
             const response = await fetch(`${API_URL}/downloads/notifications/unread`, {
@@ -1298,12 +1298,12 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao obter notificações:', error);
+            console.error('Erro ao obter notifica��es:', error);
             return { success: false, notifications: [], unreadCount: 0 };
         }
     }
 
-    // Obter todas as notificações
+    // Obter todas as notifica��es
     static async getAllNotifications(limit = 50, offset = 0) {
         try {
             const response = await fetch(`${API_URL}/downloads/notifications/all?limit=${limit}&offset=${offset}`, {
@@ -1312,12 +1312,12 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao obter notificações:', error);
+            console.error('Erro ao obter notifica��es:', error);
             return { success: false, notifications: [] };
         }
     }
 
-    // Contar notificações não lidas
+    // Contar notifica��es n�o lidas
     static async getNotificationCount() {
         try {
             const response = await fetch(`${API_URL}/downloads/notifications/count`, {
@@ -1326,12 +1326,12 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao contar notificações:', error);
+            console.error('Erro ao contar notifica��es:', error);
             return { success: false, unreadCount: 0 };
         }
     }
 
-    // Marcar notificação como lida
+    // Marcar notifica��o como lida
     static async markNotificationAsRead(notificationId) {
         try {
             const response = await fetch(`${API_URL}/downloads/notifications/${notificationId}/read`, {
@@ -1341,11 +1341,11 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao marcar como lida:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Marcar todas as notificações como lidas
+    // Marcar todas as notifica��es como lidas
     static async markAllNotificationsAsRead() {
         try {
             const response = await fetch(`${API_URL}/downloads/notifications/mark-all-read`, {
@@ -1355,11 +1355,11 @@ class AuthAPI {
             return await response.json();
         } catch (error) {
             console.error('Erro ao marcar todas como lidas:', error);
-            return { success: false, message: 'Erro de conexão' };
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
-    // Configurações de notificações do usuário
+    // Configura��es de notifica��es do usu�rio
     static async getNotificationSettings() {
         try {
             const response = await fetch(`${API_URL}/users/notification-settings`, {
@@ -1368,8 +1368,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao obter configurações de notificações:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao obter configura��es de notifica��es:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 
@@ -1382,8 +1382,8 @@ class AuthAPI {
             });
             return await response.json();
         } catch (error) {
-            console.error('Erro ao atualizar configurações de notificações:', error);
-            return { success: false, message: 'Erro de conexão' };
+            console.error('Erro ao atualizar configura��es de notifica��es:', error);
+            return { success: false, message: 'Erro de conex�o' };
         }
     }
 }

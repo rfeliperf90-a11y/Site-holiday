@@ -18,21 +18,21 @@ if (user) {
     const isMatch = bcryptjs.compareSync(testPassword, storedHash);
     
     if (isMatch) {
-        console.log('✅ Senha está CORRETA');
+        console.log('? Senha est� CORRETA');
     } else {
-        console.log('❌ Senha está INCORRETA');
+        console.log('? Senha est� INCORRETA');
         console.log('\nTentando outras senhas comuns...');
         
         const passwords = ['senha123', 'Fael123', 'fael123', '123456', 'admin123', 'Password123'];
         for (const pwd of passwords) {
             if (bcryptjs.compareSync(pwd, storedHash)) {
-                console.log(`✅ Senha encontrada: ${pwd}`);
+                console.log(`? Senha encontrada: ${pwd}`);
                 break;
             }
         }
     }
 } else {
-    console.log('Usuário não encontrado');
+    console.log('Usu�rio n�o encontrado');
 }
 
 db.close();

@@ -1,4 +1,4 @@
-﻿import sqlite3 from 'sqlite3';
+import sqlite3 from 'sqlite3';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -9,8 +9,8 @@ const db = new sqlite3.Database(path.join(__dirname, 'database', 'holiday.db'));
 
 // Atualizar conquistas para remover emojis e usar apenas texto
 const updates = [
-    { name: 'Fundador', icon: 'â˜…' },
-    { name: 'Initiate', icon: 'âœ¦' },
+    { name: 'Fundador', icon: '�~.' },
+    { name: 'Initiate', icon: '�o�' },
     { name: 'Administrador', icon: 'ADM' },
     { name: 'Membro', icon: 'M' }
 ];
@@ -23,7 +23,7 @@ updates.forEach(rank => {
             if (err) {
                 console.error(`Erro ao atualizar ${rank.name}:`, err);
             } else {
-                console.log(`âœ“ ${rank.name} atualizado para icon: ${rank.icon}`);
+                console.log(`�o" ${rank.name} atualizado para icon: ${rank.icon}`);
             }
         }
     );
@@ -31,7 +31,7 @@ updates.forEach(rank => {
 
 setTimeout(() => {
     db.all(`SELECT name, icon FROM custom_ranks`, (err, rows) => {
-        console.log('\nâœ“ CONQUISTAS ATUALIZADOS:');
+        console.log('\n�o" CONQUISTAS ATUALIZADOS:');
         console.log(JSON.stringify(rows, null, 2));
         db.close();
     });

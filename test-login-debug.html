@@ -81,8 +81,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>🧪 Login Debug Test</h1>
-        <p>Este é um teste interativo para debugar o login</p>
+        <h1>?? Login Debug Test</h1>
+        <p>Este � um teste interativo para debugar o login</p>
         
         <label>Nickname/Email:</label>
         <input type="text" id="testNickname" placeholder="Ex: fael" value="fael">
@@ -135,8 +135,8 @@
                     });
                     return await response.json();
                 } catch (error) {
-                    addLog('Erro na requisição de login: ' + error.message, 'error');
-                    return { success: false, message: 'Erro de conexão' };
+                    addLog('Erro na requisi��o de login: ' + error.message, 'error');
+                    return { success: false, message: 'Erro de conex�o' };
                 }
             }
 
@@ -149,7 +149,7 @@
                     return await response.json();
                 } catch (error) {
                     addLog('Erro ao buscar perfil: ' + error.message, 'error');
-                    return { success: false, message: 'Erro de conexão' };
+                    return { success: false, message: 'Erro de conex�o' };
                 }
             }
         }
@@ -185,13 +185,13 @@
             const result = await AuthAPI.login(nickname, password);
             
             if (result.success) {
-                addLog('✓ Login bem-sucedido!', 'success');
+                addLog('? Login bem-sucedido!', 'success');
                 addLog(`Token: ${result.token.substring(0, 30)}...`, 'success');
-                addLog(`Usuário: ${result.user.firstName} ${result.user.lastName}`, 'success');
+                addLog(`Usu�rio: ${result.user.firstName} ${result.user.lastName}`, 'success');
                 AuthAPI.setToken(result.token);
                 addLog('Token armazenado no localStorage', 'success');
             } else {
-                addLog(`✗ Login falhou: ${result.message}`, 'error');
+                addLog(`? Login falhou: ${result.message}`, 'error');
             }
         }
 
@@ -209,18 +209,18 @@
             const result = await AuthAPI.getProfile();
             
             if (result.success && result.user) {
-                addLog('✓ Perfil carregado!', 'success');
+                addLog('? Perfil carregado!', 'success');
                 addLog(`Nome: ${result.user.firstName} ${result.user.lastName}`, 'success');
                 addLog(`Email: ${result.user.email}`, 'success');
                 addLog(`Rank: ${result.rank?.name || 'N/A'}`, 'success');
                 addLog(`Custom Ranks: ${result.rankComplete?.custom?.length || 0}`, 'info');
             } else {
-                addLog(`✗ Perfil falhou: ${result.message}`, 'error');
+                addLog(`? Perfil falhou: ${result.message}`, 'error');
             }
         }
 
         // Log initial state
-        addLog('Página pronta para testes', 'success');
+        addLog('P�gina pronta para testes', 'success');
         addLog(`API URL: ${API_URL}`, 'info');
     </script>
 </body>

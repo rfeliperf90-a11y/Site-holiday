@@ -1,4 +1,4 @@
-﻿import sqlite3 from 'sqlite3';
+import sqlite3 from 'sqlite3';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -9,7 +9,7 @@ const db = new sqlite3.Database(path.join(__dirname, 'database', 'holiday.db'));
 
 const userId = 2; // coringa
 
-console.log('=== VERIFICANDO CONQUISTAS DO USUÃRIO ID:' + userId + ' ===\n');
+console.log('=== VERIFICANDO CONQUISTAS DO USUÁRIO ID:' + userId + ' ===\n');
 
 db.all(`SELECT uc.*, cr.name, cr.color, cr.icon FROM user_custom_ranks uc 
         JOIN custom_ranks cr ON uc.customRankId = cr.id 
@@ -21,13 +21,13 @@ db.all(`SELECT uc.*, cr.name, cr.color, cr.icon FROM user_custom_ranks uc
         console.log(JSON.stringify(ranks, null, 2));
     }
     
-    // TambÃ©m mostrar todos os conquistas do usuÃ¡rio
+    // Também mostrar todos os conquistas do usuário
     db.get(`SELECT * FROM users WHERE id = ?`, [userId], (err, user) => {
-        console.log('\nDados do usuÃ¡rio:', user);
+        console.log('\nDados do usuário:', user);
         
-        // Procurar downloads deste usuÃ¡rio
+        // Procurar downloads deste usuário
         db.all(`SELECT id, name, authorPostageRank FROM downloads WHERE userId = ?`, [userId], (err, downloads) => {
-            console.log('\nDownloads do usuÃ¡rio:', downloads ? downloads.length : 0);
+            console.log('\nDownloads do usuário:', downloads ? downloads.length : 0);
             console.log(JSON.stringify(downloads, null, 2));
             db.close();
         });

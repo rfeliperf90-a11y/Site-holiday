@@ -8,15 +8,15 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const certPath = path.join(__dirname, 'ssl/cert.pem');
 const keyPath = path.join(__dirname, 'ssl/key.pem');
 
-// Verificar se certificado já existe
+// Verificar se certificado j� existe
 if (fs.existsSync(certPath) && fs.existsSync(keyPath)) {
-    console.log('✓ Certificado SSL já existe');
+    console.log('? Certificado SSL j� existe');
     process.exit(0);
 }
 
 console.log('Gerando certificado SSL autoassinado...');
 
-// Criar diretório se não existir
+// Criar diret�rio se n�o existir
 if (!fs.existsSync(path.join(__dirname, 'ssl'))) {
     fs.mkdirSync(path.join(__dirname, 'ssl'), { recursive: true });
 }
@@ -65,10 +65,10 @@ try {
     fs.writeFileSync(certPath, certPem);
     fs.writeFileSync(keyPath, keyPem);
 
-    console.log('✓ Certificado SSL gerado com sucesso!');
-    console.log('📁 Arquivos: ssl/cert.pem, ssl/key.pem');
+    console.log('? Certificado SSL gerado com sucesso!');
+    console.log('?? Arquivos: ssl/cert.pem, ssl/key.pem');
     process.exit(0);
 } catch (err) {
-    console.error('❌ Erro ao gerar certificado:', err.message);
+    console.error('? Erro ao gerar certificado:', err.message);
     process.exit(1);
 }

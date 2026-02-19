@@ -1,9 +1,9 @@
-﻿// Simular dados do backend
+// Simular dados do backend
 const profile = {
     selectedRanks: [
         { id: 21, name: 'Moderador', color: '#000000', icon: 'MOD' },
-        { id: 19, name: 'Fundador', color: '#FFD700', icon: 'â˜…' },
-        { id: 20, name: 'Initiate', color: '#FF6B9D', icon: 'âœ¦' }
+        { id: 19, name: 'Fundador', color: '#FFD700', icon: '�~.' },
+        { id: 20, name: 'Initiate', color: '#FF6B9D', icon: '�o�' }
     ],
     autoRank: { name: 'Fundador', icon: 'FOUNDER', color: '#FFD700', level: 'founder' }
 };
@@ -20,7 +20,7 @@ const eloscustomHTML = profile.selectedRanks && profile.selectedRanks.length > 0
 console.log('=== CONQUISTAS CUSTOMIZADOS HTML ===');
 console.log(eloscustomHTML);
 
-console.log('\n=== RENDERIZAÃ‡ÃƒO NA MODAL ===');
+console.log('\n=== RENDERIZA�?�fO NA MODAL ===');
 console.log(`
 <div style="margin: 20px 0; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 8px;">
     <p style="color: #999; font-size: 12px; margin-bottom: 10px;">CONQUISTAS CUSTOMIZADOS:</p>

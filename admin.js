@@ -1,19 +1,19 @@
-﻿// Script para Painel Admin - Nova Versão com conquistas Customizáveis
+// Script para Painel Admin - Nova Vers�o com conquistas Customiz�veis
 
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('Admin pages loaded');
 
     if (typeof RouteGuard !== 'undefined') {
         const allowed = await RouteGuard.requireAuth({
-            loginMessage: 'Faça login para acessar o painel administrativo',
-            invalidSessionMessage: 'Sessão inválida. Faça login novamente.',
+            loginMessage: 'Fa�a login para acessar o painel administrativo',
+            invalidSessionMessage: 'Sess�o inv�lida. Fa�a login novamente.',
             validateSession: true
         });
         if (!allowed) return;
     } else {
         const token = AuthAPI.getToken();
         if (!token) {
-            window.location.href = 'login.html?message=' + encodeURIComponent('Faça login para acessar o painel administrativo');
+            window.location.href = 'login.html?message=' + encodeURIComponent('Fa�a login para acessar o painel administrativo');
             return;
         }
     }
@@ -121,7 +121,7 @@ function attachEventListeners() {
             const canUseAnimatedProfile = document.getElementById('rankCanUseAnimatedProfile')?.checked || false;
             
             if (!name || !color || !description || !customText) {
-                showMessage('Preencha todos os campos obrigatórios', 'error');
+                showMessage('Preencha todos os campos obrigat�rios', 'error');
                 return;
             }
             
@@ -200,7 +200,7 @@ function attachEventListeners() {
         });
     }
 
-    // Banimento de usuários
+    // Banimento de usu�rios
     const banForm = document.getElementById('banForm');
     if (banForm) {
         banForm.addEventListener('submit', async (e) => {
@@ -216,7 +216,7 @@ function attachEventListeners() {
             }
             
             if (banType === 'suspension' && !banDays) {
-                showMessage('Especifique os dias de suspensão', 'error');
+                showMessage('Especifique os dias de suspens�o', 'error');
                 return;
             }
 
@@ -226,19 +226,19 @@ function attachEventListeners() {
             const keyword = banType === 'suspension' ? 'SUSPENDER' : 'BANIR';
             const confirmed = await confirmCriticalAction({
                 title: 'Confirmar banimento',
-                message: `Você está prestes a ${banDescription}.`,
+                message: `Voc� est� prestes a ${banDescription}.`,
                 keyword,
-                confirmText: banType === 'suspension' ? 'Suspender usuário' : 'Banir usuário'
+                confirmText: banType === 'suspension' ? 'Suspender usu�rio' : 'Banir usu�rio'
             });
             if (!confirmed) {
-                showMessage('Operação cancelada', 'error');
+                showMessage('Opera��o cancelada', 'error');
                 return;
             }
             
             try {
                 const result = await AuthAPI.banUser(userToBan, banType, banDays, banReason);
                 if (result.success) {
-                    showMessage(`Usuário ${banType === 'suspension' ? 'suspenso' : 'banido'} com sucesso!`, 'success');
+                    showMessage(`Usu�rio ${banType === 'suspension' ? 'suspenso' : 'banido'} com sucesso!`, 'success');
                     document.getElementById('userToBan').value = '';
                     document.getElementById('banDays').value = '';
                     document.getElementById('banReason').value = '';
@@ -265,7 +265,7 @@ function attachEventListeners() {
         });
     }
 
-    // Gerenciar permissões de postagem
+    // Gerenciar permiss�es de postagem
     const grantPermissionForm = document.getElementById('grantPermissionForm');
     if (grantPermissionForm) {
         grantPermissionForm.addEventListener('submit', async (e) => {
@@ -287,7 +287,7 @@ function attachEventListeners() {
         btn.addEventListener('click', () => {
             const tabName = btn.getAttribute('data-tab');
             
-            // Remove active de todos os botões e conteúdos
+            // Remove active de todos os bot�es e conte�dos
             tabBtns.forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
@@ -323,7 +323,7 @@ async function loadSocialLinks() {
     }
 }
 
-// ===================== CONQUISTAS PADRÒO =====================
+// ===================== CONQUISTAS PADR�O =====================
 async function loadDefaultRanks() {
     const container = document.getElementById('defaultRanksContainer');
     try {
@@ -332,31 +332,31 @@ async function loadDefaultRanks() {
             renderRanksList(container, result.ranks, true);
         }
     } catch (error) {
-        container.innerHTML = '<p style="color: red;">Erro ao carregar conquistas padrão</p>';
+        container.innerHTML = '<p style="color: red;">Erro ao carregar conquistas padr�o</p>';
     }
 }
 
-// ===================== CONQUISTAS CUSTOMIZÁVEIS =====================
+// ===================== CONQUISTAS CUSTOMIZ�VEIS =====================
 async function loadCustomRanks() {
     const container = document.getElementById('customRanksContainer');
     try {
-        console.log('Carregando conquistas customizáveis...');
+        console.log('Carregando conquistas customiz�veis...');
         const result = await AuthAPI.getAllCustomRanks();
         console.log('Resultado da API:', result);
         
         if (result.success) {
             if (!result.ranks || result.ranks.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #999;">Nenhum conquista customizável criado ainda</p>';
+                container.innerHTML = '<p style="text-align: center; color: #999;">Nenhum conquista customiz�vel criado ainda</p>';
                 return;
             }
-            console.log('Renderizando', result.ranks.length, 'conquistas customizáveis');
+            console.log('Renderizando', result.ranks.length, 'conquistas customiz�veis');
             renderRanksList(container, result.ranks, false);
         } else {
             console.log('API retornou success: false', result.message);
             container.innerHTML = '<p style="color: red;">Erro ao carregar conquistas: ' + (result.message || 'Erro desconhecido') + '</p>';
         }
     } catch (error) {
-        console.error('Erro na função loadCustomRanks:', error);
+        console.error('Erro na fun��o loadCustomRanks:', error);
         container.innerHTML = '<p style="color: red;">Erro ao carregar conquistas: ' + error.message + '</p>';
     }
 }
@@ -390,7 +390,7 @@ function renderRankCardHtml(rank, isDefault, canManage = !isDefault) {
                 </div>
             ` : (!isDefault ? `
                 <div class="rank-actions" style="pointer-events: none; opacity: 0.7;">
-                    <span style="padding: 5px 10px; font-size: 11px; border-radius: 3px; color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.2);">Padrão</span>
+                    <span style="padding: 5px 10px; font-size: 11px; border-radius: 3px; color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.2);">Padr�o</span>
                 </div>
             ` : '')}
         </div>
@@ -399,7 +399,7 @@ function renderRankCardHtml(rank, isDefault, canManage = !isDefault) {
 
 function renderRanksList(container, ranks, isDefault) {
     if (!isDefault) {
-        // Para customizáveis queremos seções empilhadas; o grid fica apenas dentro de cada seção.
+        // Para customiz�veis queremos se��es empilhadas; o grid fica apenas dentro de cada se��o.
         container.style.display = 'block';
         container.style.gridTemplateColumns = 'none';
         container.style.gap = '0';
@@ -466,7 +466,7 @@ function renderRanksList(container, ranks, isDefault) {
 
         container.innerHTML = groupedHtml;
     } else {
-        // Restaurar comportamento padrão (grid) para os conquistas não removíveis.
+        // Restaurar comportamento padr�o (grid) para os conquistas n�o remov�veis.
         container.style.display = '';
         container.style.gridTemplateColumns = '';
         container.style.gap = '';
@@ -525,7 +525,7 @@ async function editRank(rankId, rankName) {
         const allRanks = await AuthAPI.getAllCustomRanks();
         const rankData = allRanks.ranks?.find(r => r.id == rankId);
         if (!rankData) {
-            showMessage('conquista não encontrado', 'error');
+            showMessage('conquista n�o encontrado', 'error');
             return;
         }
 
@@ -574,20 +574,20 @@ async function editRank(rankId, rankName) {
                     </div>
 
                     <div style="margin-bottom: 15px;">
-                        <label style="color: white; display: block; margin-bottom: 5px;">Descrição *</label>
-                        <textarea id="editRankDescription" placeholder="Descrição" style="width: 100%; height: 70px; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid #6B46C1; color: white; border-radius: 5px; resize: none;">${rankData.description || ''}</textarea>
+                        <label style="color: white; display: block; margin-bottom: 5px;">Descri��o *</label>
+                        <textarea id="editRankDescription" placeholder="Descri��o" style="width: 100%; height: 70px; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid #6B46C1; color: white; border-radius: 5px; resize: none;">${rankData.description || ''}</textarea>
                     </div>
 
                     <div style="margin-bottom: 15px;">
-                        <label style="color: white; display: block; margin-bottom: 5px;">Texto Customizável *</label>
-                        <input type="text" id="editRankCustomText" placeholder="Texto customizável" value="${rankData.customText || ''}" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid #6B46C1; color: white; border-radius: 5px;">
+                        <label style="color: white; display: block; margin-bottom: 5px;">Texto Customiz�vel *</label>
+                        <input type="text" id="editRankCustomText" placeholder="Texto customiz�vel" value="${rankData.customText || ''}" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid #6B46C1; color: white; border-radius: 5px;">
                     </div>
 
                     <div style="margin-bottom: 15px;">
                         <label style="color: white; display: block; margin-bottom: 5px;">Imagem de Fundo (URL ou upload)</label>
                         <input type="text" id="editRankBackgroundImage" placeholder="Cole a URL da imagem ou deixe em branco" value="${rankData.backgroundImage || ''}" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid #6B46C1; color: white; border-radius: 5px; margin-bottom: 8px;">
                         <input type="file" id="editRankBackgroundImageFile" accept="image/*" style="width: 100%; padding: 8px; background: rgba(0,0,0,0.3); border: 1px solid #6B46C1; border-radius: 5px; color: white;">
-                        <small style="color: rgba(255,255,255,0.65); display: block; margin-top: 6px;">Se selecionar arquivo, ele terá prioridade sobre a URL.</small>
+                        <small style="color: rgba(255,255,255,0.65); display: block; margin-top: 6px;">Se selecionar arquivo, ele ter� prioridade sobre a URL.</small>
                     </div>
 
                     <div style="margin: 20px 0; padding: 15px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 5px;">
@@ -595,15 +595,15 @@ async function editRank(rankId, rankName) {
                             <input type="checkbox" id="editRankEnableAdminPanel" ${enableAdminPanelEnabled ? 'checked' : ''} style="width: 18px; height: 18px; cursor: pointer;">
                             <span>Habilitar Painel Admin para esta conquista</span>
                         </label>
-                        <small style="color: rgba(16, 185, 129, 0.85); display: block; margin-top: 8px;">Usuários com esta conquista poderão acessar o painel de administração com permissões limitadas</small>
+                        <small style="color: rgba(16, 185, 129, 0.85); display: block; margin-top: 8px;">Usu�rios com esta conquista poder�o acessar o painel de administra��o com permiss�es limitadas</small>
                     </div>
 
                     <div style="margin: 20px 0; padding: 15px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 5px;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #3B82F6; font-weight: 600;">
                             <input type="checkbox" id="editRankIsVisible" ${rankData.isVisible !== 0 ? 'checked' : ''} style="width: 18px; height: 18px; cursor: pointer;">
-                            <span>Permitir Usuário Escolher (Exibir/Ocultar)</span>
+                            <span>Permitir Usu�rio Escolher (Exibir/Ocultar)</span>
                         </label>
-                        <small style="color: rgba(59, 130, 246, 0.8); display: block; margin-top: 8px;">Marcado: usuário pode escolher exibir ou não a conquista. Desmarcado: conquista fica fixa nas conquistas</small>
+                        <small style="color: rgba(59, 130, 246, 0.8); display: block; margin-top: 8px;">Marcado: usu�rio pode escolher exibir ou n�o a conquista. Desmarcado: conquista fica fixa nas conquistas</small>
                     </div>
 
                     <div style="margin: 20px 0; padding: 15px; background: rgba(236, 72, 153, 0.1); border: 1px solid rgba(236, 72, 153, 0.4); border-radius: 5px;">
@@ -611,23 +611,23 @@ async function editRank(rankId, rankName) {
                             <input type="checkbox" id="editRankCanManageDownloads" ${canManageDownloadsEnabled ? 'checked' : ''} style="width: 18px; height: 18px; cursor: pointer;">
                             <span>Permitir Editar/Excluir Downloads</span>
                         </label>
-                        <small style="color: rgba(236, 72, 153, 0.85); display: block; margin-top: 8px;">Usuários com esta conquista poderão editar e excluir seus próprios downloads e também os de outros usuários</small>
+                        <small style="color: rgba(236, 72, 153, 0.85); display: block; margin-top: 8px;">Usu�rios com esta conquista poder�o editar e excluir seus pr�prios downloads e tamb�m os de outros usu�rios</small>
                     </div>
 
                     <div style="margin: 20px 0; padding: 15px; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 5px;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #F59E0B; font-weight: 600;">
                             <input type="checkbox" id="editRankCanOrderAllRanks" ${canOrderAllRanksEnabled ? 'checked' : ''} style="width: 18px; height: 18px; cursor: pointer;">
-                            <span>Permitir Usuário Ordenar Todos os conquistas (incluindo fixos)</span>
+                            <span>Permitir Usu�rio Ordenar Todos os conquistas (incluindo fixos)</span>
                         </label>
-                        <small style="color: rgba(245, 158, 11, 0.85); display: block; margin-top: 8px;">Com esta conquista, o usuário pode reordenar também conquistas fixas no perfil.</small>
+                        <small style="color: rgba(245, 158, 11, 0.85); display: block; margin-top: 8px;">Com esta conquista, o usu�rio pode reordenar tamb�m conquistas fixas no perfil.</small>
                     </div>
 
                     <div style="margin: 20px 0; padding: 15px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.45); border-radius: 5px;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #38BDF8; font-weight: 600;">
                             <input type="checkbox" id="editRankCanUseAnimatedProfile" ${canUseAnimatedProfileEnabled ? 'checked' : ''} style="width: 18px; height: 18px; cursor: pointer;">
-                            <span>Permitir usuário tenha Card animado</span>
+                            <span>Permitir usu�rio tenha Card animado</span>
                         </label>
-                        <small style="color: rgba(56, 189, 248, 0.85); display: block; margin-top: 8px;">Mostra o botão "Perfil Animado" no perfil do usuário.</small>
+                        <small style="color: rgba(56, 189, 248, 0.85); display: block; margin-top: 8px;">Mostra o bot�o "Perfil Animado" no perfil do usu�rio.</small>
                     </div>
 
                     <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -666,7 +666,7 @@ async function editRank(rankId, rankName) {
             const canUseAnimatedProfile = document.getElementById('editRankCanUseAnimatedProfile')?.checked || false;
 
             if (!name || !color || !description || !customText) {
-                showMessage('Preencha todos os campos obrigatórios', 'error');
+                showMessage('Preencha todos os campos obrigat�rios', 'error');
                 return;
             }
 
@@ -702,7 +702,7 @@ async function editRank(rankId, rankName) {
     }
 }
 
-// ===================== USUÁRIOS E SEUS CONQUISTAS =====================
+// ===================== USU�RIOS E SEUS CONQUISTAS =====================
 async function loadUsers() {
     const container = document.getElementById('usersContainer');
     try {
@@ -712,7 +712,7 @@ async function loadUsers() {
         if (!result.success || !result.users || result.users.length === 0) {
             cachedUsers = [];
             currentUsersPage = 1;
-            container.innerHTML = '<p>Nenhum usuário encontrado</p>';
+            container.innerHTML = '<p>Nenhum usu�rio encontrado</p>';
             return;
         }
 
@@ -721,7 +721,7 @@ async function loadUsers() {
         currentUsersPage = 1;
 
         if (cachedUsers.length === 0) {
-            container.innerHTML = '<p>Nenhum usuário encontrado</p>';
+            container.innerHTML = '<p>Nenhum usu�rio encontrado</p>';
             return;
         }
 
@@ -729,14 +729,14 @@ async function loadUsers() {
     } catch (error) {
         cachedUsers = [];
         currentUsersPage = 1;
-        container.innerHTML = '<p style="color: red;">Erro ao carregar usuários: ' + error.message + '</p>';
+        container.innerHTML = '<p style="color: red;">Erro ao carregar usu�rios: ' + error.message + '</p>';
     }
 }
 
 function renderUsersPage(container) {
     const totalUsers = cachedUsers.length;
     if (!totalUsers) {
-        container.innerHTML = '<p>Nenhum usuário encontrado</p>';
+        container.innerHTML = '<p>Nenhum usu�rio encontrado</p>';
         return;
     }
 
@@ -755,8 +755,8 @@ function renderUsersPage(container) {
     controls.className = 'users-pagination';
     controls.innerHTML = `
         <button type="button" class="users-page-btn" data-move="prev" ${currentUsersPage === 1 ? 'disabled' : ''}>Anterior</button>
-        <span class="users-page-label">Página ${currentUsersPage} de ${totalPages}</span>
-        <button type="button" class="users-page-btn" data-move="next" ${currentUsersPage === totalPages ? 'disabled' : ''}>Próxima</button>
+        <span class="users-page-label">P�gina ${currentUsersPage} de ${totalPages}</span>
+        <button type="button" class="users-page-btn" data-move="next" ${currentUsersPage === totalPages ? 'disabled' : ''}>Pr�xima</button>
     `;
 
     controls.querySelectorAll('.users-page-btn').forEach((btn) => {
@@ -789,9 +789,9 @@ function renderUsersList(container, users) {
                         <th>Nome</th>
                         <th>Nickname</th>
                         <th>E-mail</th>
-                        <th>conquistas Customizáveis</th>
+                        <th>conquistas Customiz�veis</th>
                         <th>Ordenar Todos</th>
-                        <th>Ações</th>
+                        <th>A��es</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -908,7 +908,7 @@ function renderUserRankBadge(userId, rank) {
         <span class="user-rank-badge" style="background-color: ${rank.color}40; border-color: ${rank.color}; color: ${rank.color};" data-user-id="${userId}" data-rank-id="${rank.id}">
             ${rank.icon ? `<span class="user-rank-icon">${rank.icon}</span>` : ''}
             <span class="user-rank-label" title="${rank.name}">${rank.name}</span>
-            <button class="remove-rank-btn" style="background: none; border: none; color: ${rank.color}; cursor: pointer; padding: 0; margin-left: 4px; font-weight: bold;">×</button>
+            <button class="remove-rank-btn" style="background: none; border: none; color: ${rank.color}; cursor: pointer; padding: 0; margin-left: 4px; font-weight: bold;">�</button>
         </span>
     `;
 }
@@ -969,10 +969,10 @@ async function loadUserRanks(userId) {
                 });
             }
         } else {
-            container.innerHTML = '<p style="color: #999; font-size: 12px;">Nenhum conquista atribuído</p>';
+            container.innerHTML = '<p style="color: #999; font-size: 12px;">Nenhum conquista atribu�do</p>';
         }
     } catch (error) {
-        console.error('Erro ao carregar conquistas do usuário:', error);
+        console.error('Erro ao carregar conquistas do usu�rio:', error);
     }
 }
 
@@ -991,7 +991,7 @@ async function loadRankSelectOptions(userId) {
             });
         }
     } catch (error) {
-        console.error('Erro ao carregar opções de conquistas:', error);
+        console.error('Erro ao carregar op��es de conquistas:', error);
     }
 }
 
@@ -1007,7 +1007,7 @@ async function addUserRank(userId) {
     try {
         const result = await AuthAPI.addUserCustomRank(userId, customRankId);
         if (result.success) {
-            showMessage('conquista atribuído com sucesso!', 'success');
+            showMessage('conquista atribu�do com sucesso!', 'success');
             loadUserRanks(userId);
             select.value = '';
         } else {
@@ -1019,7 +1019,7 @@ async function addUserRank(userId) {
 }
 
 async function removeUserRank(userId, customRankId) {
-    if (!confirm('Tem certeza que deseja remover este conquista do usuário?')) {
+    if (!confirm('Tem certeza que deseja remover este conquista do usu�rio?')) {
         return;
     }
     
@@ -1038,20 +1038,20 @@ async function removeUserRank(userId, customRankId) {
 
 async function deleteUserAccount(userId) {
     if (!canRevealEmails) {
-        showMessage('Somente o dono da conta pode excluir usuários', 'error');
+        showMessage('Somente o dono da conta pode excluir usu�rios', 'error');
         return;
     }
 
     const normalizedId = Number(userId);
     if (!Number.isInteger(normalizedId) || normalizedId <= 0) {
-        showMessage('ID de usuário inválido', 'error');
+        showMessage('ID de usu�rio inv�lido', 'error');
         return;
     }
 
     const label = userLabelByUserId.get(String(normalizedId)) || `ID ${normalizedId}`;
     const confirmed = await confirmCriticalAction({
         title: 'Excluir conta',
-        message: `Tem certeza que deseja excluir completamente a conta de ${label}? Esta ação remove perfil, conquistas, downloads e histórico relacionado.`,
+        message: `Tem certeza que deseja excluir completamente a conta de ${label}? Esta a��o remove perfil, conquistas, downloads e hist�rico relacionado.`,
         confirmText: 'Excluir conta',
         keyword: 'EXCLUIR'
     });
@@ -1061,7 +1061,7 @@ async function deleteUserAccount(userId) {
     try {
         const result = await AuthAPI.deleteUserAccount(normalizedId);
         if (result.success) {
-            showMessage(result.message || 'Conta excluída com sucesso!', 'success');
+            showMessage(result.message || 'Conta exclu�da com sucesso!', 'success');
             await loadUsers();
             loadBans();
             loadPostPermissions();
@@ -1073,7 +1073,7 @@ async function deleteUserAccount(userId) {
     }
 }
 
-// ===================== UTILITÁRIOS =====================
+// ===================== UTILIT�RIOS =====================
 function readFileAsDataUrl(file) {
     return new Promise((resolve, reject) => {
         if (!file) {
@@ -1218,7 +1218,7 @@ function showKeywordConfirm(title, message, keyword) {
 
 async function confirmCriticalAction(options = {}) {
     const {
-        title = 'Confirmar ação',
+        title = 'Confirmar a��o',
         message = 'Tem certeza que deseja continuar?',
         confirmText = 'Confirmar',
         keyword = ''
@@ -1235,8 +1235,8 @@ async function confirmCriticalAction(options = {}) {
     if (!normalizedKeyword) return true;
 
     return showKeywordConfirm(
-        'Confirmação adicional',
-        'Ação crítica detectada.',
+        'Confirma��o adicional',
+        'A��o cr�tica detectada.',
         normalizedKeyword
     );
 }
@@ -1275,7 +1275,7 @@ async function loadBans() {
                         <div class="ban-info">
                             <h3>${ban.nickname} (${maskEmail(ban.email)})</h3>
                             <div class="ban-details">
-                                <strong>Tipo:</strong> ${ban.banType === 'suspension' ? 'Suspensão Temporária' : 'Ban Permanente'} ${isExpired ? '(Expirado)' : ''}
+                                <strong>Tipo:</strong> ${ban.banType === 'suspension' ? 'Suspens�o Tempor�ria' : 'Ban Permanente'} ${isExpired ? '(Expirado)' : ''}
                             </div>
                             <div class="ban-details">
                                 <strong>Motivo:</strong> ${ban.reason || 'Nenhum motivo fornecido'}
@@ -1293,7 +1293,7 @@ async function loadBans() {
             });
             container.innerHTML = html;
         } else {
-            container.innerHTML = '<p style="text-align: center; color: #999;">Nenhum usuário banido</p>';
+            container.innerHTML = '<p style="text-align: center; color: #999;">Nenhum usu�rio banido</p>';
         }
     } catch (error) {
         container.innerHTML = '<p style="color: red;">Erro ao carregar banimentos</p>';
@@ -1303,7 +1303,7 @@ async function loadBans() {
 
 async function unbanUser(banId) {
     const confirmed = await confirmCriticalAction({
-        title: 'Desbanir usuário',
+        title: 'Desbanir usu�rio',
         message: 'Tem certeza que deseja remover este banimento?',
         confirmText: 'Desbanir',
         keyword: 'DESBANIR'
@@ -1315,7 +1315,7 @@ async function unbanUser(banId) {
     try {
         const result = await AuthAPI.unbanUser(banId);
         if (result.success) {
-            showMessage('Usuário desbanido com sucesso!', 'success');
+            showMessage('Usu�rio desbanido com sucesso!', 'success');
             loadBans();
         } else {
             showMessage('Erro: ' + result.message, 'error');
@@ -1363,13 +1363,13 @@ async function loadPostPermissions() {
             table.style.display = 'table';
             container.style.display = 'none';
         } else {
-            container.innerHTML = '<p style="text-align: center; color: #999;">Nenhum usuário com permissões individuais</p>';
+            container.innerHTML = '<p style="text-align: center; color: #999;">Nenhum usu�rio com permiss�es individuais</p>';
             container.style.display = 'block';
             table.style.display = 'none';
         }
     } catch (error) {
-        container.innerHTML = '<p style="color: red;">Erro ao carregar permissões</p>';
-        console.error('Erro ao carregar permissões:', error);
+        container.innerHTML = '<p style="color: red;">Erro ao carregar permiss�es</p>';
+        console.error('Erro ao carregar permiss�es:', error);
     }
 }
 
@@ -1386,11 +1386,11 @@ async function loadPostageRanks() {
                         <div style="font-size: 32px;">${rank.icon}</div>
                         <div>
                             <h3 style="margin: 0; color: ${rank.color};">${rank.name}</h3>
-                            <p style="margin: 0; font-size: 12px; color: rgba(255, 255, 255, 0.6);">Nível ${rank.rankLevel}/10</p>
+                            <p style="margin: 0; font-size: 12px; color: rgba(255, 255, 255, 0.6);">N�vel ${rank.rankLevel}/10</p>
                         </div>
                     </div>
                     <p style="margin: 0; font-size: 12px; color: rgba(255, 255, 255, 0.7); width: 100%;">
-                        <strong>${rank.minPostages} postagens</strong> necessárias
+                        <strong>${rank.minPostages} postagens</strong> necess�rias
                     </p>
                     <small style="color: rgba(255, 255, 255, 0.6); margin-top: 8px;">${rank.description}</small>
                 </div>
@@ -1449,7 +1449,7 @@ async function saveIndividualPermissions(username) {
     try {
         const result = await AuthAPI.setUserPermissions(username, permissions);
         if (result.success) {
-            showMessage(`Permissões salvas para ${username}!`, 'success');
+            showMessage(`Permiss�es salvas para ${username}!`, 'success');
             document.getElementById('userForPermission').value = '';
             applyPermissionsToForm({
                 canPostDownloads: false,
@@ -1463,12 +1463,12 @@ async function saveIndividualPermissions(username) {
             showMessage('Erro: ' + result.message, 'error');
         }
     } catch (error) {
-        showMessage('Erro ao salvar permissões: ' + error.message, 'error');
+        showMessage('Erro ao salvar permiss�es: ' + error.message, 'error');
     }
 }
 
 async function clearIndividualPermissions(username) {
-    if (!confirm(`Tem certeza que deseja revogar todas as permissões de ${username}?`)) {
+    if (!confirm(`Tem certeza que deseja revogar todas as permiss�es de ${username}?`)) {
         return;
     }
     
@@ -1481,13 +1481,13 @@ async function clearIndividualPermissions(username) {
             canUseAnimatedProfile: false
         });
         if (result.success) {
-            showMessage(`Permissões removidas de ${username}!`, 'success');
+            showMessage(`Permiss�es removidas de ${username}!`, 'success');
             loadPostPermissions();
         } else {
             showMessage('Erro: ' + result.message, 'error');
         }
     } catch (error) {
-        showMessage('Erro ao remover permissões: ' + error.message, 'error');
+        showMessage('Erro ao remover permiss�es: ' + error.message, 'error');
     }
 }
 

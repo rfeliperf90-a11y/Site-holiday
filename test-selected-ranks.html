@@ -56,7 +56,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>DEBUG - System de SeleÃ§Ã£o de conquistas</h1>
+        <h1>DEBUG - System de Sele��o de conquistas</h1>
         
         <div class="section">
             <h3>1. Teste de Login</h3>
@@ -65,19 +65,19 @@
         </div>
 
         <div class="section">
-            <h3>2. Teste de ObtenÃ§Ã£o de conquistas Customizados</h3>
+            <h3>2. Teste de Obten��o de conquistas Customizados</h3>
             <button onclick="testGetCustomRanks()">Obter conquistas Customizados</button>
             <div id="customRanksLog" class="log"></div>
         </div>
 
         <div class="section">
-            <h3>3. Teste de SeleÃ§Ã£o de conquistas</h3>
+            <h3>3. Teste de Sele��o de conquistas</h3>
             <button onclick="testSelectRanks()">Selecionar IDs: [1, 2, 3]</button>
             <div id="selectLog" class="log"></div>
         </div>
 
         <div class="section">
-            <h3>4. Teste de RecuperaÃ§Ã£o de conquistas Selecionados</h3>
+            <h3>4. Teste de Recupera��o de conquistas Selecionados</h3>
             <button onclick="testGetSelectedRanks()">Obter conquistas Selecionados</button>
             <div id="retrieveLog" class="log"></div>
         </div>
@@ -122,14 +122,14 @@
                 if (data.success && data.token) {
                     currentToken = data.token;
                     AuthAPI.setToken(currentToken);
-                    addLog(logId, 'âœ“ Login bem-sucedido!', 'success');
+                    addLog(logId, '?o" Login bem-sucedido!', 'success');
                     addLog(logId, `Token: ${currentToken.substring(0, 30)}...`, 'success');
                     addLog(logId, `User ID: ${data.user?.id}`, 'success');
                 } else {
-                    addLog(logId, `âœ— Erro no login: ${data.message}`, 'error');
+                    addLog(logId, `?o- Erro no login: ${data.message}`, 'error');
                 }
             } catch (err) {
-                addLog(logId, `âœ— Erro na requisiÃ§Ã£o: ${err.message}`, 'error');
+                addLog(logId, `?o- Erro na requisi��o: ${err.message}`, 'error');
             }
         }
 
@@ -138,7 +138,7 @@
             document.getElementById(logId).innerHTML = '';
 
             if (!currentToken) {
-                addLog(logId, 'âœ— FaÃ§a login primeiro!', 'error');
+                addLog(logId, '?o- Fa�a login primeiro!', 'error');
                 return;
             }
 
@@ -148,7 +148,7 @@
 
                 if (result.success) {
                     customRanks = result.ranks || [];
-                    addLog(logId, `âœ“ Encontrados ${customRanks.length} conquistas customizados`, 'success');
+                    addLog(logId, `?o" Encontrados ${customRanks.length} conquistas customizados`, 'success');
                     customRanks.slice(0, 5).forEach(rank => {
                         addLog(logId, `  - ID: ${rank.id}, Nome: ${rank.name}, Cor: ${rank.color}`, 'info');
                     });
@@ -156,10 +156,10 @@
                         addLog(logId, `  ... e mais ${customRanks.length - 5} conquistas`, 'info');
                     }
                 } else {
-                    addLog(logId, `âœ— Erro: ${result.message}`, 'error');
+                    addLog(logId, `?o- Erro: ${result.message}`, 'error');
                 }
             } catch (err) {
-                addLog(logId, `âœ— Erro: ${err.message}`, 'error');
+                addLog(logId, `?o- Erro: ${err.message}`, 'error');
             }
         }
 
@@ -168,7 +168,7 @@
             document.getElementById(logId).innerHTML = '';
 
             if (!currentToken) {
-                addLog(logId, 'âœ— FaÃ§a login primeiro!', 'error');
+                addLog(logId, '?o- Fa�a login primeiro!', 'error');
                 return;
             }
 
@@ -179,13 +179,13 @@
                 const result = await AuthAPI.selectProfileRanks(rankIds);
 
                 if (result.success) {
-                    addLog(logId, 'âœ“ conquistas selecionados com sucesso!', 'success');
+                    addLog(logId, '?o" conquistas selecionados com sucesso!', 'success');
                     addLog(logId, `Message: ${result.message}`, 'info');
                 } else {
-                    addLog(logId, `âœ— Erro: ${result.message}`, 'error');
+                    addLog(logId, `?o- Erro: ${result.message}`, 'error');
                 }
             } catch (err) {
-                addLog(logId, `âœ— Erro: ${err.message}`, 'error');
+                addLog(logId, `?o- Erro: ${err.message}`, 'error');
             }
         }
 
@@ -194,7 +194,7 @@
             document.getElementById(logId).innerHTML = '';
 
             if (!currentToken) {
-                addLog(logId, 'âœ— FaÃ§a login primeiro!', 'error');
+                addLog(logId, '?o- Fa�a login primeiro!', 'error');
                 return;
             }
 
@@ -203,7 +203,7 @@
                 const result = await AuthAPI.getSelectedProfileRanks();
 
                 if (result.success) {
-                    addLog(logId, `âœ“ Resposta recebida`, 'success');
+                    addLog(logId, `?o" Resposta recebida`, 'success');
                     addLog(logId, `Rank IDs: ${JSON.stringify(result.rankIds)}`, 'info');
                     addLog(logId, `Total de conquistas: ${result.ranks?.length || 0}`, 'info');
                     
@@ -213,10 +213,10 @@
                         });
                     }
                 } else {
-                    addLog(logId, `âœ— Erro: ${result.message}`, 'error');
+                    addLog(logId, `?o- Erro: ${result.message}`, 'error');
                 }
             } catch (err) {
-                addLog(logId, `âœ— Erro: ${err.message}`, 'error');
+                addLog(logId, `?o- Erro: ${err.message}`, 'error');
             }
         }
 
@@ -237,14 +237,14 @@
 
                 const data = await response.json();
                 if (!data.success) {
-                    addLog(logId, `âœ— Login falhou: ${data.message}`, 'error');
+                    addLog(logId, `?o- Login falhou: ${data.message}`, 'error');
                     return;
                 }
                 currentToken = data.token;
                 AuthAPI.setToken(currentToken);
-                addLog(logId, 'âœ“ Login bem-sucedido!', 'success');
+                addLog(logId, '?o" Login bem-sucedido!', 'success');
             } catch (err) {
-                addLog(logId, `âœ— Erro no login: ${err.message}`, 'error');
+                addLog(logId, `?o- Erro no login: ${err.message}`, 'error');
                 return;
             }
 
@@ -253,13 +253,13 @@
             try {
                 const result = await AuthAPI.getCustomRanks();
                 if (!result.success) {
-                    addLog(logId, `âœ— Erro: ${result.message}`, 'error');
+                    addLog(logId, `?o- Erro: ${result.message}`, 'error');
                     return;
                 }
                 customRanks = result.ranks || [];
-                addLog(logId, `âœ“ ${customRanks.length} conquistas encontrados`, 'success');
+                addLog(logId, `?o" ${customRanks.length} conquistas encontrados`, 'success');
             } catch (err) {
-                addLog(logId, `âœ— Erro: ${err.message}`, 'error');
+                addLog(logId, `?o- Erro: ${err.message}`, 'error');
                 return;
             }
 
@@ -269,12 +269,12 @@
             try {
                 const result = await AuthAPI.selectProfileRanks(rankIds);
                 if (!result.success) {
-                    addLog(logId, `âœ— Erro: ${result.message}`, 'error');
+                    addLog(logId, `?o- Erro: ${result.message}`, 'error');
                     return;
                 }
-                addLog(logId, 'âœ“ conquistas selecionados com sucesso!', 'success');
+                addLog(logId, '?o" conquistas selecionados com sucesso!', 'success');
             } catch (err) {
-                addLog(logId, `âœ— Erro: ${err.message}`, 'error');
+                addLog(logId, `?o- Erro: ${err.message}`, 'error');
                 return;
             }
 
@@ -283,20 +283,20 @@
             try {
                 const result = await AuthAPI.getSelectedProfileRanks();
                 if (!result.success) {
-                    addLog(logId, `âœ— Erro: ${result.message}`, 'error');
+                    addLog(logId, `?o- Erro: ${result.message}`, 'error');
                     return;
                 }
-                addLog(logId, `âœ“ conquistas recuperados: ${JSON.stringify(result.rankIds)}`, 'success');
+                addLog(logId, `?o" conquistas recuperados: ${JSON.stringify(result.rankIds)}`, 'success');
                 
                 if (JSON.stringify(result.rankIds) === JSON.stringify(rankIds)) {
-                    addLog(logId, 'âœ“âœ“ SUCESSO! Os IDs correspondem!', 'success');
+                    addLog(logId, '?o"?o" SUCESSO! Os IDs correspondem!', 'success');
                 } else {
-                    addLog(logId, `âš ï¸ ATENÃ‡ÃƒO: IDs nÃ£o correspondem!`, 'error');
+                    addLog(logId, `?s?? ATEN???fO: IDs n�o correspondem!`, 'error');
                     addLog(logId, `  Esperado: ${JSON.stringify(rankIds)}`, 'error');
                     addLog(logId, `  Recebido: ${JSON.stringify(result.rankIds)}`, 'error');
                 }
             } catch (err) {
-                addLog(logId, `âœ— Erro: ${err.message}`, 'error');
+                addLog(logId, `?o- Erro: ${err.message}`, 'error');
                 return;
             }
 
@@ -307,15 +307,15 @@
             try {
                 const result = await AuthAPI.getSelectedProfileRanks();
                 if (result.success && JSON.stringify(result.rankIds) === JSON.stringify(rankIds)) {
-                    addLog(logId, 'âœ“âœ“âœ“ PERFEITO! Os conquistas persistiram apÃ³s reload!', 'success');
+                    addLog(logId, '?o"?o"?o" PERFEITO! Os conquistas persistiram ap�s reload!', 'success');
                 } else {
-                    addLog(logId, 'âœ— FALHA: Os conquistas nÃ£o persistiram!', 'error');
+                    addLog(logId, '?o- FALHA: Os conquistas n�o persistiram!', 'error');
                 }
             } catch (err) {
-                addLog(logId, `âœ— Erro: ${err.message}`, 'error');
+                addLog(logId, `?o- Erro: ${err.message}`, 'error');
             }
 
-            addLog(logId, '=== TESTE CONCLUÃDO ===', 'info');
+            addLog(logId, '=== TESTE CONCLU�DO ===', 'info');
         }
     </script>
 </body>

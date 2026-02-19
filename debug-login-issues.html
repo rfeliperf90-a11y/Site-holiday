@@ -82,14 +82,14 @@
 </head>
 <body>
     <div class="container">
-        <h1>🔧 Debug: Problemas de Login</h1>
+        <h1>?? Debug: Problemas de Login</h1>
         
         <section>
             <h2>1. Teste do Toggle de Senha</h2>
-            <label>Digite algo e clique no botão ⊙ para alternar:</label>
+            <label>Digite algo e clique no bot�o ? para alternar:</label>
             <div class="toggle-demo">
                 <input type="password" id="testPassword" value="test123">
-                <button id="testToggle" type="button">⊙</button>
+                <button id="testToggle" type="button">?</button>
             </div>
             <div id="toggleLog" style="margin-top: 10px;"></div>
         </section>
@@ -105,7 +105,7 @@
         <section>
             <h2>3. Teste de Redirecionamento</h2>
             <button onclick="testRedirect()">Fazer login E redirecionar</button>
-            <p style="color: #FFD700;">⚠️ Aviso: Este botão irá redirecionar para profile.html!</p>
+            <p style="color: #FFD700;">?? Aviso: Este bot�o ir� redirecionar para profile.html!</p>
             <div id="redirectLog" style="margin-top: 10px;"></div>
         </section>
     </div>
@@ -121,7 +121,7 @@
             
             const isPassword = input.type === 'password';
             input.type = isPassword ? 'text' : 'password';
-            btn.textContent = isPassword ? '⊗' : '⊙';
+            btn.textContent = isPassword ? '?' : '?';
             
             addLog(log, `Toggle: ${isPassword ? 'Mostrando' : 'Ocultando'} senha`, 'success');
         });
@@ -137,26 +137,26 @@
             addLog(log, `Tentando login com: ${nickname} / ***`, 'info');
             
             if (!AuthAPI) {
-                addLog(log, 'ERRO: AuthAPI não está disponível!', 'error');
+                addLog(log, 'ERRO: AuthAPI n�o est� dispon�vel!', 'error');
                 return;
             }
             
-            addLog(log, 'AuthAPI disponível ✓', 'success');
+            addLog(log, 'AuthAPI dispon�vel ?', 'success');
             
             try {
                 const result = await AuthAPI.login(nickname, password);
                 addLog(log, `Resposta: ${JSON.stringify(result)}`, 'info');
                 
                 if (result.success) {
-                    addLog(log, `✓ Login bem-sucedido!`, 'success');
+                    addLog(log, `? Login bem-sucedido!`, 'success');
                     addLog(log, `Token: ${result.token.substring(0, 30)}...`, 'success');
                     AuthAPI.setToken(result.token);
-                    addLog(log, `✓ Token salvo no localStorage`, 'success');
+                    addLog(log, `? Token salvo no localStorage`, 'success');
                 } else {
-                    addLog(log, `✗ Erro: ${result.message}`, 'error');
+                    addLog(log, `? Erro: ${result.message}`, 'error');
                 }
             } catch (e) {
-                addLog(log, `✗ Exceção: ${e.message}`, 'error');
+                addLog(log, `? Exce��o: ${e.message}`, 'error');
             }
         }
 
@@ -174,19 +174,19 @@
                 const result = await AuthAPI.login(nickname, password);
                 
                 if (result.success) {
-                    addLog(log, '✓ Login bem-sucedido, preparando redirecionamento...', 'success');
+                    addLog(log, '? Login bem-sucedido, preparando redirecionamento...', 'success');
                     AuthAPI.setToken(result.token);
-                    addLog(log, '✓ Token salvo, REDIRECIONANDO EM 2 SEGUNDOS', 'success');
+                    addLog(log, '? Token salvo, REDIRECIONANDO EM 2 SEGUNDOS', 'success');
                     
                     setTimeout(() => {
                         addLog(log, 'REDIRECIONANDO AGORA...', 'success');
                         window.location.href = 'profile.html';
                     }, 2000);
                 } else {
-                    addLog(log, `✗ Login falhou: ${result.message}`, 'error');
+                    addLog(log, `? Login falhou: ${result.message}`, 'error');
                 }
             } catch (e) {
-                addLog(log, `✗ Erro: ${e.message}`, 'error');
+                addLog(log, `? Erro: ${e.message}`, 'error');
             }
         }
 
@@ -200,7 +200,7 @@
 
         // Log inicial
         const initLog = document.getElementById('loginLog');
-        addLog(initLog, `AuthAPI disponível? ${typeof AuthAPI !== 'undefined'}`, 'success');
+        addLog(initLog, `AuthAPI dispon�vel? ${typeof AuthAPI !== 'undefined'}`, 'success');
     </script>
 </body>
 </html>

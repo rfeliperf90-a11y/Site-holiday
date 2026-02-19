@@ -127,47 +127,47 @@
 </head>
 <body>
     <div class="container">
-        <h1>🔍 Debug de Login e Toggle Senha</h1>
+        <h1>?? Debug de Login e Toggle Senha</h1>
 
-        <h2>1️⃣ Teste do Botão Toggle (Mostrar/Ocultar Senha)</h2>
+        <h2>1?? Teste do Bot�o Toggle (Mostrar/Ocultar Senha)</h2>
         <div class="test-section">
             <div class="form-group">
                 <label for="passwordDemo">Senha:</label>
                 <div class="password-field">
                     <input type="password" id="passwordDemo" placeholder="Digite algo aqui...">
-                    <button type="button" id="toggleBtn">⊙</button>
+                    <button type="button" id="toggleBtn">?</button>
                 </div>
             </div>
-            <button onclick="testToggle()">Testar Click no Botão</button>
+            <button onclick="testToggle()">Testar Click no Bot�o</button>
             <div class="log" id="toggleLog"></div>
         </div>
 
-        <h2>2️⃣ Teste de Credenciais</h2>
+        <h2>2?? Teste de Credenciais</h2>
         <div class="credentials">
-            <h3>✓ Credenciais que FUNCIONAM:</h3>
+            <h3>? Credenciais que FUNCIONAM:</h3>
             <p><code>Apelido:</code> <strong>fael</strong></p>
             <p><code>Senha:</code> <strong>test123</strong></p>
         </div>
 
         <div class="credentials" style="background: #4d0a0a; border-left-color: #ff4444;">
-            <h3>✗ Credenciais que NÃO FUNCIONAM:</h3>
-            <p><code>Apelido:</code> <strong>Fael</strong> (com F maiúsculo)</p>
+            <h3>? Credenciais que N�O FUNCIONAM:</h3>
+            <p><code>Apelido:</code> <strong>Fael</strong> (com F mai�sculo)</p>
             <p><code>Senha:</code> <strong>@Anjoloco90</strong></p>
-            <p style="color: #ff8888;">⚠️ Esta conta NÃO existe no banco de dados!</p>
+            <p style="color: #ff8888;">?? Esta conta N�O existe no banco de dados!</p>
         </div>
 
-        <h2>3️⃣ Teste Automático de Login</h2>
+        <h2>3?? Teste Autom�tico de Login</h2>
         <div class="test-section">
-            <button onclick="testLoginValid()">Testar Login (Credenciais Válidas: fael/test123)</button>
-            <button onclick="testLoginInvalid()">Testar Login (Credenciais Inválidas: Fael/@Anjoloco90)</button>
+            <button onclick="testLoginValid()">Testar Login (Credenciais V�lidas: fael/test123)</button>
+            <button onclick="testLoginInvalid()">Testar Login (Credenciais Inv�lidas: Fael/@Anjoloco90)</button>
             <div class="log" id="loginLog"></div>
         </div>
 
-        <h2>4️⃣ Links Rápidos</h2>
+        <h2>4?? Links R�pidos</h2>
         <div class="test-section">
-            <p><a href="login.html?nickname=fael&password=test123" style="color: #44ff44; text-decoration: none; font-weight: bold;">➜ Ir para login auto-preenchido (fael/test123)</a></p>
-            <p><a href="login.html" style="color: #EC4899; text-decoration: none; font-weight: bold;">➜ Ir para login vazio</a></p>
-            <p><a href="signup.html" style="color: #6B46C1; text-decoration: none; font-weight: bold;">➜ Criar nova conta</a></p>
+            <p><a href="login.html?nickname=fael&password=test123" style="color: #44ff44; text-decoration: none; font-weight: bold;">? Ir para login auto-preenchido (fael/test123)</a></p>
+            <p><a href="login.html" style="color: #EC4899; text-decoration: none; font-weight: bold;">? Ir para login vazio</a></p>
+            <p><a href="signup.html" style="color: #6B46C1; text-decoration: none; font-weight: bold;">? Criar nova conta</a></p>
         </div>
     </div>
 
@@ -187,21 +187,21 @@
             const btn = document.getElementById('toggleBtn');
             const input = document.getElementById('passwordDemo');
             
-            addLog('toggleLog', 'Simulando clique no botão...', 'info');
+            addLog('toggleLog', 'Simulando clique no bot�o...', 'info');
             
             input.value = 'teste123';
             input.type = input.type === 'password' ? 'text' : 'password';
-            btn.textContent = input.type === 'password' ? '⊙' : '⊗';
+            btn.textContent = input.type === 'password' ? '?' : '?';
             
             addLog('toggleLog', `Tipo alterado para: ${input.type}`, 'success');
-            addLog('toggleLog', `Botão agora mostra: ${btn.textContent}`, 'success');
+            addLog('toggleLog', `Bot�o agora mostra: ${btn.textContent}`, 'success');
         }
 
         async function testLoginValid() {
             const logDiv = document.getElementById('loginLog');
             logDiv.innerHTML = '';
             
-            addLog('loginLog', 'Iniciando teste com credenciais VÁLIDAS...', 'info');
+            addLog('loginLog', 'Iniciando teste com credenciais V�LIDAS...', 'info');
             addLog('loginLog', 'Apelido: fael', 'info');
             addLog('loginLog', 'Senha: test123', 'info');
             
@@ -209,19 +209,19 @@
                 const result = await AuthAPI.login('fael', 'test123');
                 
                 if (result.success) {
-                    addLog('loginLog', '✓ Login bem-sucedido!', 'success');
+                    addLog('loginLog', '? Login bem-sucedido!', 'success');
                     addLog('loginLog', `Token: ${result.token.substring(0, 40)}...`, 'success');
-                    addLog('loginLog', 'Você será redirecionado em 3 segundos...', 'success');
+                    addLog('loginLog', 'Voc� ser� redirecionado em 3 segundos...', 'success');
                     
                     AuthAPI.setToken(result.token);
                     setTimeout(() => {
                         window.location.href = 'profile.html';
                     }, 3000);
                 } else {
-                    addLog('loginLog', `✗ Erro: ${result.message}`, 'error');
+                    addLog('loginLog', `? Erro: ${result.message}`, 'error');
                 }
             } catch (error) {
-                addLog('loginLog', `✗ Erro na conexão: ${error.message}`, 'error');
+                addLog('loginLog', `? Erro na conex�o: ${error.message}`, 'error');
             }
         }
 
@@ -229,27 +229,27 @@
             const logDiv = document.getElementById('loginLog');
             logDiv.innerHTML = '';
             
-            addLog('loginLog', 'Iniciando teste com credenciais INVÁLIDAS...', 'info');
+            addLog('loginLog', 'Iniciando teste com credenciais INV�LIDAS...', 'info');
             addLog('loginLog', 'Apelido: Fael', 'info');
             addLog('loginLog', 'Senha: @Anjoloco90', 'info');
-            addLog('loginLog', 'Nota: Esta conta não existe no banco de dados', 'info');
+            addLog('loginLog', 'Nota: Esta conta n�o existe no banco de dados', 'info');
             
             try {
                 const result = await AuthAPI.login('Fael', '@Anjoloco90');
                 
                 if (result.success) {
-                    addLog('loginLog', '✓ Login bem-sucedido!', 'success');
+                    addLog('loginLog', '? Login bem-sucedido!', 'success');
                 } else {
-                    addLog('loginLog', `✗ Login falhou (esperado):`, 'error');
+                    addLog('loginLog', `? Login falhou (esperado):`, 'error');
                     addLog('loginLog', `Mensagem: ${result.message}`, 'error');
-                    addLog('loginLog', 'Razão: Credenciais não existem no banco de dados', 'error');
+                    addLog('loginLog', 'Raz�o: Credenciais n�o existem no banco de dados', 'error');
                 }
             } catch (error) {
-                addLog('loginLog', `✗ Erro na conexão: ${error.message}`, 'error');
+                addLog('loginLog', `? Erro na conex�o: ${error.message}`, 'error');
             }
         }
 
-        // Testes automáticos ao carregar
+        // Testes autom�ticos ao carregar
         window.addEventListener('DOMContentLoaded', () => {
             addLog('toggleLog', 'Sistema de teste pronto', 'success');
             addLog('loginLog', 'Aguardando comando...', 'info');

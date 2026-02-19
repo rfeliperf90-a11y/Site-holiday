@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -580,20 +580,20 @@
     <div class="admin-container">
         <div class="admin-header">
             <h1>Painel Administrativo</h1>
-            <p>Gerenciar conquistas e usuários da guilda</p>
+            <p>Gerenciar conquistas e usu�rios da guilda</p>
         </div>
 
         
 
-        <!-- Abas para diferentes seções -->
+        <!-- Abas para diferentes se��es -->
         <div class="tabs">
             <button class="tab-btn active" data-tab="ranks">Gerenciar conquistas</button>
-            <button class="tab-btn" data-tab="users">Gerenciar Usuários</button>
+            <button class="tab-btn" data-tab="users">Gerenciar Usu�rios</button>
             <button class="tab-btn" data-tab="post-permissions">Postagens (Downloads)</button>
             <button class="tab-btn" data-tab="bans">Banimentos</button>
         </div>
 
-        <!-- TAB: Gerenciar conquistas Customizáveis -->
+        <!-- TAB: Gerenciar conquistas Customiz�veis -->
         <div id="ranks-tab" class="tab-content active">
             <div class="admin-section">
                 <h2>Links da Comunidade (Navbar)</h2>
@@ -609,14 +609,14 @@
                         </div>
                     </div>
                     <small style="color: rgba(255,255,255,0.65); margin-top: 8px;">
-                        Esses links serão usados em todos os botões do navbar (todas as páginas).
+                        Esses links ser�o usados em todos os bot�es do navbar (todas as p�ginas).
                     </small>
                     <button type="submit" style="margin-top: 15px; width: 100%;">Salvar Links</button>
                 </form>
             </div>
 
             <div class="admin-section">
-                <h2>Criar Novo conquista Customizável</h2>
+                <h2>Criar Novo conquista Customiz�vel</h2>
                 <form class="form-group" id="createRankForm" style="flex-direction: column; align-items: flex-start;">
                     <div style="width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <div>
@@ -630,12 +630,12 @@
                     </div>
 
                     <div style="width: 100%; margin-top: 10px;">
-                        <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Descrição *</label>
-                        <textarea placeholder="Ex: Fundador e proprietário da HOLIDAY Guild" required id="rankDescription" style="width: 100%; box-sizing: border-box; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid #EC4899; border-radius: 5px; color: white; font-family: inherit; height: 70px; resize: vertical;"></textarea>
+                        <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Descri��o *</label>
+                        <textarea placeholder="Ex: Fundador e propriet�rio da HOLIDAY Guild" required id="rankDescription" style="width: 100%; box-sizing: border-box; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid #EC4899; border-radius: 5px; color: white; font-family: inherit; height: 70px; resize: vertical;"></textarea>
                     </div>
 
                     <div style="width: 100%; margin-top: 10px;">
-                        <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Texto Customizável (Conquistado, Membro, etc) *</label>
+                        <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Texto Customiz�vel (Conquistado, Membro, etc) *</label>
                         <input type="text" placeholder="Ex: Conquistado em Jul/2025" required id="rankCustomText" style="width: 100%; box-sizing: border-box;">
                     </div>
 
@@ -651,15 +651,15 @@
                             <input type="checkbox" id="rankEnableAdminPanel" style="width: 18px; height: 18px; cursor: pointer;">
                             <span>Habilitar Painel Admin para este conquista</span>
                         </label>
-                        <small style="color: rgba(16, 185, 129, 0.8); display: block; margin-top: 8px;">Usuários com este conquista poderão acessar o painel de administração com permissões limitadas</small>
+                        <small style="color: rgba(16, 185, 129, 0.8); display: block; margin-top: 8px;">Usu�rios com este conquista poder�o acessar o painel de administra��o com permiss�es limitadas</small>
                     </div>
 
                     <div id="visibilityCheckboxContainer" style="width: 100%; margin-top: 15px; padding: 15px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 5px;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #3B82F6; font-weight: 600;">
                             <input type="checkbox" id="rankIsVisible" checked style="width: 18px; height: 18px; cursor: pointer;">
-                            <span>Permitir Usuário Escolher (Exibir/Ocultar)</span>
+                            <span>Permitir Usu�rio Escolher (Exibir/Ocultar)</span>
                         </label>
-                        <small style="color: rgba(59, 130, 246, 0.8); display: block; margin-top: 8px;">Marcado: usuário pode escolher exibir ou não o conquista. Desmarcado: conquista fica fixo nas conquistas (como progressão)</small>
+                        <small style="color: rgba(59, 130, 246, 0.8); display: block; margin-top: 8px;">Marcado: usu�rio pode escolher exibir ou n�o o conquista. Desmarcado: conquista fica fixo nas conquistas (como progress�o)</small>
                     </div>
 
                     <div id="downloadManagementCheckboxContainer" style="width: 100%; margin-top: 15px; padding: 15px; background: rgba(236, 72, 153, 0.1); border: 1px solid rgba(236, 72, 153, 0.4); border-radius: 5px;">
@@ -667,21 +667,21 @@
                             <input type="checkbox" id="rankCanManageDownloads" style="width: 18px; height: 18px; cursor: pointer;">
                             <span>Permitir Editar/Excluir Downloads</span>
                         </label>
-                        <small style="color: rgba(236, 72, 153, 0.8); display: block; margin-top: 8px;">Usuários com este conquista poderão editar e excluir seus próprios downloads e também os de outros usuários</small>
+                        <small style="color: rgba(236, 72, 153, 0.8); display: block; margin-top: 8px;">Usu�rios com este conquista poder�o editar e excluir seus pr�prios downloads e tamb�m os de outros usu�rios</small>
                     </div>
                     <div id="orderAllRanksCheckboxContainer" style="width: 100%; margin-top: 15px; padding: 15px; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 5px;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #F59E0B; font-weight: 600;">
                             <input type="checkbox" id="rankCanOrderAllRanks" style="width: 18px; height: 18px; cursor: pointer;">
-                            <span>Permitir Usuário Ordenar Todos os conquistas (incluindo fixos)</span>
+                            <span>Permitir Usu�rio Ordenar Todos os conquistas (incluindo fixos)</span>
                         </label>
-                        <small style="color: rgba(245, 158, 11, 0.85); display: block; margin-top: 8px;">Com este conquista, o usuário pode reordenar também conquistas fixos na seção Minhas Conquistas.</small>
+                        <small style="color: rgba(245, 158, 11, 0.85); display: block; margin-top: 8px;">Com este conquista, o usu�rio pode reordenar tamb�m conquistas fixos na se��o Minhas Conquistas.</small>
                     </div>
                     <div id="animatedProfileCheckboxContainer" style="width: 100%; margin-top: 15px; padding: 15px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.45); border-radius: 5px;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #38BDF8; font-weight: 600;">
                             <input type="checkbox" id="rankCanUseAnimatedProfile" style="width: 18px; height: 18px; cursor: pointer;">
-                            <span>Permitir usuário tenha Card animado</span>
+                            <span>Permitir usu�rio tenha Card animado</span>
                         </label>
-                        <small style="color: rgba(56, 189, 248, 0.85); display: block; margin-top: 8px;">Com este conquista, aparecerá o botão "Perfil Animado" no perfil do usuário.</small>
+                        <small style="color: rgba(56, 189, 248, 0.85); display: block; margin-top: 8px;">Com este conquista, aparecer� o bot�o "Perfil Animado" no perfil do usu�rio.</small>
                     </div>
 
                     <button type="submit" style="margin-top: 15px; width: 100%;">Criar conquista</button>
@@ -689,33 +689,33 @@
             </div>
 
             <div class="admin-section">
-                <h2>conquistas Customizáveis</h2>
-                <div id="customRanksContainer" class="ranks-list loading">Carregando conquistas customizáveis...</div>
+                <h2>conquistas Customiz�veis</h2>
+                <div id="customRanksContainer" class="ranks-list loading">Carregando conquistas customiz�veis...</div>
             </div>
 
             <div class="admin-section">
-                <h2>conquistas Padrão (Não Removíveis)</h2>
-                <div id="defaultRanksContainer" class="ranks-list loading">Carregando conquistas padrão...</div>
+                <h2>conquistas Padr�o (N�o Remov�veis)</h2>
+                <div id="defaultRanksContainer" class="ranks-list loading">Carregando conquistas padr�o...</div>
             </div>
         </div>
 
-        <!-- TAB: Gerenciar Usuários -->
+        <!-- TAB: Gerenciar Usu�rios -->
         <div id="users-tab" class="tab-content">
             <div class="admin-section">
-                <h2>conquistas dos Usuários</h2>
-                <div id="usersContainer" class="loading">Carregando usuários...</div>
+                <h2>conquistas dos Usu�rios</h2>
+                <div id="usersContainer" class="loading">Carregando usu�rios...</div>
             </div>
         </div>
 
-        <!-- TAB: Permissões de Postagem/Downloads -->
+        <!-- TAB: Permiss�es de Postagem/Downloads -->
         <div id="post-permissions-tab" class="tab-content">
             <div class="admin-section">
-                <h2>Conceder Permissões Individuais</h2>
+                <h2>Conceder Permiss�es Individuais</h2>
                 <form class="form-group" id="grantPermissionForm" style="flex-direction: column; align-items: flex-start;">
                     <div style="width: 100%;">
-                        <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Nickname/Email do Usuário *</label>
+                        <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Nickname/Email do Usu�rio *</label>
                         <input type="text" placeholder="Digite o nickname ou email" required id="userForPermission" style="width: 100%; box-sizing: border-box;">
-                        <small style="color: rgba(255, 255, 255, 0.5); display: block; margin-top: 5px;">Defina aqui permissões diretas (sem depender de conquista).</small>
+                        <small style="color: rgba(255, 255, 255, 0.5); display: block; margin-top: 5px;">Defina aqui permiss�es diretas (sem depender de conquista).</small>
                     </div>
                     <div style="width: 100%; margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <label style="display: flex; align-items: center; gap: 8px; color: #F9A8D4; font-weight: 600;">
@@ -739,29 +739,29 @@
                             <span>Card de Perfil Animado</span>
                         </label>
                     </div>
-                    <button type="submit" style="margin-top: 15px; width: 100%;">Salvar Permissões</button>
+                    <button type="submit" style="margin-top: 15px; width: 100%;">Salvar Permiss�es</button>
                 </form>
             </div>
 
             <div class="admin-section">
-                <h2>Usuários com Permissões Individuais</h2>
+                <h2>Usu�rios com Permiss�es Individuais</h2>
                 <table class="users-table" id="postPermissionsTable" style="display: none;">
                     <thead>
                         <tr>
                             <th>Nickname</th>
                             <th>Email</th>
                             <th>Postagens</th>
-                            <th>Permissões</th>
-                            <th>Ações</th>
+                            <th>Permiss�es</th>
+                            <th>A��es</th>
                         </tr>
                     </thead>
                     <tbody id="postPermissionsTableBody"></tbody>
                 </table>
-                <div id="postPermissionsContainer" class="loading">Carregando usuários com permissões...</div>
+                <div id="postPermissionsContainer" class="loading">Carregando usu�rios com permiss�es...</div>
             </div>
 
             <div class="admin-section">
-                <h2>conquistas de Postagem (Progressão)</h2>
+                <h2>conquistas de Postagem (Progress�o)</h2>
                 <div id="postageRanksContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;"></div>
             </div>
         </div>
@@ -769,17 +769,17 @@
         <!-- TAB: Banimentos -->
         <div id="bans-tab" class="tab-content">
             <div class="admin-section">
-                <h2>Banir ou Suspender Usuário</h2>
+                <h2>Banir ou Suspender Usu�rio</h2>
                 <form class="form-group" id="banForm" style="flex-direction: column; align-items: flex-start;">
                     <div style="width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <div>
-                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Nickname/Email do Usuário *</label>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Nickname/Email do Usu�rio *</label>
                             <input type="text" placeholder="Digite o nickname ou email" required id="userToBan" style="width: 100%; box-sizing: border-box;">
                         </div>
                         <div>
                             <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Tipo *</label>
                             <select id="banType" style="width: 100%; box-sizing: border-box;">
-                                <option value="suspension">Suspensão Temporária</option>
+                                <option value="suspension">Suspens�o Tempor�ria</option>
                                 <option value="permanent">Ban Permanente</option>
                             </select>
                         </div>
@@ -787,7 +787,7 @@
 
                     <div style="width: 100%; margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <div id="daysDiv" style="display: block;">
-                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Dias de Suspensão *</label>
+                            <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Dias de Suspens�o *</label>
                             <input type="number" placeholder="Ex: 7, 30, 365" required id="banDays" min="1" style="width: 100%; box-sizing: border-box;">
                         </div>
                         <div>
@@ -801,7 +801,7 @@
             </div>
 
             <div class="admin-section">
-                <h2>Usuários Banidos/Suspensos</h2>
+                <h2>Usu�rios Banidos/Suspensos</h2>
                 <div id="bansListContainer" class="loading">Carregando lista de banimentos...</div>
             </div>
         </div>

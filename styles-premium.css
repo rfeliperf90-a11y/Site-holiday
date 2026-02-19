@@ -1,4 +1,4 @@
-﻿* {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -118,7 +118,7 @@ body {
     100% { opacity: 0; }
 }
 
-/* Fumaça e Partículas com Luzes Piscando */
+/* Fuma�a e Part�culas com Luzes Piscando */
 .smoke-particle {
     position: absolute;
     border-radius: 50%;
@@ -261,7 +261,7 @@ body {
     }
 }
 
-/* Nuvens da Galáxia - Background com animação de flash */
+/* Nuvens da Gal�xia - Background com anima��o de flash */
 .cloud-bg-1 {
     position: absolute;
     width: 300px;
@@ -572,7 +572,7 @@ body {
     }
 }
 
-/* Estrelas da Galáxia - Background */
+/* Estrelas da Gal�xia - Background */
 .star-bg-1 {
     position: absolute;
     width: 2px;
@@ -688,7 +688,7 @@ body {
     }
 }
 
-/* Título fora do quadrado */
+/* T�tulo fora do quadrado */
 .title-outside {
     position: relative;
     top: 60px;
@@ -857,7 +857,7 @@ header h1:hover {
             drop-shadow(0 0 40px rgba(0, 212, 255, 0.5));
 }
 
-/* Efeito Galáxia com Raios e Nuvens */
+/* Efeito Gal�xia com Raios e Nuvens */
 .galaxy-effect {
     display: none;
 }
@@ -1044,7 +1044,7 @@ header h1:hover {
     }
 }
 
-/* Estrelas da Galáxia */
+/* Estrelas da Gal�xia */
 .star {
     position: absolute;
     width: 3px;
@@ -1180,7 +1180,7 @@ header h1:hover {
     transform: translateY(-5px) scale(1.15) rotate(5deg);
 }
 
-/* Navbar icon buttons (WhatsApp, Discord, Notificações, Sair) */
+/* Navbar icon buttons (WhatsApp, Discord, Notifica��es, Sair) */
 .navbar-buttons .icon-btn {
     padding: 0 !important;
     display: inline-flex;

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -36,7 +36,7 @@
         <div class="auth-card">
             <div class="auth-header">
                 <h1>HOLIDAY GUILD</h1>
-                <p>Junte-se à comunidade!</p>
+                <p>Junte-se � comunidade!</p>
             </div>
 
             <form id="signupForm" class="auth-form">
@@ -60,7 +60,7 @@
 
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required placeholder="E-mail válido">
+                    <input type="email" id="email" name="email" required placeholder="E-mail v�lido">
                     <span class="error-message" id="emailError"></span>
                 </div>
 
@@ -73,8 +73,8 @@
                 <div class="form-group">
                     <label for="password">Senha</label>
                     <div class="password-wrapper">
-                        <input type="password" id="password" name="password" required placeholder="Mínimo 6 caracteres">
-                        <button type="button" id="togglePassword" aria-label="Mostrar senha" title="Mostrar senha" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #EC4899; font-size: 16px; padding: 5px; font-weight: bold; line-height: 1;">⊙</button>
+                        <input type="password" id="password" name="password" required placeholder="M�nimo 6 caracteres">
+                        <button type="button" id="togglePassword" aria-label="Mostrar senha" title="Mostrar senha" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #EC4899; font-size: 16px; padding: 5px; font-weight: bold; line-height: 1;">?</button>
                     </div>
                     <span class="error-message" id="passwordError"></span>
                 </div>
@@ -83,7 +83,7 @@
                     <label for="confirmPassword">Confirmar Senha</label>
                     <div class="password-wrapper">
                         <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirme sua senha">
-                        <button type="button" id="toggleConfirmPassword" aria-label="Mostrar senha" title="Mostrar senha" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #EC4899; font-size: 16px; padding: 5px; font-weight: bold; line-height: 1;">⊙</button>
+                        <button type="button" id="toggleConfirmPassword" aria-label="Mostrar senha" title="Mostrar senha" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #EC4899; font-size: 16px; padding: 5px; font-weight: bold; line-height: 1;">?</button>
                     </div>
                     <span class="error-message" id="confirmPasswordError"></span>
                 </div>
@@ -95,29 +95,29 @@
             <div class="auth-divider">ou</div>
 
             <div class="auth-footer">
-                <p>Já tem conta? <a href="login.html">Faça login</a></p>
+                <p>J� tem conta? <a href="login.html">Fa�a login</a></p>
             </div>
         </div>
 
-        <!-- Modal de Verificação de Email -->
+        <!-- Modal de Verifica��o de Email -->
         <div id="verifyModal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
             <div class="auth-card" style="width: 90%; max-width: 500px;">
                 <div class="auth-header">
                     <h2 style="color: #EC4899; margin: 0;">Verifique seu Email</h2>
                 </div>
-                <p style="text-align: center; color: #999; margin: 20px 0;">Enviamos um código de 6 dígitos para <strong id="verifyEmail" style="color: #EC4899;"></strong></p>
+                <p style="text-align: center; color: #999; margin: 20px 0;">Enviamos um c�digo de 6 d�gitos para <strong id="verifyEmail" style="color: #EC4899;"></strong></p>
                 
                 <form id="verifyForm" class="auth-form" style="margin-top: 30px;">
                     <div class="form-group">
-                        <label for="verificationCode">Código de Verificação</label>
+                        <label for="verificationCode">C�digo de Verifica��o</label>
                         <input type="text" id="verificationCode" maxlength="6" placeholder="000000" required style="text-align: center; font-size: 24px; letter-spacing: 5px;">
                     </div>
                     <button type="submit" class="btn-submit">Verificar</button>
                 </form>
                 
                 <div style="text-align: center; margin-top: 20px;">
-                    <p id="verificationTimer" style="color: #6B46C1; font-size: 14px; margin: 10px 0; font-weight: bold;">Válido por 4:00</p>
-                    <button type="button" id="resendBtn" onclick="resendVerificationCode()" style="background: linear-gradient(135deg, #6B46C1, #EC4899); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px;">Reenviar Código</button>
+                    <p id="verificationTimer" style="color: #6B46C1; font-size: 14px; margin: 10px 0; font-weight: bold;">V�lido por 4:00</p>
+                    <button type="button" id="resendBtn" onclick="resendVerificationCode()" style="background: linear-gradient(135deg, #6B46C1, #EC4899); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px;">Reenviar C�digo</button>
                 </div>
                 
                 <span class="error-message" id="verifyError" style="display: block; text-align: center; margin-top: 15px;"></span>

@@ -7,18 +7,18 @@ const __dirname = path.dirname(__filename);
 
 const db = new sqlite3.Database(path.join(__dirname, 'database', 'holiday.db'));
 
-// Criar conquistas customizados se nÃ£o existirem
+// Criar conquistas customizados se n�o existirem
 const ranks = [
     {
         name: 'Fundador',
         color: '#FFD700',
-        icon: 'ðŸ‘‘',
+        icon: '?Y''',
         description: 'Fundador da Guilda Holiday'
     },
     {
         name: 'Initiate',
         color: '#FF6B9D',
-        icon: 'ðŸŒŸ',
+        icon: '?YOY',
         description: 'Membro iniciante da Guilda'
     }
 ];
@@ -37,10 +37,10 @@ ranks.forEach((rank, idx) => {
                     if (err) {
                         console.error(`Erro ao criar ${rank.name}:`, err);
                     } else {
-                        console.log(`âœ“ ${rank.name} criado com ID: ${this.lastID}`);
+                        console.log(`?o" ${rank.name} criado com ID: ${this.lastID}`);
                         createdRankIds.push({ name: rank.name, id: this.lastID });
                         
-                        // Se for o Ãºltimo conquista, atribuir ao usuÃ¡rio
+                        // Se for o �ltimo conquista, atribuir ao usu�rio
                         if (createdRankIds.length === ranks.length) {
                             assignRanksToUser();
                         }
@@ -48,7 +48,7 @@ ranks.forEach((rank, idx) => {
                 }
             );
         } else {
-            console.log(`${rank.name} jÃ¡ existe (ID: ${row.id})`);
+            console.log(`${rank.name} j� existe (ID: ${row.id})`);
             createdRankIds.push({ name: rank.name, id: row.id });
             
             if (createdRankIds.length === ranks.length) {
@@ -69,13 +69,13 @@ function assignRanksToUser() {
                 if (err) {
                     console.error(`Erro ao atribuir ${rank.name}:`, err);
                 } else {
-                    console.log(`âœ“ ${rank.name} atribuÃ­do ao usuÃ¡rio Fael`);
+                    console.log(`?o" ${rank.name} atribu�do ao usu�rio Fael`);
                 }
             }
         );
     });
     
-    // Verificar atribuiÃ§Ã£o apÃ³s 1 segundo
+    // Verificar atribui��o ap�s 1 segundo
     setTimeout(() => {
         db.all(
             `SELECT cr.name, cr.color, cr.icon FROM user_custom_ranks uc
@@ -83,7 +83,7 @@ function assignRanksToUser() {
              WHERE uc.userId = ?`,
             [userId],
             (err, rows) => {
-                console.log('\nâœ“ CONQUISTAS DO USUÃRIO FAEL APÃ“S ATRIBUIÃ‡ÃƒO:');
+                console.log('\n?o" CONQUISTAS DO USU�RIO FAEL AP?"S ATRIBUI???fO:');
                 console.log(JSON.stringify(rows, null, 2));
                 db.close();
             }

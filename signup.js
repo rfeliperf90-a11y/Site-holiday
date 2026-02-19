@@ -1,4 +1,4 @@
-﻿// Script para página de SIGNUP
+// Script para p�gina de SIGNUP
 
 let userEmail = '';
 let verificationTimer = null;
@@ -7,7 +7,7 @@ const RESEND_COOLDOWN = 30000; // 30 segundos entre reenvios
 
 // Esperar o DOM carregar completamente
 document.addEventListener('DOMContentLoaded', function() {
-    console.log(' Página carregada');
+    console.log(' P�gina carregada');
     
     const signupForm = document.getElementById('signupForm');
     const verifyForm = document.getElementById('verifyForm');
@@ -15,15 +15,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
     
     if (!signupForm) {
-        console.error(' Formulário de signup não encontrado!');
+        console.error(' Formul�rio de signup n�o encontrado!');
         return;
     }
     
     console.log(' Elementos encontrados, registrando eventos...');
     
-    // Evento de submit do formulário
+    // Evento de submit do formul�rio
     signupForm.addEventListener('submit', async (e) => {
-        console.log(' Formulário enviado');
+        console.log(' Formul�rio enviado');
         e.preventDefault();
         clearErrors();
 
@@ -54,17 +54,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (nickname.length < 1) {
-            document.getElementById('nicknameError').textContent = 'Nickname é obrigatório';
+            document.getElementById('nicknameError').textContent = 'Nickname � obrigat�rio';
             return;
         }
 
         if (password.length < 6) {
-            document.getElementById('passwordError').textContent = 'Senha deve ter no mínimo 6 caracteres';
+            document.getElementById('passwordError').textContent = 'Senha deve ter no m�nimo 6 caracteres';
             return;
         }
 
         if (password !== confirmPassword) {
-            document.getElementById('confirmPasswordError').textContent = 'Senhas não conferem';
+            document.getElementById('confirmPasswordError').textContent = 'Senhas n�o conferem';
             return;
         }
 
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
             userEmail = email;
             lastResendTime = Date.now();
             
-            console.log(' Usuário criado, mostrando modal');
+            console.log(' Usu�rio criado, mostrando modal');
             document.getElementById('verifyEmail').textContent = email;
             document.getElementById('signupForm').style.display = 'none';
             document.getElementById('verifyModal').style.display = 'flex';
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Evento de verificação de email
+    // Evento de verifica��o de email
     if (verifyForm) {
         verifyForm.addEventListener('submit', async (e) => {
             console.log(' Verificando email');
@@ -101,11 +101,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const code = document.getElementById('verificationCode').value.trim();
             
             if (!code || code.length !== 6) {
-                document.getElementById('verifyError').textContent = 'Insira um código válido com 6 dígitos';
+                document.getElementById('verifyError').textContent = 'Insira um c�digo v�lido com 6 d�gitos';
                 return;
             }
             
-            console.log(' Enviando código:', code);
+            console.log(' Enviando c�digo:', code);
             const result = await AuthAPI.verifyEmail(userEmail, code);
             console.log('Resposta:', result);
             
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Email verificado com sucesso! ');
                 window.location.href = 'profile.html';
             } else {
-                document.getElementById('verifyError').textContent = result.message || 'Código inválido ou expirado';
+                document.getElementById('verifyError').textContent = result.message || 'C�digo inv�lido ou expirado';
                 console.error('Erro:', result.message);
             }
         });
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const updateVisual = () => {
             const isVisible = inputEl.type === 'text';
-            buttonEl.textContent = isVisible ? '⊗' : '⊙';
+            buttonEl.textContent = isVisible ? '?' : '?';
             buttonEl.setAttribute('aria-label', isVisible ? 'Ocultar senha' : 'Mostrar senha');
             buttonEl.setAttribute('title', isVisible ? 'Ocultar senha' : 'Mostrar senha');
         };
@@ -146,14 +146,14 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log(' Eventos registrados com sucesso');
 });
 
-// Timer de 4 minutos para verificação
+// Timer de 4 minutos para verifica��o
 function startVerificationTimer() {
     let timeLeft = 240; // 4 minutos em segundos
     const timerElement = document.getElementById('verificationTimer');
     const resendBtn = document.getElementById('resendBtn');
     
     if (!timerElement || !resendBtn) {
-        console.warn('Elementos de timer não encontrados');
+        console.warn('Elementos de timer n�o encontrados');
         return;
     }
 
@@ -166,7 +166,7 @@ function startVerificationTimer() {
         
         if (timeLeft <= 0) {
             clearVerificationTimer();
-            timerElement.textContent = 'Código expirado! Reenvie um novo código.';
+            timerElement.textContent = 'C�digo expirado! Reenvie um novo c�digo.';
             timerElement.style.color = '#FF0000';
             document.getElementById('verifyForm').style.pointerEvents = 'none';
             document.getElementById('verifyForm').style.opacity = '0.5';
@@ -177,7 +177,7 @@ function startVerificationTimer() {
 function updateTimerDisplay(seconds, element) {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    element.textContent = `Válido por ${minutes}:${secs.toString().padStart(2, '0')}`;
+    element.textContent = `V�lido por ${minutes}:${secs.toString().padStart(2, '0')}`;
 }
 
 function clearVerificationTimer() {
@@ -187,7 +187,7 @@ function clearVerificationTimer() {
     }
 }
 
-// Reenviar código
+// Reenviar c�digo
 async function resendVerificationCode() {
     const now = Date.now();
     
@@ -205,7 +205,7 @@ async function resendVerificationCode() {
     
     if (result.success) {
         lastResendTime = now;
-        document.getElementById('verifyError').textContent = '✅ Novo código enviado para seu email!';
+        document.getElementById('verifyError').textContent = '? Novo c�digo enviado para seu email!';
         document.getElementById('verifyError').style.color = '#00FF00';
         document.getElementById('verificationCode').value = '';
         
@@ -213,15 +213,15 @@ async function resendVerificationCode() {
         clearVerificationTimer();
         startVerificationTimer();
         
-        // Spinner no botão
+        // Spinner no bot�o
         setTimeout(() => {
             resendBtn.disabled = false;
-            resendBtn.textContent = 'Reenviar Código';
+            resendBtn.textContent = 'Reenviar C�digo';
         }, 2000);
     } else {
-        document.getElementById('verifyError').textContent = result.message || 'Erro ao reenviar código';
+        document.getElementById('verifyError').textContent = result.message || 'Erro ao reenviar c�digo';
         resendBtn.disabled = false;
-        resendBtn.textContent = 'Reenviar Código';
+        resendBtn.textContent = 'Reenviar C�digo';
     }
 }
 

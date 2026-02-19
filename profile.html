@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -44,9 +44,9 @@
     <nav class="navbar">
         <div class="container navbar-container">
             <div class="nav-links">
-                <a href="index.html" class="nav-link">Início</a>
+                <a href="index.html" class="nav-link">In�cio</a>
                 <a href="dicas.html" class="nav-link">Comandos & Dicas</a>
-                <a href="lag.html" class="nav-link">Customização</a>
+                <a href="lag.html" class="nav-link">Customiza��o</a>
                 <a href="downloads.html" class="nav-link">Downloads</a>
                 <a href="profile.html" class="nav-link active">Perfil</a>
             </div>
@@ -57,8 +57,8 @@
                 <a href="https://discord.gg/KEc4ZdR3" class="btn-navbar btn-discord icon-btn" target="_blank" aria-label="Discord">
                     <img src="/imagens/Discord.png" alt="Discord" class="navbar-icon" width="16" height="16">
                 </a>
-                <button id="notificationBell" class="btn-navbar btn-notifications icon-btn" style="position: relative; display: none;" aria-label="Notificações">
-                    <img src="/imagens/Sino.png" alt="Notificações" class="navbar-icon" width="16" height="16">
+                <button id="notificationBell" class="btn-navbar btn-notifications icon-btn" style="position: relative; display: none;" aria-label="Notifica��es">
+                    <img src="/imagens/Sino.png" alt="Notifica��es" class="navbar-icon" width="16" height="16">
                     <span id="notificationBadge" class="notification-badge" style="display: none;"></span>
                 </button>
                 <button id="logoutBtn" class="btn-navbar btn-logout icon-btn" style="display: none;" aria-label="Sair" title="Sair">
@@ -86,7 +86,7 @@
                 <input type="file" id="bannerInput" accept="image/*" style="display: none;">
             </div>
 
-            <!-- Informações Principais -->
+            <!-- Informa��es Principais -->
             <div class="profile-main">
                 <div class="profile-avatar-section">
                     <div class="profile-avatar" id="profileAvatar"></div>
@@ -100,7 +100,7 @@
                 <div class="profile-info">
                     <h1 id="profileUsername">Username</h1>
                     
-                    <!-- conquista Progressivo + conquistas Automáticos + Customizáveis + Minhas Conquistas -->
+                    <!-- conquista Progressivo + conquistas Autom�ticos + Customiz�veis + Minhas Conquistas -->
                     <div class="rank-display">
                         <!-- Label Minhas Conquistas -->
                         <div style="display: flex; align-items: center; gap: 8px; margin: 0 0 8px 0;">
@@ -139,28 +139,28 @@
                 </div>
             </div>
 
-            <!-- Histórico de conquistas -->
+            <!-- Hist�rico de conquistas -->
             <div class="profile-section">
-                <h2>Histórico de conquistas</h2>
+                <h2>Hist�rico de conquistas</h2>
                 <div class="ranks-history" id="ranksHistory">
-                    <p>Carregando histórico...</p>
+                    <p>Carregando hist�rico...</p>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Modal de Edição de Perfil -->
+    <!-- Modal de Edi��o de Perfil -->
     <div id="editModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Configurações da Conta</h2>
+            <h2>Configura��es da Conta</h2>
             
             <!-- Abas -->
             <div class="modal-tabs">
                 <button class="tab-btn active" data-tab="edit-tab">Perfil</button>
                 <button class="tab-btn" data-tab="conquistas-tab">Minhas Conquistas</button>
                 <button class="tab-btn" data-tab="postages-tab">Minhas Postagens</button>
-                <button class="tab-btn" data-tab="password-tab">Segurança</button>
+                <button class="tab-btn" data-tab="password-tab">Seguran�a</button>
             </div>
 
             <!-- Aba 1: Editar Perfil -->
@@ -198,15 +198,15 @@
                         <div class="form-label-row">
                             <label for="editProfileTagline">Frase do Perfil</label>
                             <div class="tagline-actions">
-                                <button type="button" id="randomTaglineBtn" class="btn-random-tagline">Frase Aleatória</button>
+                                <button type="button" id="randomTaglineBtn" class="btn-random-tagline">Frase Aleat�ria</button>
                                 <button type="button" id="clearTaglineBtn" class="btn-random-tagline btn-clear-tagline">Limpar</button>
                             </div>
                         </div>
-                        <textarea id="editProfileTagline" maxlength="120" rows="2" placeholder="Digite sua frase (opcional) ou use Frase Aleatória"></textarea>
+                        <textarea id="editProfileTagline" maxlength="120" rows="2" placeholder="Digite sua frase (opcional) ou use Frase Aleat�ria"></textarea>
                         <small id="taglineCount">0/120</small>
                     </div>
 
-                    <button type="submit" class="btn-submit">Salvar Alterações</button>
+                    <button type="submit" class="btn-submit">Salvar Altera��es</button>
                     <span class="error-message" id="editError"></span>
                 </form>
             </div>
@@ -214,26 +214,26 @@
             <!-- Aba: Minhas Conquistas -->
             <div id="conquistas-tab" class="tab-content">
                 <div class="notif-settings-box">
-                    <h4 class="notif-settings-title">Notificações</h4>
+                    <h4 class="notif-settings-title">Notifica��es</h4>
                     <label class="notif-setting-item">
                         <input type="checkbox" id="disableCommentNotifications">
-                        <span>Desativar notificações de comentários</span>
+                        <span>Desativar notifica��es de coment�rios</span>
                     </label>
                     <label class="notif-setting-item">
                         <input type="checkbox" id="disableLikeNotifications">
-                        <span>Desativar notificações de likes</span>
+                        <span>Desativar notifica��es de likes</span>
                     </label>
                     <label class="notif-setting-item">
                         <input type="checkbox" id="disableAchievementNotifications">
-                        <span>Desativar notificação de ganho de conquista</span>
+                        <span>Desativar notifica��o de ganho de conquista</span>
                     </label>
                     <label class="notif-setting-item all">
                         <input type="checkbox" id="disableAllNotifications">
-                        <span>Desativar todas as notificações</span>
+                        <span>Desativar todas as notifica��es</span>
                     </label>
                 </div>
 
-                <h3 style="margin-top: 0; color: #EC4899;">Configuração de conquistas</h3>
+                <h3 style="margin-top: 0; color: #EC4899;">Configura��o de conquistas</h3>
 
                 <div class="conquista-expand-options">
                     <button type="button" class="conquista-expand-btn active" data-target="conquista-conquistas-section">Minhas Conquistas</button>
@@ -249,7 +249,7 @@
                 </div>
 
                 <div id="conquista-postagens-section" class="conquista-expand-section">
-                    <p class="conquista-section-subtitle">conquistas de progressão por quantidade de postagens.</p>
+                    <p class="conquista-section-subtitle">conquistas de progress�o por quantidade de postagens.</p>
 
                     <div class="conquista-stats-grid">
                         <div class="conquista-stat-box">
@@ -262,7 +262,7 @@
                         </div>
                         <div class="conquista-stat-box">
                             <div class="conquista-stat-value"><span id="totalHeartsReceived">0</span></div>
-                            <div class="conquista-stat-label">Corações</div>
+                            <div class="conquista-stat-label">Cora��es</div>
                         </div>
                     </div>
 
@@ -270,8 +270,8 @@
                         <div class="conquista-current-icon" id="currentRankIcon">?</div>
                         <div class="conquista-current-info">
                             <h4 id="currentRankName">Sem conquista</h4>
-                            <p id="currentRankDesc">Faça sua primeira postagem</p>
-                            <p id="nextPostageRankHint">Faça sua primeira postagem para desbloquear o primeiro conquista.</p>
+                            <p id="currentRankDesc">Fa�a sua primeira postagem</p>
+                            <p id="nextPostageRankHint">Fa�a sua primeira postagem para desbloquear o primeiro conquista.</p>
                         </div>
                     </div>
 
@@ -290,12 +290,12 @@
                 </div>
 
                 <div id="conquista-likes-section" class="conquista-expand-section">
-                    <p class="conquista-section-subtitle">conquistas de progressão por likes acumulados no histórico.</p>
+                    <p class="conquista-section-subtitle">conquistas de progress�o por likes acumulados no hist�rico.</p>
 
                     <div class="conquista-stats-grid">
                         <div class="conquista-stat-box">
                             <div class="conquista-stat-value"><span id="totalLikesHistory">0</span></div>
-                            <div class="conquista-stat-label">Likes Históricos</div>
+                            <div class="conquista-stat-label">Likes Hist�ricos</div>
                         </div>
                         <div class="conquista-stat-box">
                             <div class="conquista-stat-value"><span id="totalLikesCurrent">0</span></div>
@@ -303,7 +303,7 @@
                         </div>
                         <div class="conquista-stat-box">
                             <div class="conquista-stat-value"><span id="totalHeartsLikesTab">0</span></div>
-                            <div class="conquista-stat-label">Corações</div>
+                            <div class="conquista-stat-label">Cora��es</div>
                         </div>
                     </div>
 
@@ -352,7 +352,7 @@
 
                     <div class="form-group">
                         <label for="newPassword">Nova Senha</label>
-                        <input type="password" id="newPassword" required placeholder="Mínimo 6 caracteres">
+                        <input type="password" id="newPassword" required placeholder="M�nimo 6 caracteres">
                     </div>
 
                     <div class="form-group">
@@ -366,7 +366,7 @@
 
                 <div class="two-factor-box">
                     <h3>Authenticator (2FA)</h3>
-                    <p class="two-factor-help">Opcional. Ao ativar, no login você pode validar por Authenticator ou por código enviado no e-mail.</p>
+                    <p class="two-factor-help">Opcional. Ao ativar, no login voc� pode validar por Authenticator ou por c�digo enviado no e-mail.</p>
 
                     <div class="two-factor-status-row">
                         <span>Status:</span>
@@ -374,7 +374,7 @@
                     </div>
 
                     <div id="twoFactorSettingsRow" class="two-factor-settings-row" style="display: none;">
-                        <label for="twoFactorRememberDays">Pedir 2FA novamente após:</label>
+                        <label for="twoFactorRememberDays">Pedir 2FA novamente ap�s:</label>
                         <select id="twoFactorRememberDays">
                             <option value="0">Desativado</option>
                             <option value="3">3 dias</option>
@@ -395,10 +395,10 @@
                         <div id="twoFactorQrWrap" class="two-factor-qr-wrap" style="display: none;">
                             <img id="twoFactorQrImage" class="two-factor-qr-image" src="" alt="QR Code do Authenticator">
                         </div>
-                        <p class="two-factor-step">2. Digite abaixo o código gerado no app para ativar.</p>
+                        <p class="two-factor-step">2. Digite abaixo o c�digo gerado no app para ativar.</p>
 
                         <div class="form-group">
-                            <label for="twoFactorEnableCode">Código de Ativação</label>
+                            <label for="twoFactorEnableCode">C�digo de Ativa��o</label>
                             <input type="text" id="twoFactorEnableCode" maxlength="6" inputmode="numeric" placeholder="000000">
                         </div>
                         <button type="button" id="enableTwoFactorBtn" class="btn-submit two-factor-action-btn">Ativar 2FA</button>
@@ -407,12 +407,12 @@
                     <div id="twoFactorDisablePanel" class="two-factor-panel" style="display: none;">
                         <button type="button" id="showDisableTwoFactorFormBtn" class="btn-submit two-factor-danger-btn">Desativar 2FA</button>
                         <div id="disableTwoFactorFormWrap" style="display: none; margin-top: 12px;">
-                            <p class="two-factor-step">Para desativar, digite um código atual do app Authenticator.</p>
+                            <p class="two-factor-step">Para desativar, digite um c�digo atual do app Authenticator.</p>
                             <div class="form-group">
-                                <label for="twoFactorDisableCode">Código para Desativar</label>
+                                <label for="twoFactorDisableCode">C�digo para Desativar</label>
                                 <input type="text" id="twoFactorDisableCode" maxlength="6" inputmode="numeric" placeholder="000000">
                             </div>
-                            <button type="button" id="disableTwoFactorBtn" class="btn-submit two-factor-danger-btn">Confirmar desativação</button>
+                            <button type="button" id="disableTwoFactorBtn" class="btn-submit two-factor-danger-btn">Confirmar desativa��o</button>
                         </div>
                     </div>
 
@@ -451,7 +451,7 @@
                 <div class="form-group">
                     <label for="animatedProfileThemeSelect">Tema do card</label>
                     <select id="animatedProfileThemeSelect">
-                        <option value="auto">Automático</option>
+                        <option value="auto">Autom�tico</option>
                         <option value="theme-aurora">Aurora</option>
                         <option value="theme-prisma">Prisma</option>
                         <option value="theme-pulse">Pulse</option>
@@ -488,7 +488,7 @@
                         <input type="file" id="animatedCustomGifFile" accept="image/gif">
                         <button type="button" id="uploadAnimatedGifBtn" class="btn-random-tagline">Enviar GIF</button>
                     </div>
-                    <small>Limite máximo: 500KB por GIF.</small>
+                    <small>Limite m�ximo: 500KB por GIF.</small>
                 </div>
 
                 <div class="animated-profile-preview-wrap">
@@ -510,7 +510,7 @@
         </div>
     </div>
 
-    <!-- Modal de Alteração de Email -->
+    <!-- Modal de Altera��o de Email -->
     <div id="changeEmailModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close" id="closeChangeEmailModal">&times;</span>
@@ -528,15 +528,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Código de Confirmação</label>
+                    <label>C�digo de Confirma��o</label>
                     <div class="code-input-wrapper">
-                        <input type="text" id="emailVerificationCode" placeholder="Código enviado para seu email atual" maxlength="6" required>
-                        <button type="button" id="sendEmailCodeBtn" class="btn-send-code">Enviar Código</button>
+                        <input type="text" id="emailVerificationCode" placeholder="C�digo enviado para seu email atual" maxlength="6" required>
+                        <button type="button" id="sendEmailCodeBtn" class="btn-send-code">Enviar C�digo</button>
                     </div>
-                    <small style="color: rgba(255,255,255,0.5); margin-top: 5px; display: block;">Um código será enviado para seu email atual</small>
+                    <small style="color: rgba(255,255,255,0.5); margin-top: 5px; display: block;">Um c�digo ser� enviado para seu email atual</small>
                 </div>
                 
-                <button type="submit" class="btn-submit">Confirmar Alteração</button>
+                <button type="submit" class="btn-submit">Confirmar Altera��o</button>
                 <span class="error-message" id="changeEmailError"></span>
             </form>
         </div>

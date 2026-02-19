@@ -1,4 +1,4 @@
-﻿let currentUser = null;
+let currentUser = null;
 let allDownloads = [];
 let userCanPost = false;
 let userCanManageDownloads = false;
@@ -267,7 +267,7 @@ function parseDownloadLinks(download) {
                 });
             }
         } catch {
-            // Ignorar JSON inválido e usar fallback.
+            // Ignorar JSON inv�lido e usar fallback.
         }
     }
 
@@ -386,7 +386,7 @@ function setupFormatHelpTooltip() {
     });
 }
 
-// Carregar usuário autenticado ao abrir página
+// Carregar usu�rio autenticado ao abrir p�gina
 async function loadCurrentUser() {
     const token = localStorage.getItem('token');
     if (!token) return;
@@ -412,7 +412,7 @@ async function loadCurrentUser() {
             // Notificacoes globais ficam no auth-manager.js
         }
     } catch (error) {
-        console.error('Erro ao carregar usuário:', error);
+        console.error('Erro ao carregar usu�rio:', error);
     }
 }
 
@@ -516,7 +516,7 @@ function renderDownloadsPagination(totalItems, totalPages) {
     paginationContainer.innerHTML = `
         <button type="button" class="downloads-page-btn" data-page="prev" ${currentDownloadsPage === 1 ? 'disabled' : ''}>Anterior</button>
         ${pagesHtml}
-        <button type="button" class="downloads-page-btn" data-page="next" ${currentDownloadsPage === totalPages ? 'disabled' : ''}>Próxima</button>
+        <button type="button" class="downloads-page-btn" data-page="next" ${currentDownloadsPage === totalPages ? 'disabled' : ''}>Pr�xima</button>
     `;
 
     paginationContainer.querySelectorAll('.downloads-page-btn').forEach((btn) => {
@@ -559,10 +559,10 @@ async function filterAndRender(options = {}) {
     renderDownloads(filtered, { preservePage: true });
 }
 
-// Função para lidar com reações (like/coração)
+// Fun��o para lidar com rea��es (like/cora��o)
 async function handleReaction(e) {
     if (!currentUser) {
-        showNotification('Você deve estar logado para reagir', 'error');
+        showNotification('Voc� deve estar logado para reagir', 'error');
         return;
     }
 
@@ -579,7 +579,7 @@ async function handleReaction(e) {
             console.log('Reacao adicionada/removida com sucesso');
             console.log('Resposta:', response);
             
-            // Atualizar o botão visualmente
+            // Atualizar o bot�o visualmente
             if (response.userReactions) {
                 const likeBtn = document.querySelector(`[data-type="like"][data-id="${downloadId}"]`);
                 const heartBtn = document.querySelector(`[data-type="heart"][data-id="${downloadId}"]`);
@@ -607,13 +607,13 @@ async function handleReaction(e) {
                 }
             }
             
-            showNotification(`${reactionType === 'like' ? 'Like' : 'Coração'} ${response.isAdded ? 'adicionado' : 'removido'}!`, 'success');
+            showNotification(`${reactionType === 'like' ? 'Like' : 'Cora��o'} ${response.isAdded ? 'adicionado' : 'removido'}!`, 'success');
         } else {
-            showNotification(response.message || 'Erro ao adicionar reação', 'error');
+            showNotification(response.message || 'Erro ao adicionar rea��o', 'error');
         }
     } catch (error) {
-        console.error('Erro ao adicionar reação:', error);
-        showNotification('Erro ao processar reação', 'error');
+        console.error('Erro ao adicionar rea��o:', error);
+        showNotification('Erro ao processar rea��o', 'error');
     }
 }
 
@@ -768,7 +768,7 @@ function renderDownloads(downloadsToRender = allDownloads, options = {}) {
                         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23EC4899' style='width: 18px; height: 18px;'%3E%3Cpath d='M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z'/%3E%3C/svg%3E" alt="Like" style="width: 16px; height: 16px;"> <span class="count">${download.likes || 0}</span>
                     </button>
                     <button class="btn-reaction heart-btn" data-type="heart" data-id="${download.id}" style="flex: 1; padding: 8px; border: 1px solid #EC4899; border-radius: 5px; background: transparent; color: #EC4899; cursor: pointer; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 5px;">
-                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23EC4899' style='width: 18px; height: 18px;'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E" alt="Coração" style="width: 16px; height: 16px;"> <span class="count">${download.hearts || 0}</span>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23EC4899' style='width: 18px; height: 18px;'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E" alt="Cora��o" style="width: 16px; height: 16px;"> <span class="count">${download.hearts || 0}</span>
                     </button>
                     <button class="btn-comment" data-id="${download.id}" style="flex: 1; padding: 8px; border: 1px solid #6B46C1; border-radius: 5px; background: transparent; color: #6B46C1; cursor: pointer; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 5px;">
                         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236B46C1' style='width: 18px; height: 18px;'%3E%3Cpath d='M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z'/%3E%3C/svg%3E" alt="Comentar" style="width: 16px; height: 16px;"> <span class="count">${download.comments || 0}</span>
@@ -778,16 +778,16 @@ function renderDownloads(downloadsToRender = allDownloads, options = {}) {
         `;
     }).join('');
 
-    // Adicionar event listeners para reações
+    // Adicionar event listeners para rea��es
     document.querySelectorAll('.btn-reaction').forEach(btn => {
         btn.addEventListener('click', handleReaction);
     });
 
-    // Adicionar event listeners para comentários
+    // Adicionar event listeners para coment�rios
     document.querySelectorAll('.btn-comment').forEach(btn => {
         btn.addEventListener('click', (e) => {
             if (!currentUser) {
-                showNotification('Você deve estar logado para comentar', 'error');
+                showNotification('Voc� deve estar logado para comentar', 'error');
                 return;
             }
             const downloadId = e.currentTarget.dataset.id;
@@ -795,7 +795,7 @@ function renderDownloads(downloadsToRender = allDownloads, options = {}) {
         });
     });
 
-    // Adicionar event listeners para usuários
+    // Adicionar event listeners para usu�rios
     document.querySelectorAll('.user-name, .user-avatar').forEach(el => {
         el.addEventListener('click', (e) => {
             const userId = e.currentTarget.dataset.userId;
@@ -809,7 +809,7 @@ function renderDownloads(downloadsToRender = allDownloads, options = {}) {
             e.preventDefault();
             const downloadId = e.currentTarget.dataset.id;
             
-            // Criar modal de confirmação
+            // Criar modal de confirma��o
             const modal = document.createElement('div');
             modal.style.cssText = `
                 position: fixed;
@@ -838,7 +838,7 @@ function renderDownloads(downloadsToRender = allDownloads, options = {}) {
             
             content.innerHTML = `
                 <h3 style="color: #EC4899; margin-bottom: 15px; font-size: 20px;">Deletar Download?</h3>
-                <p style="color: rgba(255,255,255,0.8); margin-bottom: 30px;">Esta ação não pode ser desfeita. Tem certeza?</p>
+                <p style="color: rgba(255,255,255,0.8); margin-bottom: 30px;">Esta a��o n�o pode ser desfeita. Tem certeza?</p>
                 <div style="display: flex; gap: 10px; justify-content: center;">
                     <button id="cancelDelete" style="padding: 10px 20px; background: linear-gradient(135deg, #6B46C1 0%, #8B5CF6 100%); color: white; border: 1px solid #6B46C1; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;">Cancelar</button>
                     <button id="confirmDelete" style="padding: 10px 20px; background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%); color: white; border: 1px solid #EC4899; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s;">Confirmar Delete</button>
@@ -851,7 +851,7 @@ function renderDownloads(downloadsToRender = allDownloads, options = {}) {
             const cancelBtn = document.getElementById('cancelDelete');
             const confirmBtn = document.getElementById('confirmDelete');
             
-            // Efeitos hover para botão cancelar
+            // Efeitos hover para bot�o cancelar
             cancelBtn.addEventListener('mouseenter', () => {
                 cancelBtn.style.background = 'linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%)';
                 cancelBtn.style.transform = 'translateY(-2px)';
@@ -864,7 +864,7 @@ function renderDownloads(downloadsToRender = allDownloads, options = {}) {
                 cancelBtn.style.boxShadow = '0 0 0px rgba(236, 72, 153, 0)';
             });
             
-            // Efeitos hover para botão confirmar
+            // Efeitos hover para bot�o confirmar
             confirmBtn.addEventListener('mouseenter', () => {
                 confirmBtn.style.background = 'linear-gradient(135deg, #DB2777 0%, #EC4899 100%)';
                 confirmBtn.style.transform = 'translateY(-2px)';
@@ -910,7 +910,7 @@ function renderDownloads(downloadsToRender = allDownloads, options = {}) {
             }
         });
         
-        // Efeito de hover para botão de editar
+        // Efeito de hover para bot�o de editar
         btn.addEventListener('mouseenter', () => {
             btn.style.background = 'linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%)';
             btn.style.transform = 'translateY(-2px)';
@@ -924,7 +924,7 @@ function renderDownloads(downloadsToRender = allDownloads, options = {}) {
         });
     });
     
-    // Adicionar efeito de hover para botão de excluir
+    // Adicionar efeito de hover para bot�o de excluir
     document.querySelectorAll('.btn-delete-download').forEach(btn => {
         btn.addEventListener('mouseenter', () => {
             btn.style.background = 'linear-gradient(135deg, #DB2777 0%, #EC4899 100%)';
@@ -942,9 +942,9 @@ function renderDownloads(downloadsToRender = allDownloads, options = {}) {
     attachInteractiveCardEffects(grid);
 }
 
-// Mostrar formulário de comentários
+// Mostrar formul�rio de coment�rios
 async function showCommentForm(downloadId) {
-    // Carregar comentários existentes
+    // Carregar coment�rios existentes
     const commentsResponse = await AuthAPI.getDownloadComments(downloadId);
     const comments = commentsResponse.success ? commentsResponse.comments : [];
     
@@ -995,7 +995,7 @@ async function showCommentForm(downloadId) {
     } else {
         commentsHTML = `
             <div style="display: flex; align-items: center; justify-content: center; min-height: 120px; border: 1px dashed rgba(107, 70, 193, 0.55); border-radius: 8px;">
-                <p style="color: #999; text-align: center; padding: 20px; margin: 0;">Nenhum comentário ainda. Seja o primeiro a comentar!</p>
+                <p style="color: #999; text-align: center; padding: 20px; margin: 0;">Nenhum coment�rio ainda. Seja o primeiro a comentar!</p>
             </div>
         `;
     }
@@ -1003,7 +1003,7 @@ async function showCommentForm(downloadId) {
     content.innerHTML = `
         <div style="text-align: center;">
             <h3 style="color: #EC4899; margin: 0 0 10px 0; font-size: 22px; font-weight: 700;">Comentarios</h3>
-            <p style="color: #999; margin: 0 0 20px 0; font-size: 12px;">${comments.length} comentário(s)</p>
+            <p style="color: #999; margin: 0 0 20px 0; font-size: 12px;">${comments.length} coment�rio(s)</p>
         </div>
         
         <div style="background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 100%); padding: 15px; border-radius: 8px; min-height: 160px; max-height: 36vh; overflow-y: auto; margin-bottom: 20px; border: 1px solid #6B46C1;">
@@ -1025,12 +1025,12 @@ async function showCommentForm(downloadId) {
         <form id="commentForm" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 2px solid #6B46C1;">
             <div>
                 <label style="color: #EC4899; font-size: 12px; font-weight: 600; display: block; margin-bottom: 8px;">Adicione seu comentario:</label>
-                <textarea id="commentContent" placeholder="Digite seu comentário aqui..." style="width: 100%; padding: 12px; background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 100%); border: 2px solid #6B46C1; border-radius: 6px; color: white; font-family: inherit; height: 100px; resize: vertical; font-size: 13px;" maxlength="500"></textarea>
+                <textarea id="commentContent" placeholder="Digite seu coment�rio aqui..." style="width: 100%; padding: 12px; background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 100%); border: 2px solid #6B46C1; border-radius: 6px; color: white; font-family: inherit; height: 100px; resize: vertical; font-size: 13px;" maxlength="500"></textarea>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span style="font-size: 11px; color: #999;" id="charCount">0/500</span>
                 <div style="display: flex; gap: 10px; align-items: center;">
-                    <button type="submit" style="padding: 10px 20px; background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%); color: white; border: 1px solid #EC4899; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s; box-shadow: 0 0 10px rgba(236, 72, 153, 0.3);">Enviar Comentário</button>
+                    <button type="submit" style="padding: 10px 20px; background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%); color: white; border: 1px solid #EC4899; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s; box-shadow: 0 0 10px rgba(236, 72, 153, 0.3);">Enviar Coment�rio</button>
                     <button id="closeComments" type="button" style="padding: 10px 20px; background: linear-gradient(135deg, #6B46C1 0%, #8B5CF6 100%); color: white; border: 1px solid #EC4899; border-radius: 5px; cursor: pointer; font-weight: 600; transition: all 0.3s; box-shadow: 0 0 10px rgba(236, 72, 153, 0.3);">Fechar</button>
                 </div>
             </div>
@@ -1047,24 +1047,24 @@ async function showCommentForm(downloadId) {
         charCount.textContent = `${textarea.value.length}/500`;
     });
     
-    // Enviar comentário
+    // Enviar coment�rio
     document.getElementById('commentForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const content = textarea.value.trim();
         
         if (!content) {
-            showNotification('Comentário não pode estar vazio', 'error');
+            showNotification('Coment�rio n�o pode estar vazio', 'error');
             return;
         }
         
         const response = await AuthAPI.addDownloadComment(downloadId, content);
         if (response.success) {
-            showNotification('Comentário adicionado com sucesso!', 'success');
-            // Recarregar downloads para atualizar contador de comentários
+            showNotification('Coment�rio adicionado com sucesso!', 'success');
+            // Recarregar downloads para atualizar contador de coment�rios
             await loadDownloads();
             modal.remove();
         } else {
-            showNotification(response.message || 'Erro ao adicionar comentário', 'error');
+            showNotification(response.message || 'Erro ao adicionar coment�rio', 'error');
         }
     });
     
@@ -1073,7 +1073,7 @@ async function showCommentForm(downloadId) {
         modal.remove();
     });
     
-    // Event listeners para botões de responder
+    // Event listeners para bot�es de responder
     document.querySelectorAll('.btn-reply-comment').forEach(btn => {
         btn.addEventListener('click', () => {
             const replySection = document.getElementById('replySection');
@@ -1110,7 +1110,7 @@ async function showCommentForm(downloadId) {
         const replyTo = (document.getElementById('replyUserName')?.textContent || '').trim();
         
         if (!content) {
-            showNotification('Resposta não pode estar vazia', 'error');
+            showNotification('Resposta n�o pode estar vazia', 'error');
             return;
         }
         
@@ -1130,7 +1130,7 @@ async function showCommentForm(downloadId) {
     });
 }
 
-// Mostrar formulário de editar download
+// Mostrar formul�rio de editar download
 function showEditDownloadForm(download) {
     const modal = document.createElement('div');
     modal.style.cssText = `
@@ -1166,14 +1166,14 @@ function showEditDownloadForm(download) {
                 <input type="text" id="editDownloadName" style="width: 100%; box-sizing: border-box; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid #EC4899; border-radius: 5px; color: white;">
             </div>
             <div>
-                <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Descrição</label>
+                <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 5px;">Descri��o</label>
                 <textarea id="editDownloadDescription" style="width: 100%; box-sizing: border-box; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid #EC4899; border-radius: 5px; color: white; font-family: inherit; height: 100px; resize: vertical;"></textarea>
             </div>
             <div>
                 <label style="color: #EC4899; font-size: 12px; display: block; margin-bottom: 8px;">Links do Download</label>
                 <div id="editLinksContainer" style="display: flex; flex-direction: column; gap: 10px;"></div>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
-                    <small style="color: #A78BFA;">Máximo de ${MAX_DOWNLOAD_LINKS} links</small>
+                    <small style="color: #A78BFA;">M�ximo de ${MAX_DOWNLOAD_LINKS} links</small>
                     <button id="editBtnAddLink" type="button" style="padding: 7px 12px; background: #6B46C1; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">+ Link</button>
                 </div>
             </div>
@@ -1252,7 +1252,7 @@ function showEditDownloadForm(download) {
     editBtnAddLink?.addEventListener('click', () => {
         const rowCount = editLinksContainer.querySelectorAll('.edit-download-link-row').length;
         if (rowCount >= MAX_DOWNLOAD_LINKS) {
-            showNotification(`Máximo de ${MAX_DOWNLOAD_LINKS} links por postagem`, 'error');
+            showNotification(`M�ximo de ${MAX_DOWNLOAD_LINKS} links por postagem`, 'error');
             syncEditLinksState();
             return;
         }
@@ -1277,12 +1277,12 @@ function showEditDownloadForm(download) {
             .filter(Boolean);
         
         if (!name || links.length === 0) {
-            showNotification('Nome e pelo menos um link são obrigatórios', 'error');
+            showNotification('Nome e pelo menos um link s�o obrigat�rios', 'error');
             return;
         }
         
         if (links.length > MAX_DOWNLOAD_LINKS) {
-            showNotification(`Máximo de ${MAX_DOWNLOAD_LINKS} links permitidos`, 'error');
+            showNotification(`M�ximo de ${MAX_DOWNLOAD_LINKS} links permitidos`, 'error');
             return;
         }
 
@@ -1312,10 +1312,10 @@ function updateAddLinkButtonState() {
     addLinkBtn.disabled = maxReached;
     addLinkBtn.style.opacity = maxReached ? '0.65' : '1';
     addLinkBtn.style.cursor = maxReached ? 'not-allowed' : 'pointer';
-    addLinkBtn.title = maxReached ? `Máximo de ${MAX_DOWNLOAD_LINKS} links por postagem` : '';
+    addLinkBtn.title = maxReached ? `M�ximo de ${MAX_DOWNLOAD_LINKS} links por postagem` : '';
 }
 
-// Adicionar botão de adicionar link
+// Adicionar bot�o de adicionar link
 document.getElementById('btnAddLink')?.addEventListener('click', (e) => {
     e.preventDefault();
     const container = document.getElementById('linksContainer');
@@ -1323,7 +1323,7 @@ document.getElementById('btnAddLink')?.addEventListener('click', (e) => {
 
     const linkCount = container.querySelectorAll('.download-link-row').length;
     if (linkCount >= MAX_DOWNLOAD_LINKS) {
-        showNotification(`Máximo de ${MAX_DOWNLOAD_LINKS} links por postagem`, 'error');
+        showNotification(`M�ximo de ${MAX_DOWNLOAD_LINKS} links por postagem`, 'error');
         updateAddLinkButtonState();
         return;
     }
@@ -1356,7 +1356,7 @@ function showErrorMessage(message) {
     errorDiv.style.display = 'block';
 }
 
-// Mostrar notificação toast
+// Mostrar notifica��o toast
 function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.style.cssText = `
@@ -1380,11 +1380,11 @@ function showNotification(message, type = 'info') {
     }, 4000);
 }
 
-// Event listeners para busca e ordenação
+// Event listeners para busca e ordena��o
 document.getElementById('searchInput')?.addEventListener('keyup', filterAndRender);
 document.getElementById('sortSelect')?.addEventListener('change', filterAndRender);
 
-// Inicializar página
+// Inicializar p�gina
 // Enviar novo download
 async function submitDownload() {
     const name = document.getElementById('downloadName').value.trim();
@@ -1395,13 +1395,13 @@ async function submitDownload() {
     if (errorDiv) errorDiv.style.display = 'none';
 
     if (!name || links.length === 0) {
-        errorDiv.textContent = 'Nome e pelo menos um link são obrigatórios!';
+        errorDiv.textContent = 'Nome e pelo menos um link s�o obrigat�rios!';
         errorDiv.style.display = 'block';
         return;
     }
 
     if (links.length > MAX_DOWNLOAD_LINKS) {
-        errorDiv.textContent = `Máximo de ${MAX_DOWNLOAD_LINKS} links permitidos!`;
+        errorDiv.textContent = `M�ximo de ${MAX_DOWNLOAD_LINKS} links permitidos!`;
         errorDiv.style.display = 'block';
         return;
     }
@@ -1413,10 +1413,10 @@ async function submitDownload() {
             showNotification('Download postado com sucesso!', 'success');
             if (Array.isArray(response.gainedPostAchievementRanks) && response.gainedPostAchievementRanks.length > 0) {
                 const names = response.gainedPostAchievementRanks.map(rank => rank.name).join(', ');
-                showNotification(`Novo conquista conquistado: ${names}. Vá no perfil e marque para exibir.`, 'info');
+                showNotification(`Novo conquista conquistado: ${names}. V� no perfil e marque para exibir.`, 'info');
             }
             
-            // Limpar formulário
+            // Limpar formul�rio
             document.getElementById('postDownloadForm').reset();
             closePostDownloadModal();
             resetPostLinksUi();
@@ -1461,7 +1461,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
     
-    // Configurar formulário de postagem
+    // Configurar formul�rio de postagem
     const postDownloadForm = document.getElementById('postDownloadForm');
     if (postDownloadForm) {
         postDownloadForm.addEventListener('submit', async (e) => {
@@ -1478,18 +1478,18 @@ function showCommentInlineForm(downloadId) {
     const card = document.querySelector(`.download-card[data-id="${downloadId}"]`);
     if (!card) return;
     
-    // Verificar se já existe um formulário aberto
+    // Verificar se j� existe um formul�rio aberto
     let commentForm = card.querySelector('.comment-form-inline');
     if (commentForm) {
         commentForm.remove();
         return;
     }
     
-    // Criar e inserir formulário inline
+    // Criar e inserir formul�rio inline
     const formHTML = `
         <div class="comment-form-inline" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #333;">
             <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                <textarea id="commentInput-${downloadId}" placeholder="Digite seu comentário..." maxlength="500" style="flex: 1; padding: 10px; border: 1px solid #6B46C1; border-radius: 5px; background: rgba(0,0,0,0.3); color: white; font-family: inherit; resize: vertical; min-height: 60px;"></textarea>
+                <textarea id="commentInput-${downloadId}" placeholder="Digite seu coment�rio..." maxlength="500" style="flex: 1; padding: 10px; border: 1px solid #6B46C1; border-radius: 5px; background: rgba(0,0,0,0.3); color: white; font-family: inherit; resize: vertical; min-height: 60px;"></textarea>
             </div>
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
                 <button class="btn-cancel-comment" data-id="${downloadId}" style="padding: 8px 16px; border: 1px solid #666; border-radius: 5px; background: transparent; color: #999; cursor: pointer; font-weight: 600;">Cancelar</button>
@@ -1498,7 +1498,7 @@ function showCommentInlineForm(downloadId) {
         </div>
     `;
     
-    // Inserir depois das reações
+    // Inserir depois das rea��es
     const reactionsDiv = card.querySelector('.download-reactions');
     if (reactionsDiv) {
         reactionsDiv.insertAdjacentHTML('afterend', formHTML);
@@ -1514,18 +1514,18 @@ function showCommentInlineForm(downloadId) {
                 const content = textarea.value.trim();
                 
                 if (content.length === 0) {
-                    showNotification('Comentário não pode estar vazio', 'error');
+                    showNotification('Coment�rio n�o pode estar vazio', 'error');
                     return;
                 }
                 
                 if (content.length > 500) {
-                    showNotification('Comentário muito longo (máximo 500 caracteres)', 'error');
+                    showNotification('Coment�rio muito longo (m�ximo 500 caracteres)', 'error');
                     return;
                 }
                 
                 await submitInlineComment(downloadId, content);
                 card.querySelector('.comment-form-inline').remove();
-                // Atualizar contagem de comentários
+                // Atualizar contagem de coment�rios
                 await loadDownloads();
             });
         }
@@ -1549,22 +1549,22 @@ async function submitInlineComment(downloadId, content) {
     const response = await AuthAPI.addDownloadComment(downloadId, content);
     
     if (response.success) {
-        showNotification('Comentário adicionado com sucesso!', 'success');
-        // Recarregar a página de downloads para atualizar contadores
+        showNotification('Coment�rio adicionado com sucesso!', 'success');
+        // Recarregar a p�gina de downloads para atualizar contadores
         await loadDownloads();
     } else {
-        showNotification(response.message || 'Erro ao adicionar comentário', 'error');
+        showNotification(response.message || 'Erro ao adicionar coment�rio', 'error');
     }
 }
 
-// Mostrar mini perfil do usuário
+// Mostrar mini perfil do usu�rio
 async function showUserMiniProfile(userId) {
     try {
-        // Buscar informações do usuário
+        // Buscar informa��es do usu�rio
         const response = await AuthAPI.getUserMiniProfile(userId);
         
         if (!response.success || !response.profile) {
-            showNotification('Erro ao carregar perfil do usuário', 'error');
+            showNotification('Erro ao carregar perfil do usu�rio', 'error');
             return;
         }
 
@@ -1680,7 +1680,7 @@ async function showUserMiniProfile(userId) {
         });
     } catch (error) {
         console.error('Erro ao carregar perfil:', error);
-        showNotification('Erro ao carregar perfil do usuário', 'error');
+        showNotification('Erro ao carregar perfil do usu�rio', 'error');
     }
 }
 
